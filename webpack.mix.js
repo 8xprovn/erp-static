@@ -18,7 +18,7 @@ const mix = require('laravel-mix');
 // ];
 
 mix.js('resources/js/app.js', 'public/js')
-    .sass('resources/sass/app.scss', 'public/css')
+    .sass('resources/sass/app.scss', 'public/master/css')
 mix.scripts([
     'resources/js/main/bootstrap.bundle.min.js',
     'resources/js/plugins/tables/datatables/datatables.min.js',
@@ -51,11 +51,11 @@ mix.scripts([
     'resources/js/vendors/filepond/filepond-plugin-media-preview.js',
     'resources/js/vendors/tinymce/tinymce.min.js',
     'resources/js/app/*'
-], 'public/js/vendors.js').minify('public/js/vendors.js');
+], 'public/master/js/vendors.js').minify('public/master/js/vendors.js');
 mix.styles([
     'resources/js/vendors/filepond/filepond-plugin-image-preview.css',
     'resources/js/vendors/filepond/filepond-plugin-media-preview.css',
     'resources/js/vendors/filepond/filepond.css',
     'resources/js/vendors/filepond/filepond.css',
-    'css/custom.css',
-], 'public/css/vendors.css')
+    'master/css/custom.css',
+], 'public/master/css/vendors.css')
