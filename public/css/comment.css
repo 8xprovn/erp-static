@@ -1,0 +1,71 @@
+.input_comment_data {
+  outline: none;
+  border: 1px solid #eee;
+  padding: 3px 5px;
+  border-radius: 5px;
+  font-size: 15px;
+  min-height: 64px;
+  cursor: text;
+}
+
+.input_comment_data:focus {
+  border-color: #d1d1d1;
+  background-color: #fbfbfb;
+}
+
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  display: block;
+  color: #ccc;
+}
+
+#test-autocomplete-container {
+  position: relative;
+}
+
+#test-autocomplete-textarea-container {
+  position: relative;
+}
+
+.float-right {
+  float: right;
+}
+
+.tribute-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  overflow: auto;
+  display: block;
+  z-index: 999999;
+}
+
+.tribute-container ul {
+  margin: 0;
+  margin-top: 2px;
+  padding: 0;
+  list-style: none;
+  background: #efefef;
+}
+
+.tribute-container li {
+  padding: 5px 5px;
+  cursor: pointer;
+}
+
+.tribute-container li.highlight {
+  background: #ddd;
+}
+
+.tribute-container li span {
+  font-weight: bold;
+}
+
+.tribute-container li.no-match {
+  cursor: default;
+}
+
+.tribute-container .menu-highlighted {
+  font-weight: bold;
+}

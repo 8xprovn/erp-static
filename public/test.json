@@ -1,0 +1,34 @@
+[
+  {
+    "url": "https:\/\/demos.neoflow.ch\/filery\/files\/xfrikandel.jpg.pagespeed.ic.b7YiQddLii.jpg",
+    "name": "xfrikandel.jpg.pagespeed.ic.b7YiQddLii.jpg",
+    "extension": "jpg",
+    "time": 1560762149,
+    "size": 16777,
+    "type": "image"
+  },
+  {
+    "url": "https:\/\/demos.neoflow.ch\/filery\/files\/thumb.png",
+    "name": "thumb.png",
+    "extension": "png",
+    "time": 1589187807,
+    "size": 7444,
+    "type": "image"
+  },
+  {
+    "url": "https:\/\/demos.neoflow.ch\/filery\/files\/audio1.mp3",
+    "name": "audio1.mp3",
+    "extension": "mp3",
+    "time": 1561758870,
+    "size": 294471,
+    "type": "audio"
+  },
+  {
+    "url": "https:\/\/demos.neoflow.ch\/filery\/files\/Video.mp4",
+    "name": "Video.mp4",
+    "extension": "mp4",
+    "time": 1591706918,
+    "size": 0,
+    "type": "video"
+  }
+]

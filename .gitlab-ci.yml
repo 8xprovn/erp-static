@@ -1,0 +1,20 @@
+deploy-app:
+  stage: deploy
+  image: alpine
+  variables:
+    FTP_HOST: "$FTP_HOST"
+    FTP_USERNAME: "$FTP_USERNAME"
+    FTP_PASSWORD: "$FTP_PASSWORD"
+  before_script:
+    - apk add --no-cache lftp
+  only:
+    - staging
+    - master
+  script:
+    
+    ######### SYNC STATIC #########
+    - lftp -e "open $FTP_HOST;  user $FTP_USERNAME $FTP_PASSWORD; set ftp:ssl-allow no; mirror -X .* -X .*/ --reverse --verbose --delete ./public /st-ebomb-cdn.ebomb.edu.vn/$CI_COMMIT_REF_NAME; bye"
+  environment:
+    name: $CI_COMMIT_REF_NAME #branch
+    # kubernetes:
+    #   namespace: $CI_COMMIT_REF_NAME
