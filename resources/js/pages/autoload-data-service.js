@@ -539,6 +539,13 @@ const AutoloadDataService = (function () {
             query: ["category_id", "status"],
             version: 2,
         },
+        "task-category": {
+            url: window.API_SERVICE_URL_V2 + "/task/category",
+            formated: "$(name)",
+            id: "_id",
+            query: ["status"],
+            version: 2,
+        },
         /////////End task backend v2//////
     };
     var arrDomAutoFill = [
@@ -1202,6 +1209,14 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/task/projects",
             dom: ".em-project",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/task/category",
+            dom: ".em-task-category",
             attr: "data-id",
             formated: "$(name)",
             fk: "_id",
