@@ -57,5 +57,5 @@ mix.styles([
     'resources/js/vendors/filepond/filepond-plugin-media-preview.css',
     'resources/js/vendors/filepond/filepond.css',
     'resources/js/vendors/filepond/filepond.css',
-    'master/css/custom.css',
+    'css/custom.css',
 ], 'public/master/css/vendors.css')
