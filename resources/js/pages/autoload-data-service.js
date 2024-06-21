@@ -1066,7 +1066,7 @@ const AutoloadDataService = (function () {
         },
 
         {
-            url: window.API_SERVICE_URL + "/finance/wallets",
+            url: window.API_SERVICE_URL_V2 + "/finance/wallets",
             dom: ".finance_wallets",
             attr: "data-id",
             formated: "$(name)",
