@@ -107,10 +107,49 @@ const Layout = function () {
                         })
                         $(document).trigger(self.attr("data-trigger") , Object.assign(objData , data) );
                     }
-    
+                    var popupId = self.attr("data-popup-id");
+                    if (self.attr("data-redirect-load-modal") && self.attr("data-redirect-load-modal") == 'true') {
+                        let _url = data.redirect_uri || '';
+                        $.ajax({
+                            url: _url,
+                            data: {
+                                view: 'popup'
+                            },
+                            dataType: "html",
+                            beforeSend: function (xhr) {
+                                progress_loading.show(".content-inner"); 
+                            },
+                            success: function (data, status, xhr) {
+                                progress_loading.hide();
+                                $( '#' + popupId ).find('.modal-body-content').html(data);  
+                                $( '#' + popupId ).trigger( "MainContentReloaded", [] );
+                            },
+                            error: function ( xhr,  ajaxOptions, thrownError) {
+                                if (xhr.responseText) {
+                                    var responseText = JSON.parse(
+                                        xhr.responseText
+                                    );
+                                    var TextMessage = responseText.message ||  "Vui lòng liên hệ IT để được hỗ trợ";
+                                } else {
+                                    var TextMessage =
+                                        "Vui lòng liên hệ IT để được xử lý";
+                                }
+                                show_notify_error({
+                                    message:
+                                        "Lỗi " +
+                                        xhr.status +
+                                        ": " +
+                                        TextMessage,
+                                }); 
+                                progress_loading.hide();
+                            },
+                        }).done(function () {});  
+                        redirectAjaxUrl(window.location.href);
+                        return true;
+                    } 
+                    
                     if (redirect_uri == 'popup_close')
                     {
-                        var popupId = self.attr("data-popup-id");
                         $( '#' + popupId ).modal( 'hide' ).data( 'bs.modal', null );
                         redirectAjaxUrl(window.location.href);
                         return true;

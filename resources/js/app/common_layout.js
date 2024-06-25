@@ -91,7 +91,7 @@ $(document).ready(function () {
                     </a>\
                 </div>',
         'call-center': '<div class="col-4">\
-                    <a href="https://erp.ebomb.edu.vn/call-center" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
+                    <a href="https://erp.ebomb.edu.vn/call-center/me" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
                         <i class="icon-phone-wave text-primary icon-2x"></i>\
                         <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Call-center</div>\
                     </a>\

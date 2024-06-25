@@ -150,27 +150,54 @@ function redirectAjaxUrl(url) {
         
     });
 }
+// function formatReplace(tpl, data) {
+//     return tpl.replace(/\$\(([^\)]+)?\)/g, function($1, $2) {
+//         if ($2.indexOf('.') > 0)
+//         {
+//           var result = data;
+//           var res = $2.split(".");
+//           for(var i = 0; i < res.length; i++) {
+//             if(typeof result[res[i]] === "undefined"){
+//               return '';
+//             }
+//             result = result[res[i]];
+//           }
+//           return result
+//         }
+//         if (!data[$2] || data[$2] == 'null') {
+//             return '';
+//         }
+//         if (data[$2] > 1000000000 && data[$2].toString().indexOf("+") < 0 && $2 != "_id") {
+//             return moment(data[$2]*1000).format("DD/MM/YYYY HH:mm");
+//         }
+//         return data[$2]; 
+//     });
+// }
 function formatReplace(tpl, data) {
     return tpl.replace(/\$\(([^\)]+)?\)/g, function($1, $2) {
-        if ($2.indexOf('.') > 0)
-        {
-          var result = data;
-          var res = $2.split(".");
-          for(var i = 0; i < res.length; i++) {
-            if(typeof result[res[i]] === "undefined"){
-              return '';
-            }
-            result = result[res[i]];
-          }
-          return result
+        var isTimeFormat = false;
+        
+        if ($2.startsWith("time:")) {
+            isTimeFormat = true;
+            $2 = $2.slice(5); // Loại bỏ tiền tố "time:"
         }
+        if ($2.indexOf('.') > 0) {
+            var result = data;
+            var res = $2.split(".");
+            for (var i = 0; i < res.length; i++) {
+                if (typeof result[res[i]] === "undefined") {
+                    return '';
+                }
+                result = result[res[i]];
+            }
+            return isTimeFormat ? moment(result * 1000).format("DD/MM/YYYY HH:mm") : result;
+        }
+
         if (!data[$2] || data[$2] == 'null') {
             return '';
         }
-        if (data[$2] > 1000000000 && data[$2].toString().indexOf("+") < 0 && $2 != "_id") {
-            return moment(data[$2]*1000).format("DD/MM/YYYY HH:mm");
-        }
-        return data[$2]; 
+
+        return isTimeFormat ? moment(data[$2] * 1000).format("DD/MM/YYYY HH:mm") : data[$2];
     });
 }
 function show_notify_error(option) {

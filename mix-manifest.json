@@ -1,7 +1,7 @@
 {
     "/public/js/app.js": "/public/js/app.js",
-    "/public/css/app.css": "/public/css/app.css",
-    "/public/js/vendors.js": "/public/js/vendors.js",
-    "/public/js/vendors.min.js": "/public/js/vendors.min.js",
-    "/public/css/vendors.css": "/public/css/vendors.css"
+    "/public/master/css/app.css": "/public/master/css/app.css",
+    "/public/master/js/vendors.js": "/public/master/js/vendors.js",
+    "/public/master/js/vendors.min.js": "/public/master/js/vendors.min.js",
+    "/public/master/css/vendors.css": "/public/master/css/vendors.css"
 }
