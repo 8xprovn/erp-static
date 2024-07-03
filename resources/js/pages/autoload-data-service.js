@@ -227,7 +227,7 @@ const AutoloadDataService = (function () {
         },
         "class-schedule": {
             url: window.API_SERVICE_URL_V2 + "/lms/class-schedules",
-            formated: "$(lesson_name) Buổi $(schedule_number) Ngày $(date)",
+            formated: "$(lesson_name) Buổi $(schedule_number) Ngày $(time:date)",
             query: [
                 "class_id",
                 "is_completed",
