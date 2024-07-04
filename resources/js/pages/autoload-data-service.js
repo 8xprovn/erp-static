@@ -1203,6 +1203,7 @@ const AutoloadDataService = (function () {
             attr: "data-id",
             formated: "$(name)",
             fk: "_id",
+            link: "/call-center/ticket/$(_id)",
             version: 2,
         },
         /////////End call center//////
