@@ -508,7 +508,13 @@ const AutoloadDataService = (function () {
             query: ["category_id", "status"],
             version: 2,
         },
-
+        callcenter_ticket: {
+            url: window.API_SERVICE_URL_V2 + "/call-center/ticket",
+            formated: "$(name) - $(_id)",
+            id: "_id",
+            query: ["topic_id", "status", "_id"],
+            version: 2,
+        },
         "core-service": {
             url: window.API_SERVICE_URL_V2 + "/core/services",
             formated: "$(name)",
@@ -1175,6 +1181,14 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/call-center/ticket-topics",
             dom: ".em-ticket-topic",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/call-center/ticket",
+            dom: ".em-ticket",
             attr: "data-id",
             formated: "$(name)",
             fk: "_id",
