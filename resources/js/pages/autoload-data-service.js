@@ -456,7 +456,7 @@ const AutoloadDataService = (function () {
             query: ["name", "product_id", "status"],
             version: 2,
         },
-        
+
         "inventory-follows": {
             url: window.API_SERVICE_URL_V2 + "/inventory/follows",
             formated: "$(name)",
@@ -553,6 +553,17 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         /////////End task backend v2//////
+
+        //////// Payroll v2 ///////////
+        "payroll-variable": {
+            url: window.API_SERVICE_URL_V2 + "/payroll/system-variable",
+            formated: "$(name)",
+            id: "_id",
+            query: ["name", "code", "status", "type", "type_module"],
+            version: 2,
+        },
+
+        /////// End payroll v2////////
     };
     var arrDomAutoFill = [
         {
@@ -1237,6 +1248,19 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         /////////End task backend v2//////
+
+        //////// Payroll v2 ///////////
+        {
+            url: window.API_SERVICE_URL_V2 + "/payroll/system-variable",
+            dom: ".em-payroll-variable",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["type", "code", "status", 'type_module'], // query ko bat buoc
+            fk: "_id",
+        }
+
+
+        /////// End payroll v2////////
     ];
 
     //
@@ -1382,13 +1406,13 @@ const AutoloadDataService = (function () {
                                     if (new_link) {
                                         $(this).html(
                                             '<a href="' +
-                                                formatReplace(
-                                                    new_link,
-                                                    objData[v]
-                                                ) +
-                                                '" class="load_not_ajax" target="_blank">' +
-                                                formatReplace(tmp, objData[v]) +
-                                                "</a>"
+                                            formatReplace(
+                                                new_link,
+                                                objData[v]
+                                            ) +
+                                            '" class="load_not_ajax" target="_blank">' +
+                                            formatReplace(tmp, objData[v]) +
+                                            "</a>"
                                         );
                                     } else {
                                         $(this).text(
@@ -1399,7 +1423,7 @@ const AutoloadDataService = (function () {
                             }
                         });
                     },
-                    error: function () {},
+                    error: function () { },
                 });
             }
         });
@@ -1497,7 +1521,7 @@ const AutoloadDataService = (function () {
         //console.debug(objParams);
         var minimumInputLength =
             (typeof showType == "undefined" || showType != "all") &&
-            search_param
+                search_param
                 ? 2
                 : 0;
         var limit = search_param ? 50 : 500;
