@@ -99,6 +99,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/hr/setting/job_title",
             formated: "$(name)",
             id: "_id",
+            query: ["_id","type", "code"],
             version: 2,
         },
         "hr-documents": {
