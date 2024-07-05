@@ -555,7 +555,7 @@ const AutoloadDataService = (function () {
         /////////End task backend v2//////
 
         //////// Payroll v2 ///////////
-        "payroll-variable": {
+        payroll_variable: {
             url: window.API_SERVICE_URL_V2 + "/payroll/system-variable",
             formated: "$(name)",
             id: "_id",
@@ -1256,7 +1256,7 @@ const AutoloadDataService = (function () {
             dom: ".em-payroll-variable",
             attr: "data-id",
             formated: "$(name)",
-            query: ["_id","name", "code", "status", "type", "type_module"], // query ko bat buoc
+            query: ["_id", "status"],
             fk: "_id",
             version: 2,
         }
