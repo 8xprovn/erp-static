@@ -279,7 +279,7 @@ const AutoloadDataService = (function () {
         },
         classes: {
             url: window.API_SERVICE_URL_V2 + "/lms/classes",
-            formated: "$(name) $(start_date)",
+            formated: "$(name) $(time:start_date)",
             query: [
                 "branch_id",
                 "course_id",
@@ -292,7 +292,7 @@ const AutoloadDataService = (function () {
         "classes-search": {
             url: window.API_SERVICE_URL_V2 + "/lms/classes/custom/search",
             search_param: "keyword",
-            formated: "$(name) - $(start_date)",
+            formated: "$(name) - $(time:start_date)",
             // 'query': ['branch_id','course_id','lt_end_date','schedule_number_available'],
             id: "_id",
             version: 2,
