@@ -1258,6 +1258,7 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             query: ["_id","name", "code", "status", "type", "type_module"], // query ko bat buoc
             fk: "_id",
+            version: 2,
         }
 
 
