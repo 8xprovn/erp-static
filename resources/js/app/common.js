@@ -56,8 +56,10 @@ $(document).ready(function(){
     $(".call_center_click_2_call").on("click",function(){
         var data = $(this).data();
         var strQuery = $.param(data);
+        var url = window.location.protocol + '//' + window.location.hostname + '/call-center/softphone/create?' + strQuery;
+        console.log(url);
         //document.getElementById("callCenterIframe").contentWindow.postMessage('audio','',phone);
-        var url = SITE_URL + '/call-center/softphone/create?' + strQuery;
+        // var url = SITE_URL + '/call-center/softphone/create?' + strQuery;
         var html = '<div class="modal" id="callcenterpopup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">\
             <div class="modal-dialog" style="width: 95%; height: 98%; max-width: inherit; max-height: inherit;" role="document">\
                 <div class="modal-content" style="height: 100%">\
