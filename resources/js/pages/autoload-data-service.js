@@ -563,6 +563,13 @@ const AutoloadDataService = (function () {
             query: ["_id","name", "code", "status", "type", "type_module"],
             version: 2,
         },
+        payroll_template: {
+            url: window.API_SERVICE_URL_V2 + "/payroll/payroll-template",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
 
         /////// End payroll v2////////
     };
@@ -1255,6 +1262,15 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/payroll/system-variable",
             dom: ".em-payroll-variable",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/payroll/payroll-template",
+            dom: ".em-payroll-template",
             attr: "data-id",
             formated: "$(name)",
             query: ["_id", "status"],
