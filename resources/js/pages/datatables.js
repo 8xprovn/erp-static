@@ -134,6 +134,42 @@ var Datatable = function() {
         }
 
 
+        if ($('.datatable-fixed-left-search').length > 0) {
+            if ($.fn.DataTable.isDataTable('.datatable-fixed-left-search')) {
+                $('.datatable-fixed-left').DataTable().destroy();
+            }
+            //var  setTimeout(function(){
+                //fixedTable.columns.adjust();
+                $('.datatable-fixed-left-search').each(function(){
+                    var dataPosition = $(this).attr("data-position") || 1;
+                    var dataRightPosition = $(this).attr("data-right-position") || 0;
+                    var fixedColumns =  {
+                        leftColumns: dataPosition,
+                    };
+                    if (dataRightPosition > 0) {
+                        fixedColumns.rightColumns = dataRightPosition;
+                    }
+                    var fixedTable = $(this).DataTable({
+                        scrollX: true,
+                        paging: false,
+                        dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
+                        searching: true,
+                        bInfo : false,
+                        ordering: false,
+                        scrollY: '60vh',
+                        scrollCollapse: true,
+                        //fixedColumns: true,
+                        fixedColumns: fixedColumns
+                        
+                    }); 
+                    arrTimeout.push(setInterval(function(){
+                         fixedTable.columns.adjust();
+                    }, 2000));
+                })
+            //}, 2000);
+        }
+
+
 
 
         // Left and right fixed columns
@@ -172,17 +208,16 @@ var Datatable = function() {
         // }
 
         var dataTableConfigSearch = {
-            // responsive: true,
-            scrollX: true,
+            responsive: true,
+            scrollX: false,
             dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
-            // retrieve: true,
+            retrieve: true,
             scrollY: '60vh',
             scrollCollapse: true,
             paging: false,
             searching: true,
             bInfo : false,
             ordering: false,
-            fixedColumns: true,
             buttons: [ 
                 // {
                 //     text: 'Hiển thị',
