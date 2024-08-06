@@ -172,16 +172,17 @@ var Datatable = function() {
         // }
 
         var dataTableConfigSearch = {
-            responsive: true,
-            scrollX: false,
+            // responsive: true,
+            scrollX: true,
             dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
-            retrieve: true,
+            // retrieve: true,
             scrollY: '60vh',
             scrollCollapse: true,
             paging: false,
             searching: true,
             bInfo : false,
             ordering: false,
+            fixedColumns: fixedColumns,
             buttons: [ 
                 // {
                 //     text: 'Hiển thị',
