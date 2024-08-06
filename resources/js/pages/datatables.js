@@ -182,7 +182,7 @@ var Datatable = function() {
             searching: true,
             bInfo : false,
             ordering: false,
-            fixedColumns: fixedColumns,
+            fixedColumns: true,
             buttons: [ 
                 // {
                 //     text: 'Hiển thị',
