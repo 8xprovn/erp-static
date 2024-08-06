@@ -159,7 +159,8 @@ var Datatable = function() {
                         scrollY: '60vh',
                         scrollCollapse: true,
                         //fixedColumns: true,
-                        fixedColumns: fixedColumns
+                        fixedColumns: fixedColumns,
+                        buttons: [],
                         
                     }); 
                     arrTimeout.push(setInterval(function(){
