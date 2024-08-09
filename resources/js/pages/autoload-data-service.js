@@ -251,7 +251,7 @@ const AutoloadDataService = (function () {
             //'search_param': 'name',
             formated: "$(name)",
             id: "_id",
-            query: ["brand_id", "contact_id", "status", "course_level_id"],
+            query: ["brand_id", "contact_id", "status", "course_level_id", "type"],
             version: 2,
         },
         "course-search": {
