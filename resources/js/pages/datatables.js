@@ -136,7 +136,7 @@ var Datatable = function() {
 
         if ($('.datatable-fixed-left-search').length > 0) {
             if ($.fn.DataTable.isDataTable('.datatable-fixed-left-search')) {
-                $('.datatable-fixed-left').DataTable().destroy();
+                $('.datatable-fixed-left-search').DataTable().destroy();
             }
             //var  setTimeout(function(){
                 //fixedTable.columns.adjust();
