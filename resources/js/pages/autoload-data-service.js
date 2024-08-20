@@ -572,6 +572,58 @@ const AutoloadDataService = (function () {
         },
 
         /////// End payroll v2////////
+
+
+        ///// asset /////
+        allocation_type: {
+            url: window.API_SERVICE_URL_V2 + "/asset/allocation-type",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "is_template"],
+            version: 2,
+        },
+
+        allocation_template: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-template",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
+
+        asset_unit: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-units",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
+
+        asset_attribute: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-attributes",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
+
+        asset_category: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-categories",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
+
+        assets: {
+            url: window.API_SERVICE_URL_V2 + "/asset/assets",
+            formated: "$(title) - $(code)",
+            id: "_id",
+            query: ["_id", "unit_id", "category_id"],
+            version: 2,
+        },
+
+        ///// end asset /////
     };
     var arrDomAutoFill = [
         {
@@ -1276,10 +1328,67 @@ const AutoloadDataService = (function () {
             query: ["_id", "status"],
             fk: "_id",
             version: 2,
-        }
+        },
 
 
         /////// End payroll v2////////
+
+        ///// asset /////
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/allocation-type",
+            dom: ".em-allocation-type",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "is_template"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-template",
+            dom: ".em-allocation-template",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-units",
+            dom: ".em-asset-unit",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-attributes",
+            dom: ".em-asset-attribute",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-categories",
+            dom: ".em-asset-category",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/assets",
+            dom: ".em-asset",
+            attr: "data-id",
+            formated: "$(title) - $(code)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        }
+        ///// end asset /////
     ];
 
     //
