@@ -623,6 +623,22 @@ const AutoloadDataService = (function () {
             version: 2,
         },
 
+        asset_attribute_group: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset_attribute_group",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "asset_id"],
+            version: 2,
+        },
+
+        asset_setting_key: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset_setting_key",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
+
         ///// end asset /////
     };
     var arrDomAutoFill = [
@@ -1384,6 +1400,24 @@ const AutoloadDataService = (function () {
             dom: ".em-asset",
             attr: "data-id",
             formated: "$(title) - $(code)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset_attribute_group",
+            dom: ".em-asset_attribute_group",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset_setting_key",
+            dom: ".em-asset_setting_key",
+            attr: "data-id",
+            formated: "$(name)",
             query: ["_id"],
             fk: "_id",
             version: 2,
