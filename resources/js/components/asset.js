@@ -14,5 +14,8 @@ module.exports = (function(){
             delete(params.asset_id);
             helpers.curlgetapi(API_SERVICE_URL_V2 + '/asset/assets/' + asset_id, params, callback);
         },
+        getAttributeByAsset: function(params, callback) {
+            helpers.curlgetapi(API_SERVICE_URL_V2 + '/asset/asset_attribute_group', params, callback);
+        },
     }
 })();
