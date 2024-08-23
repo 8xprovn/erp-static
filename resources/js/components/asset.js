@@ -17,5 +17,10 @@ module.exports = (function(){
         getAttributeByAsset: function(params, callback) {
             helpers.curlgetapi_v2(API_SERVICE_URL_V2 + '/asset/asset_attribute_group', params, callback);
         },
+        getAttributeDetail: function(params, callback) {
+            var attr_id = params.attr_id;
+            delete(params.attr_id);
+            helpers.curlgetapi(API_SERVICE_URL_V2 + '/asset/asset_attribute_group/' + attr_id, params, callback);
+        },
     }
 })();
