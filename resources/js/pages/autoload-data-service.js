@@ -1168,6 +1168,15 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
+            url: window.API_SERVICE_URL_V2 + "/finance/transaction-type",
+            dom: ".finance-transaction-type",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
             url: window.API_SERVICE_URL + "/finance/vouchers-category",
             dom: ".finance_vouchers_category",
             attr: "data-id",
