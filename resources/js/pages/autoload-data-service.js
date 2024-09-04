@@ -647,6 +647,14 @@ const AutoloadDataService = (function () {
             version: 2,
         },
 
+        asset_allocation_detail: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-detail",
+            formated: "$(title)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
+
         ///// end asset /////
     };
     var arrDomAutoFill = [
@@ -1444,6 +1452,15 @@ const AutoloadDataService = (function () {
             dom: ".em-asset_allocation",
             attr: "data-id",
             formated: "$(title) - $(code)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-detail",
+            dom: ".em-asset_allocation_detail",
+            attr: "data-id",
+            formated: "$(title)",
             query: ["_id"],
             fk: "_id",
             version: 2,

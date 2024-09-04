@@ -14,6 +14,11 @@ module.exports = (function(){
             delete(params.allocation_id);
             helpers.curlgetapi(API_SERVICE_URL_V2 + '/asset/asset-allocation/' + allocation_id, params, callback);
         },
+        getAllocationDetailDetail: function(params, callback) {
+            var detail_id = params.detail_id;
+            delete(params.detail_id);
+            helpers.curlgetapi(API_SERVICE_URL_V2 + '/asset/asset-allocation-detail/' + detail_id, params, callback);
+        },
         getAssetDetail: function(params, callback) {
             var asset_id = params.asset_id;
             delete(params.asset_id);
