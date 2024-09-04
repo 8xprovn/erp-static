@@ -9,6 +9,11 @@ module.exports = (function(){
             delete(params.template_id);
             helpers.curlgetapi(API_SERVICE_URL_V2 + '/asset/asset-allocation-template/' + template_id, params, callback);
         },
+        getAllocationDetail: function(params, callback) {
+            var allocation_id = params.allocation_id;
+            delete(params.allocation_id);
+            helpers.curlgetapi(API_SERVICE_URL_V2 + '/asset/asset-allocation/' + allocation_id, params, callback);
+        },
         getAssetDetail: function(params, callback) {
             var asset_id = params.asset_id;
             delete(params.asset_id);
