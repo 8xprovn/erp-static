@@ -668,6 +668,7 @@ const AutoloadDataService = (function () {
             query: ["type", "branch_id", "manager_id", "department_id"],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/brand",
@@ -1473,12 +1474,174 @@ const AutoloadDataService = (function () {
     //
 
     // Basic Datatable examples
+    // var replaceData = function (parentDom) {
+    //     $.each(arrDomAutoFill, function (idx, item) {
+    //         var focusDom = parentDom.find(item.dom);
+    //         if (!focusDom.length) {
+    //             return true;
+    //         }
+
+    //         /////////// FIX TAM CHO CAC DOM DANG CHAY ///////////
+
+    //         /////////////  END //////////////////
+
+    //         //if (item.pquery) {
+    //         var arrId = [];
+    //         focusDom.each(function () {
+    //             var selfDom = $(this);
+    //             if (selfDom.prop("tagName") == "SELECT") {
+    //                 selfDom.find("option").each(function () {
+    //                     var v = $(this).val();
+    //                     if (v && $.inArray(v, arrId) == -1) {
+    //                         arrId.push(v);
+    //                     }
+    //                 });
+    //             } else {
+    //                 var v = selfDom.attr(item.attr);
+
+    //                 if (v && $.inArray(v, arrId) == -1) {
+    //                     arrId.push(v);
+    //                 }
+    //             }
+    //         });
+    //         if (!arrId.length) {
+    //             return;
+    //         }
+    //         arrId = arrId.filter(unique);
+    //         var count = 1;
+    //         if (arrId.length > 200) {
+    //             // lay so lam tron len
+    //             count = Math.ceil(arrId.length / 200);
+    //         }
+    //         for (i = 1; i <= count; i++) {
+    //             var objParams = {};
+
+    //             var inqId = arrId.slice((i - 1) * 200, 200 * i);
+    //             if (item.version == 2) {
+    //                 objParams[item.fk] = inqId;
+    //             } else {
+    //                 objParams[item.fk] = { inq: inqId };
+    //             }
+
+    //             //replace url arg
+    //             var urlQuery = item.url;
+    //             if (item.url_arg) {
+    //                 $.each(item.url_arg, function (k, v) {
+    //                     urlQuery = urlQuery.replace(
+    //                         "{" + k + "}",
+    //                         objParams[v]
+    //                     );
+    //                     delete objParams[v];
+    //                 });
+    //             }
+    //             var dataGet = {};
+    //             if (!$.isEmptyObject(objParams)) {
+    //                 if (item.version == 2) {
+    //                     dataGet = { filter: objParams, limit: 1000 };
+    //                 } else {
+    //                     dataGet = {
+    //                         filter: JSON.stringify({
+    //                             where: objParams,
+    //                             limit: 500,
+    //                         }),
+    //                     };
+    //                 }
+    //             }
+    //             //console.log(urlQuery,objParams);
+    //             // ktra query bat buoc
+    //             $.ajax({
+    //                 url: urlQuery,
+    //                 type: "GET",
+    //                 dataType: "json",
+    //                 // xhrFields: {
+    //                 //   withCredentials: true
+    //                 // },
+    //                 data: dataGet,
+    //                 contentType:
+    //                     "application/x-www-form-urlencoded; charset=UTF-8",
+    //                 // beforeSend: function(xhr) {
+    //                 //     //console.log('test',xhr);
+    //                 // },
+    //                 headers: {
+    //                     Authorization:
+    //                         "Bearer " + getCookie("imap_authen_access_token"),
+    //                 },
+    //                 success: function (response) {
+    //                     if (response.error) {
+    //                         ////console.log(data);
+    //                         return false;
+    //                     }
+    //                     var new_str = item.formated;
+    //                     var new_link = item.link;
+    //                     var objData = {};
+    //                     objLink = {};
+    //                     $.each(response, function (key, value) {
+    //                         objData[value[item.fk]] = value;
+    //                     });
+    //                     focusDom.each(function () {
+    //                         if ($(this).prop("tagName") == "SELECT") {
+    //                             var selectData = $(this);
+    //                             var tmp = $(this).attr("data-format")
+    //                                 ? $(this).attr("data-format")
+    //                                 : new_str;
+
+    //                             selectData
+    //                                 .find("option")
+    //                                 .each(function (element, key) {
+    //                                     var v = $(this).val();
+    //                                     if (objData[v]) {
+    //                                         var replaced = formatReplace(
+    //                                             tmp,
+    //                                             objData[v]
+    //                                         );
+    //                                         $(this).text(replaced);
+    //                                         setTimeout(function () {
+    //                                             selectData.trigger(
+    //                                                 "change_select2"
+    //                                             );
+    //                                         }, 1000);
+    //                                     }
+    //                                 });
+    //                             selectData.trigger("change");
+    //                         } else {
+    //                             var v = $(this).attr(item.attr);
+    //                             if (objData[v]) {
+    //                                 var tmp = $(this).attr("data-format")
+    //                                     ? $(this).attr("data-format")
+    //                                     : new_str;
+    //                                 if (new_link) {
+    //                                     $(this).html(
+    //                                         '<a href="' +
+    //                                         formatReplace(
+    //                                             new_link,
+    //                                             objData[v]
+    //                                         ) +
+    //                                         '" class="load_not_ajax" target="_blank">' +
+    //                                         formatReplace(tmp, objData[v]) +
+    //                                         "</a>"
+    //                                     );
+    //                                 } else {
+    //                                     $(this).text(
+    //                                         formatReplace(tmp, objData[v])
+    //                                     );
+    //                                 }
+    //                             }
+    //                         }
+    //                     });
+    //                 },
+    //                 error: function () { },
+    //             });
+    //         }
+    //     });
+    // };
+    // Basic Datatable examples
     var replaceData = function (parentDom) {
         $.each(arrDomAutoFill, function (idx, item) {
             var focusDom = parentDom.find(item.dom);
             if (!focusDom.length) {
                 return true;
             }
+            
 
             /////////// FIX TAM CHO CAC DOM DANG CHAY ///////////
 
@@ -1521,34 +1684,41 @@ const AutoloadDataService = (function () {
                 } else {
                     objParams[item.fk] = { inq: inqId };
                 }
+                
 
-                //replace url arg
-                var urlQuery = item.url;
-                if (item.url_arg) {
-                    $.each(item.url_arg, function (k, v) {
-                        urlQuery = urlQuery.replace(
-                            "{" + k + "}",
-                            objParams[v]
-                        );
-                        delete objParams[v];
-                    });
-                }
-                var dataGet = {};
-                if (!$.isEmptyObject(objParams)) {
-                    if (item.version == 2) {
-                        dataGet = { filter: objParams, limit: 1000 };
-                    } else {
-                        dataGet = {
-                            filter: JSON.stringify({
-                                where: objParams,
-                                limit: 500,
-                            }),
-                        };
-                    }
-                }
-                //console.log(urlQuery,objParams);
-                // ktra query bat buoc
-                $.ajax({
+                if(item.indexedDB && item.indexedDB == 'yes') {
+                  if (objParams._id && objParams._id.length > 0) {
+                    getMissingDataFromIndexedDB(objParams._id, item, focusDom)
+                  }
+                } else {
+
+                  //replace url arg
+                  var urlQuery = item.url;
+                  if (item.url_arg) {
+                      $.each(item.url_arg, function (k, v) {
+                          urlQuery = urlQuery.replace(
+                              "{" + k + "}",
+                              objParams[v]
+                          );
+                          delete objParams[v];
+                      });
+                  }
+                  var dataGet = {};
+                  if (!$.isEmptyObject(objParams)) {
+                      if (item.version == 2) {
+                          dataGet = { filter: objParams, limit: 1000 };
+                      } else {
+                          dataGet = {
+                              filter: JSON.stringify({
+                                  where: objParams,
+                                  limit: 500,
+                              }),
+                          };
+                      }
+                  }
+                  // ktra query bat buoc
+                  
+                  $.ajax({
                     url: urlQuery,
                     type: "GET",
                     dataType: "json",
@@ -1629,9 +1799,232 @@ const AutoloadDataService = (function () {
                         });
                     },
                     error: function () { },
-                });
+                  });
+                }
             }
         });
+    };
+    // Mở IndexedDB
+    let db;
+
+    function openIndexedDB(objectStoreName) {
+        objectStoreName = objectStoreName.replace(/\./g, '');
+        return new Promise((resolve, reject) => {
+            const request = indexedDB.open('InfomationDB', 1);
+
+            request.onupgradeneeded = (event) => {
+                db = event.target.result;
+                if (!db.objectStoreNames.contains(objectStoreName)) {
+                    db.createObjectStore(objectStoreName, { keyPath: '_id' });
+                }
+            };
+
+            request.onsuccess = (event) => {
+                db = event.target.result;
+                resolve(db);
+            };
+
+            request.onerror = (event) => {
+                reject(`IndexedDB error: ${event.target.errorCode}`);
+            };
+        });
+    };
+
+    // Lấy dữ liệu từ IndexedDB
+    function getDataFromIndexedDB(selectedId, objectStoreName) {
+        objectStoreName = objectStoreName.replace(/\./g, '');
+        return new Promise((resolve, reject) => {
+            if (!db) {
+                return reject('Database is not initialized');
+            }
+
+            const transaction = db.transaction([objectStoreName], 'readonly');
+            const objectStore = transaction.objectStore(objectStoreName);
+            const request = objectStore.get(Number(selectedId));
+            
+
+            request.onsuccess = (event) => {
+                resolve(request.result ? request.result : null);
+            };
+
+            request.onerror = (event) => {
+                reject('Error querying IndexedDB');
+            };
+        });
+    };
+
+    // Lưu dữ liệu vào IndexedDB
+    function saveDataToIndexedDB(objectStoreName, id, data) {
+        objectStoreName = objectStoreName.replace(/\./g, '');
+        return new Promise((resolve, reject) => {
+            if (!db) {
+                return reject('Database is not initialized');
+            }
+
+            const transaction = db.transaction([objectStoreName], 'readwrite');
+            const objectStore = transaction.objectStore(objectStoreName);
+            const request = objectStore.put({ _id: id, ...data });
+            
+
+            request.onsuccess = () => {
+                resolve();
+            };
+
+            request.onerror = (event) => {
+                reject(`Error saving to IndexedDB: ${event.target.errorCode}`);
+            };
+        });
+    };
+
+    // Hàm kiểm tra dữ liệu thiếu trong IndexedDB
+    async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
+        await openIndexedDB(item.dom);
+        const idsToFetch = [];
+        const objDatav = {};
+
+        for (const id of arrId) {
+            const data = await getDataFromIndexedDB(id, item.dom);
+            
+            if (!data) {
+              
+              idsToFetch.push(id);
+              
+            
+            } else {
+              objDatav[id] = data;
+            }
+        }
+        
+        if (objDatav && Object.keys(objDatav).length > 0) { 
+          await updateDomWithData(focusDom, objDatav, item);
+        }
+        if (idsToFetch && idsToFetch.length > 0) {
+          fetchDataAndUpdateDOM(item,idsToFetch, focusDom)
+        }
+        
+        
+    };
+
+    // Hàm cập nhật DOM với dữ liệu
+    function updateDomWithData(focusDom, objData, item) {
+        focusDom.each(function () {
+            if ($(this).prop("tagName") == "SELECT") {
+                const selectData = $(this);
+                const tmp = $(this).attr("data-format") || item.formated;
+                
+                selectData.find("option").each(function () {
+                    const v = $(this).val();
+                   
+                    
+                    if (objData[v]) {
+                        const replaced = formatReplace(tmp, objData[v]);
+                        $(this).text(replaced);
+                        setTimeout(() => {
+                            selectData.trigger("change_select2");
+                        }, 1000);
+                    }
+                });
+                selectData.trigger("change");
+            } else {
+                const v = $(this).attr(item.attr);
+                if (objData[v]) {
+                    const tmp = $(this).attr("data-format") || item.formated;
+                    if (item.link) {
+                        $(this).html(
+                            `<a href="${formatReplace(item.link, objData[v])}" class="load_not_ajax" target="_blank">
+                                ${formatReplace(tmp, objData[v])}
+                            </a>`
+                        );
+                    } else {
+                        $(this).text(formatReplace(tmp, objData[v]));
+                    }
+                }
+            }
+        });
+    };
+
+    // Hàm gọi API và cập nhật DOM
+    async function fetchDataAndUpdateDOM(item, arrId, focusDom) {
+            const inqId = arrId;
+            let objParams = {};
+
+            if (item.version === 2) {
+                objParams[item.fk] = inqId;
+            } else {
+                objParams[item.fk] = { inq: inqId };
+            }
+
+            
+            //replace url arg
+            var urlQuery = item.url;
+            if (item.url_arg) {
+                $.each(item.url_arg, function (k, v) {
+                    urlQuery = urlQuery.replace(
+                        "{" + k + "}",
+                        objParams[v]
+                    );
+                    delete objParams[v];
+                });
+            }
+            var dataGet = {};
+            if (!$.isEmptyObject(objParams)) {
+                if (item.version == 2) {
+                    dataGet = { filter: objParams, limit: 1000 };
+                } else {
+                    dataGet = {
+                        filter: JSON.stringify({
+                            where: objParams,
+                            limit: 500,
+                        }),
+                    };
+                }
+            }
+            // ktra query bat buoc
+            
+            try {
+              const response = await ajaxRequest(urlQuery, dataGet, item);
+              if (response.error) {
+                  return false;
+              }
+              const objDatav = {};
+              for (const value of response) {
+                  const id = value[item.fk];
+                  objDatav[value[item.fk]] = value;
+                  
+                  const data_save = { ...value };
+        
+                  // Xóa trường _id khỏi bản sao
+                  delete data_save._id;
+                  if (objDatav && Object.keys(objDatav).length > 0) { 
+                    await updateDomWithData(focusDom, objDatav, item);
+                  }
+                  await saveDataToIndexedDB(item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
+              }
+
+            } catch (error) {
+                console.error("Error in AJAX request:", error);
+            }
+        
+    };
+    function ajaxRequest(url, dataGet, item) {
+      return new Promise((resolve, reject) => {
+          $.ajax({
+              url: url,
+              type: "GET",
+              dataType: "json",
+              data: dataGet,
+              contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+              headers: {
+                  Authorization: "Bearer " + getCookie("imap_authen_access_token"),
+              },
+              success: function (response) {
+                  resolve(response);
+              },
+              error: function (error) {
+                  reject(error);
+              }
+          });
+      });
     };
     var selectData = function (parentDom) {
         var __cache = [];
