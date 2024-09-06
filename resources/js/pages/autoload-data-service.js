@@ -1814,7 +1814,7 @@ const AutoloadDataService = (function () {
     function openIndexedDB(objectStoreName) {
         objectStoreName = objectStoreName.replace(/\./g, '');
         return new Promise((resolve, reject) => {
-            const request = indexedDB.open('InfomationDB', 1);
+            const request = indexedDB.open('ERPDB', 1);
 
             request.onupgradeneeded = (event) => {
                 db = event.target.result;
