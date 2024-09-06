@@ -678,7 +678,6 @@ const AutoloadDataService = (function () {
             query: ["_id", "status"],
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
         },
         ////////////// EDU //////////
         {
@@ -925,7 +924,6 @@ const AutoloadDataService = (function () {
             query: ["brand_id", "city_code"],
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/city",
@@ -934,7 +932,6 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
         },
         {
             url: window.API_SERVICE_URL + "/org/location-cities",
@@ -942,7 +939,6 @@ const AutoloadDataService = (function () {
             attr: "data-id",
             formated: "$(name)",
             fk: "city_id",
-            indexedDB:'yes',
         },
         {
             url: window.API_SERVICE_URL + "/org/location/district",
