@@ -1860,12 +1860,9 @@ const AutoloadDataService = (function () {
                     const objectStore = currentDb.objectStoreNames.contains(objectStoreName);
     
                     if (!objectStore) {
-                        console.log(`Object store "${objectStoreName}" không tồn tại.`);
                         const newVersion = getDatabaseVersion() + 1;
                         setDatabaseVersion(newVersion);
-                        console.log(getDatabaseVersion());
                         
-    
                         // Đóng cơ sở dữ liệu hiện tại và đợi một khoảng thời gian ngắn
                         db.close();
                         await new Promise(resolve => setTimeout(resolve, 500)); // Đợi cơ sở dữ liệu đóng
