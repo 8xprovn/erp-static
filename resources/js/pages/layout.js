@@ -129,7 +129,7 @@ const Layout = function () {
                                     var responseText = JSON.parse(
                                         xhr.responseText
                                     );
-                                    var TextMessage = responseText.message ||  "Vui lòng liên hệ IT để được hỗ trợ";
+                                    var TextMessage = responseText.message || responseText.error_description ||  "Vui lòng liên hệ IT để được hỗ trợ";
                                 } else {
                                     var TextMessage =
                                         "Vui lòng liên hệ IT để được xử lý";
@@ -296,7 +296,7 @@ const Layout = function () {
                 error: function (xhr, ajaxOptions, thrownError) {
                     if (xhr.responseText) {
                         var responseText = JSON.parse(xhr.responseText); 
-                        var TextMessage = responseText.message || 'Vui lòng liên hệ IT để được hỗ trợ';
+                        var TextMessage = responseText.message || responseText.error_description || 'Vui lòng liên hệ IT để được hỗ trợ';
                     }
                     else {
                         var TextMessage = 'Vui lòng liên hệ IT để được xử lý';
@@ -344,7 +344,7 @@ const Layout = function () {
                 error: function (xhr, ajaxOptions, thrownError) {
                     if (xhr.responseText) {
                         var responseText = JSON.parse(xhr.responseText); 
-                        var TextMessage = responseText.message || 'Vui lòng liên hệ IT để được hỗ trợ';
+                        var TextMessage = responseText.message || responseText.error_description || 'Vui lòng liên hệ IT để được hỗ trợ';
                     }
                     else {
                         var TextMessage = 'Vui lòng liên hệ IT để được xử lý';
@@ -423,7 +423,7 @@ const Layout = function () {
                         self.show();
                         if (xhr.responseText) {
                             var responseText = JSON.parse(xhr.responseText); 
-                            var TextMessage = responseText.message || 'Vui lòng liên hệ IT để được hỗ trợ';
+                            var TextMessage = responseText.message || responseText.error_description || 'Vui lòng liên hệ IT để được hỗ trợ';
                         }
                         else {
                             var TextMessage = 'Vui lòng liên hệ IT để được xử lý';
@@ -513,7 +513,7 @@ const Layout = function () {
                 body.modal('hide');
                 if (xhr.responseText) {
                     var responseText = JSON.parse(xhr.responseText); 
-                    var TextMessage = responseText.message || 'Vui lòng liên hệ IT để được hỗ trợ';
+                    var TextMessage = responseText.message || responseText.error_description || 'Vui lòng liên hệ IT để được hỗ trợ';
                 }
                 else {
                     var TextMessage = 'Vui lòng liên hệ IT để được xử lý';
