@@ -669,6 +669,7 @@ const AutoloadDataService = (function () {
             fk: "_id",
             version: 2,
             indexedDB:'yes',
+            indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'status'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/brand",
@@ -678,6 +679,8 @@ const AutoloadDataService = (function () {
             query: ["_id", "status"],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status'],
         },
         ////////////// EDU //////////
         {
@@ -924,6 +927,8 @@ const AutoloadDataService = (function () {
             query: ["brand_id", "city_code"],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/city",
@@ -1804,118 +1809,164 @@ const AutoloadDataService = (function () {
             }
         });
     };
-    // Mở IndexedDB
     let db;
-
-    function openIndexedDB(objectStoreName) {
-        objectStoreName = objectStoreName.replace(/\./g, '');
+    const dbPromises = {}; // Object to keep track of ongoing database operations
+    const DB_VERSION_KEY = 'dbVersion';
+    const DEFAULT_DB_VERSION = 1;
+    function getDatabaseVersion() {
+        const version = localStorage.getItem(DB_VERSION_KEY);
+        return version ? parseInt(version, 10) : DEFAULT_DB_VERSION;
+    }
+    
+    function setDatabaseVersion(version) {
+        localStorage.setItem(DB_VERSION_KEY, version);
+    }
+    
+    // Hàm mở IndexedDB với object store cụ thể
+    async function openIndexedDB(objectStoreName) {
+        objectStoreName = String(objectStoreName).replace(/\./g, '');
+    
         return new Promise((resolve, reject) => {
-            const request = indexedDB.open('ERPDB', 1);
-
+            const version = getDatabaseVersion();
+    
+            const request = indexedDB.open('ERPDB', version);
+    
             request.onupgradeneeded = (event) => {
-                db = event.target.result;
+                const db = event.target.result;
                 if (!db.objectStoreNames.contains(objectStoreName)) {
                     db.createObjectStore(objectStoreName, { keyPath: '_id' });
                 }
             };
-
+    
             request.onsuccess = (event) => {
                 db = event.target.result;
                 resolve(db);
             };
-
+    
             request.onerror = (event) => {
-                reject(`IndexedDB error: ${event.target.errorCode}`);
+                reject(`Lỗi khi mở cơ sở dữ liệu: ${event.target.errorCode}`);
             };
         });
-    };
-
-    // Lấy dữ liệu từ IndexedDB
-    function getDataFromIndexedDB(selectedId, objectStoreName) {
-        objectStoreName = objectStoreName.replace(/\./g, '');
+    }
+    
+    // Hàm kiểm tra và tạo object store nếu không tồn tại
+    async function checkAndCreateObjectStore(objectStoreName) {
+        objectStoreName = String(objectStoreName).replace(/\./g, '');
+    
+        if (!dbPromises[objectStoreName]) {
+            dbPromises[objectStoreName] = (async () => {
+                try {
+                    const currentDb = await openIndexedDB(objectStoreName);
+                    const objectStore = currentDb.objectStoreNames.contains(objectStoreName);
+    
+                    if (!objectStore) {
+                        const newVersion = getDatabaseVersion() + 1;
+                        setDatabaseVersion(newVersion);
+                        
+                        // Đóng cơ sở dữ liệu hiện tại và đợi một khoảng thời gian ngắn
+                        db.close();
+                        await new Promise(resolve => setTimeout(resolve, 500)); // Đợi cơ sở dữ liệu đóng
+    
+                        // Mở cơ sở dữ liệu với phiên bản mới
+                        return openIndexedDB(objectStoreName);
+                    } else {
+                        return currentDb;
+                    }
+                } catch (error) {
+                    console.error(`Lỗi khi kiểm tra object store: ${error}`);
+                    throw error;
+                } finally {
+                    delete dbPromises[objectStoreName]; // Xóa bỏ promise sau khi hoàn tất
+                }
+            })();
+        }
+        return dbPromises[objectStoreName];
+    }
+    
+    // Hàm lấy dữ liệu từ IndexedDB
+    async function getDataFromIndexedDB(selectedId, objectStoreName) {
+        objectStoreName = String(objectStoreName).replace(/\./g, '');
+    
         return new Promise((resolve, reject) => {
             if (!db) {
                 return reject('Database is not initialized');
             }
-
+    
             const transaction = db.transaction([objectStoreName], 'readonly');
             const objectStore = transaction.objectStore(objectStoreName);
             const request = objectStore.get(Number(selectedId));
-            
-
+    
             request.onsuccess = (event) => {
                 resolve(request.result ? request.result : null);
             };
-
+    
             request.onerror = (event) => {
                 reject('Error querying IndexedDB');
             };
         });
-    };
-
-    // Lưu dữ liệu vào IndexedDB
-    function saveDataToIndexedDB(objectStoreName, id, data) {
-        objectStoreName = objectStoreName.replace(/\./g, '');
+    }
+    
+    // Hàm lưu dữ liệu vào IndexedDB
+    async function saveDataToIndexedDB(objectStoreName, id, data) {
+        objectStoreName = String(objectStoreName).replace(/\./g, '');
+    
         return new Promise((resolve, reject) => {
             if (!db) {
                 return reject('Database is not initialized');
             }
-
+    
             const transaction = db.transaction([objectStoreName], 'readwrite');
             const objectStore = transaction.objectStore(objectStoreName);
             const request = objectStore.put({ _id: id, ...data });
-            
-
+    
             request.onsuccess = () => {
                 resolve();
             };
-
+    
             request.onerror = (event) => {
                 reject(`Error saving to IndexedDB: ${event.target.errorCode}`);
             };
         });
-    };
-
+    }
+    
     // Hàm kiểm tra dữ liệu thiếu trong IndexedDB
     async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
-        await openIndexedDB(item.dom);
-        const idsToFetch = [];
-        const objDatav = {};
-
-        for (const id of arrId) {
-            const data = await getDataFromIndexedDB(id, item.dom);
-            
-            if (!data) {
-              
-              idsToFetch.push(id);
-              
-            
-            } else {
-              objDatav[id] = data;
+        try {
+            await checkAndCreateObjectStore(item.dom); // Đảm bảo object store đã được tạo
+    
+            const idsToFetch = [];
+            const objDatav = {};
+    
+            for (const id of arrId) {
+                const data = await getDataFromIndexedDB(id, item.dom);
+                if (!data) {
+                    idsToFetch.push(id);
+                } else {
+                    objDatav[id] = data;
+                }
             }
+    
+            if (Object.keys(objDatav).length > 0) {
+                await updateDomWithData(focusDom, objDatav, item);
+            }
+    
+            if (idsToFetch.length > 0) {
+                await fetchDataAndUpdateDOM(item, idsToFetch, focusDom);
+            }
+        } catch (error) {
+          console.error('Error in getMissingDataFromIndexedDB:', error);
         }
-        
-        if (objDatav && Object.keys(objDatav).length > 0) { 
-          await updateDomWithData(focusDom, objDatav, item);
-        }
-        if (idsToFetch && idsToFetch.length > 0) {
-          fetchDataAndUpdateDOM(item,idsToFetch, focusDom)
-        }
-        
-        
-    };
-
+    }
+    
     // Hàm cập nhật DOM với dữ liệu
     function updateDomWithData(focusDom, objData, item) {
         focusDom.each(function () {
             if ($(this).prop("tagName") == "SELECT") {
                 const selectData = $(this);
                 const tmp = $(this).attr("data-format") || item.formated;
-                
+    
                 selectData.find("option").each(function () {
                     const v = $(this).val();
-                   
-                    
                     if (objData[v]) {
                         const replaced = formatReplace(tmp, objData[v]);
                         $(this).text(replaced);
@@ -1941,91 +1992,86 @@ const AutoloadDataService = (function () {
                 }
             }
         });
-    };
-
+    }
+    
     // Hàm gọi API và cập nhật DOM
     async function fetchDataAndUpdateDOM(item, arrId, focusDom) {
-            const inqId = arrId;
-            let objParams = {};
-
-            if (item.version === 2) {
-                objParams[item.fk] = inqId;
+        const inqId = arrId;
+        let objParams = {};
+    
+        if (item.version === 2) {
+            objParams[item.fk] = inqId;
+        } else {
+            objParams[item.fk] = { inq: inqId };
+        }
+    
+        var urlQuery = item.url;
+        if (item.url_arg) {
+            $.each(item.url_arg, function (k, v) {
+                urlQuery = urlQuery.replace("{" + k + "}", objParams[v]);
+                delete objParams[v];
+            });
+        }
+    
+        var dataGet = {};
+        if (!$.isEmptyObject(objParams)) {
+            if (item.version == 2) {
+                dataGet = { filter: objParams, limit: 1000 };
             } else {
-                objParams[item.fk] = { inq: inqId };
+                dataGet = {
+                    filter: JSON.stringify({
+                        where: objParams,
+                        limit: 500,
+                    }),
+                };
             }
-
-            
-            //replace url arg
-            var urlQuery = item.url;
-            if (item.url_arg) {
-                $.each(item.url_arg, function (k, v) {
-                    urlQuery = urlQuery.replace(
-                        "{" + k + "}",
-                        objParams[v]
-                    );
-                    delete objParams[v];
-                });
+        }
+    
+        try {
+            const response = await ajaxRequest(urlQuery, dataGet, item);
+            if (response.error) {
+                return false;
             }
-            var dataGet = {};
-            if (!$.isEmptyObject(objParams)) {
-                if (item.version == 2) {
-                    dataGet = { filter: objParams, limit: 1000 };
-                } else {
-                    dataGet = {
-                        filter: JSON.stringify({
-                            where: objParams,
-                            limit: 500,
-                        }),
-                    };
-                }
-            }
-            // ktra query bat buoc
-            
-            try {
-              const response = await ajaxRequest(urlQuery, dataGet, item);
-              if (response.error) {
-                  return false;
-              }
-              const objDatav = {};
-              for (const value of response) {
-                  const id = value[item.fk];
-                  objDatav[value[item.fk]] = value;
-                  
-                  const data_save = { ...value };
-        
-                  // Xóa trường _id khỏi bản sao
-                  delete data_save._id;
-                  if (objDatav && Object.keys(objDatav).length > 0) { 
+    
+            const objDatav = {};
+            for (const value of response) {
+                const id = value[item.fk];
+                objDatav[id] = value;
+    
+                const data_save = { ...value };
+                delete data_save._id;
+    
+                if (Object.keys(objDatav).length > 0) {
                     await updateDomWithData(focusDom, objDatav, item);
-                  }
-                  await saveDataToIndexedDB(item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
-              }
-
-            } catch (error) {
-                console.error("Error in AJAX request:", error);
+                }
+                await saveDataToIndexedDB(item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
             }
-        
-    };
+    
+        } catch (error) {
+          console.error("Error in AJAX request:", error);
+        }
+    }
+    
     function ajaxRequest(url, dataGet, item) {
-      return new Promise((resolve, reject) => {
-          $.ajax({
-              url: url,
-              type: "GET",
-              dataType: "json",
-              data: dataGet,
-              contentType: "application/x-www-form-urlencoded; charset=UTF-8",
-              headers: {
-                  Authorization: "Bearer " + getCookie("imap_authen_access_token"),
-              },
-              success: function (response) {
-                  resolve(response);
-              },
-              error: function (error) {
-                  reject(error);
-              }
-          });
-      });
-    };
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "json",
+                data: dataGet,
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                headers: {
+                    Authorization: "Bearer " + getCookie("imap_authen_access_token"),
+                },
+                success: function (response) {
+                    resolve(response);
+                },
+                error: function (error) {
+                    reject(error);
+                }
+            });
+        });
+    }
     var selectData = function (parentDom) {
         var __cache = [];
         parentDom.find(".select2_suggest").each(function () {
