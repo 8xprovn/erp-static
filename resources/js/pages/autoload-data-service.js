@@ -777,6 +777,8 @@ const AutoloadDataService = (function () {
             ],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status', 'type', 'email', 'phone', 'status', 'price', 'salary', 'method', 'teacher_type', 'rate'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/lms/setting-shifts",
@@ -1512,167 +1514,7 @@ const AutoloadDataService = (function () {
     // Setup module components
     //
 
-    // Basic Datatable examples
-    // var replaceData = function (parentDom) {
-    //     $.each(arrDomAutoFill, function (idx, item) {
-    //         var focusDom = parentDom.find(item.dom);
-    //         if (!focusDom.length) {
-    //             return true;
-    //         }
-
-    //         /////////// FIX TAM CHO CAC DOM DANG CHAY ///////////
-
-    //         /////////////  END //////////////////
-
-    //         //if (item.pquery) {
-    //         var arrId = [];
-    //         focusDom.each(function () {
-    //             var selfDom = $(this);
-    //             if (selfDom.prop("tagName") == "SELECT") {
-    //                 selfDom.find("option").each(function () {
-    //                     var v = $(this).val();
-    //                     if (v && $.inArray(v, arrId) == -1) {
-    //                         arrId.push(v);
-    //                     }
-    //                 });
-    //             } else {
-    //                 var v = selfDom.attr(item.attr);
-
-    //                 if (v && $.inArray(v, arrId) == -1) {
-    //                     arrId.push(v);
-    //                 }
-    //             }
-    //         });
-    //         if (!arrId.length) {
-    //             return;
-    //         }
-    //         arrId = arrId.filter(unique);
-    //         var count = 1;
-    //         if (arrId.length > 200) {
-    //             // lay so lam tron len
-    //             count = Math.ceil(arrId.length / 200);
-    //         }
-    //         for (i = 1; i <= count; i++) {
-    //             var objParams = {};
-
-    //             var inqId = arrId.slice((i - 1) * 200, 200 * i);
-    //             if (item.version == 2) {
-    //                 objParams[item.fk] = inqId;
-    //             } else {
-    //                 objParams[item.fk] = { inq: inqId };
-    //             }
-
-    //             //replace url arg
-    //             var urlQuery = item.url;
-    //             if (item.url_arg) {
-    //                 $.each(item.url_arg, function (k, v) {
-    //                     urlQuery = urlQuery.replace(
-    //                         "{" + k + "}",
-    //                         objParams[v]
-    //                     );
-    //                     delete objParams[v];
-    //                 });
-    //             }
-    //             var dataGet = {};
-    //             if (!$.isEmptyObject(objParams)) {
-    //                 if (item.version == 2) {
-    //                     dataGet = { filter: objParams, limit: 1000 };
-    //                 } else {
-    //                     dataGet = {
-    //                         filter: JSON.stringify({
-    //                             where: objParams,
-    //                             limit: 500,
-    //                         }),
-    //                     };
-    //                 }
-    //             }
-    //             //console.log(urlQuery,objParams);
-    //             // ktra query bat buoc
-    //             $.ajax({
-    //                 url: urlQuery,
-    //                 type: "GET",
-    //                 dataType: "json",
-    //                 // xhrFields: {
-    //                 //   withCredentials: true
-    //                 // },
-    //                 data: dataGet,
-    //                 contentType:
-    //                     "application/x-www-form-urlencoded; charset=UTF-8",
-    //                 // beforeSend: function(xhr) {
-    //                 //     //console.log('test',xhr);
-    //                 // },
-    //                 headers: {
-    //                     Authorization:
-    //                         "Bearer " + getCookie("imap_authen_access_token"),
-    //                 },
-    //                 success: function (response) {
-    //                     if (response.error) {
-    //                         ////console.log(data);
-    //                         return false;
-    //                     }
-    //                     var new_str = item.formated;
-    //                     var new_link = item.link;
-    //                     var objData = {};
-    //                     objLink = {};
-    //                     $.each(response, function (key, value) {
-    //                         objData[value[item.fk]] = value;
-    //                     });
-    //                     focusDom.each(function () {
-    //                         if ($(this).prop("tagName") == "SELECT") {
-    //                             var selectData = $(this);
-    //                             var tmp = $(this).attr("data-format")
-    //                                 ? $(this).attr("data-format")
-    //                                 : new_str;
-
-    //                             selectData
-    //                                 .find("option")
-    //                                 .each(function (element, key) {
-    //                                     var v = $(this).val();
-    //                                     if (objData[v]) {
-    //                                         var replaced = formatReplace(
-    //                                             tmp,
-    //                                             objData[v]
-    //                                         );
-    //                                         $(this).text(replaced);
-    //                                         setTimeout(function () {
-    //                                             selectData.trigger(
-    //                                                 "change_select2"
-    //                                             );
-    //                                         }, 1000);
-    //                                     }
-    //                                 });
-    //                             selectData.trigger("change");
-    //                         } else {
-    //                             var v = $(this).attr(item.attr);
-    //                             if (objData[v]) {
-    //                                 var tmp = $(this).attr("data-format")
-    //                                     ? $(this).attr("data-format")
-    //                                     : new_str;
-    //                                 if (new_link) {
-    //                                     $(this).html(
-    //                                         '<a href="' +
-    //                                         formatReplace(
-    //                                             new_link,
-    //                                             objData[v]
-    //                                         ) +
-    //                                         '" class="load_not_ajax" target="_blank">' +
-    //                                         formatReplace(tmp, objData[v]) +
-    //                                         "</a>"
-    //                                     );
-    //                                 } else {
-    //                                     $(this).text(
-    //                                         formatReplace(tmp, objData[v])
-    //                                     );
-    //                                 }
-    //                             }
-    //                         }
-    //                     });
-    //                 },
-    //                 error: function () { },
-    //             });
-    //         }
-    //     });
-    // };
+    
     // Basic Datatable examples
     var replaceData = function (parentDom) {
         $.each(arrDomAutoFill, function (idx, item) {
@@ -1843,162 +1685,142 @@ const AutoloadDataService = (function () {
             }
         });
     };
-    let db;
-    const dbPromises = {}; // Object to keep track of ongoing database operations
+    let dbs = {};  // Đối tượng để lưu trữ các kết nối đến các cơ sở dữ liệu khác nhau
     const DB_VERSION_KEY = 'dbVersion';
     const DEFAULT_DB_VERSION = 1;
-    function getDatabaseVersion() {
-        const version = localStorage.getItem(DB_VERSION_KEY);
+
+    // Lấy phiên bản cơ sở dữ liệu từ localStorage
+    function getDatabaseVersion(dbName) {
+        const version = localStorage.getItem(`${DB_VERSION_KEY}_${dbName}`);
         return version ? parseInt(version, 10) : DEFAULT_DB_VERSION;
     }
-    
-    function setDatabaseVersion(version) {
-        localStorage.setItem(DB_VERSION_KEY, version);
+
+    // Đặt phiên bản cơ sở dữ liệu vào localStorage
+    function setDatabaseVersion(dbName, version) {
+        localStorage.setItem(`${DB_VERSION_KEY}_${dbName}`, version);
     }
-    
-    // Hàm mở IndexedDB với object store cụ thể
-    async function openIndexedDB(objectStoreName) {
-        objectStoreName = String(objectStoreName).replace(/\./g, '');
-    
+
+    // Mở một cơ sở dữ liệu IndexedDB cụ thể với tên và phiên bản
+    function openIndexedDB(dbName, objectStoreName) {
         return new Promise((resolve, reject) => {
-            const version = getDatabaseVersion();
-    
-            const request = indexedDB.open('ERPDB', version);
-    
+            let version = getDatabaseVersion(dbName);
+            const request = indexedDB.open(dbName, version);
+
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
                 if (!db.objectStoreNames.contains(objectStoreName)) {
                     db.createObjectStore(objectStoreName, { keyPath: '_id' });
                 }
             };
-    
+
             request.onsuccess = (event) => {
-                db = event.target.result;
-                resolve(db);
+                dbs[dbName] = event.target.result;
+                resolve(dbs[dbName]);
             };
-    
+
             request.onerror = (event) => {
-                reject(`Lỗi khi mở cơ sở dữ liệu: ${event.target.errorCode}`);
+                reject(`IndexedDB error: ${event.target.errorCode}`);
             };
         });
     }
-    
-    // Hàm kiểm tra và tạo object store nếu không tồn tại
-    async function checkAndCreateObjectStore(objectStoreName) {
-        objectStoreName = String(objectStoreName).replace(/\./g, '');
-    
-        if (!dbPromises[objectStoreName]) {
-            dbPromises[objectStoreName] = (async () => {
-                try {
-                    const currentDb = await openIndexedDB(objectStoreName);
-                    const objectStore = currentDb.objectStoreNames.contains(objectStoreName);
-    
-                    if (!objectStore) {
-                        const newVersion = getDatabaseVersion() + 1;
-                        setDatabaseVersion(newVersion);
-                        
-                        // Đóng cơ sở dữ liệu hiện tại và đợi một khoảng thời gian ngắn
-                        db.close();
-                        await new Promise(resolve => setTimeout(resolve, 500)); // Đợi cơ sở dữ liệu đóng
-    
-                        // Mở cơ sở dữ liệu với phiên bản mới
-                        return openIndexedDB(objectStoreName);
-                    } else {
-                        return currentDb;
-                    }
-                } catch (error) {
-                    console.error(`Lỗi khi kiểm tra object store: ${error}`);
-                    throw error;
-                } finally {
-                    delete dbPromises[objectStoreName]; // Xóa bỏ promise sau khi hoàn tất
-                }
-            })();
-        }
-        return dbPromises[objectStoreName];
-    }
-    
-    // Hàm lấy dữ liệu từ IndexedDB
-    async function getDataFromIndexedDB(selectedId, objectStoreName) {
-        objectStoreName = String(objectStoreName).replace(/\./g, '');
-    
+
+    // Lấy dữ liệu từ một cơ sở dữ liệu cụ thể
+    function getDataFromIndexedDB(dbName, objectStoreName, selectedId) {
         return new Promise((resolve, reject) => {
-            if (!db) {
+            if (!dbs[dbName]) {
                 return reject('Database is not initialized');
             }
-    
-            const transaction = db.transaction([objectStoreName], 'readonly');
+
+            const transaction = dbs[dbName].transaction([objectStoreName], 'readonly');
             const objectStore = transaction.objectStore(objectStoreName);
             const request = objectStore.get(Number(selectedId));
-    
+
             request.onsuccess = (event) => {
                 resolve(request.result ? request.result : null);
             };
-    
+
             request.onerror = (event) => {
                 reject('Error querying IndexedDB');
             };
         });
     }
-    
-    // Hàm lưu dữ liệu vào IndexedDB
-    async function saveDataToIndexedDB(objectStoreName, id, data) {
+
+    // Lưu dữ liệu vào một cơ sở dữ liệu cụ thể
+    function saveDataToIndexedDB(dbName, objectStoreName, id, data) {
+        dbName = String(dbName).replace(/\./g, '');
         objectStoreName = String(objectStoreName).replace(/\./g, '');
-    
         return new Promise((resolve, reject) => {
-            if (!db) {
+            if (!dbs[dbName]) {
                 return reject('Database is not initialized');
             }
-    
-            const transaction = db.transaction([objectStoreName], 'readwrite');
+
+            const transaction = dbs[dbName].transaction([objectStoreName], 'readwrite');
             const objectStore = transaction.objectStore(objectStoreName);
             const request = objectStore.put({ _id: id, ...data });
-    
+
             request.onsuccess = () => {
                 resolve();
             };
-    
+
             request.onerror = (event) => {
                 reject(`Error saving to IndexedDB: ${event.target.errorCode}`);
             };
         });
     }
-    
-    // Hàm kiểm tra dữ liệu thiếu trong IndexedDB
-    async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
-        try {
-            await checkAndCreateObjectStore(item.dom); // Đảm bảo object store đã được tạo
-    
-            const idsToFetch = [];
-            const objDatav = {};
-    
-            for (const id of arrId) {
-                const data = await getDataFromIndexedDB(id, item.dom);
-                if (!data) {
-                    idsToFetch.push(id);
+
+    // Kiểm tra và tạo object store trong cơ sở dữ liệu
+    function checkAndCreateObjectStore(dbName, objectStoreName) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                // Mở cơ sở dữ liệu
+                const existingDB = await openIndexedDB(dbName, objectStoreName);
+                if (!existingDB.objectStoreNames.contains(objectStoreName)) {
+                    // Tăng phiên bản và mở lại cơ sở dữ liệu để tạo object store mới
+                    let version = getDatabaseVersion(dbName) + 1;
+                    setDatabaseVersion(dbName, version);
+                    existingDB.close();
+                    await new Promise(resolve => setTimeout(resolve, 200)); 
+                    const newDB = await openIndexedDB(dbName, objectStoreName);
+                    resolve(newDB);
                 } else {
-                    objDatav[id] = data;
+                    resolve(existingDB);
                 }
+            } catch (error) {
+                reject(`Lỗi khi kiểm tra object store: ${error}`);
             }
-    
-            if (Object.keys(objDatav).length > 0) {
-                await updateDomWithData(focusDom, objDatav, item);
+        });
+    }
+
+    // Hàm kiểm tra dữ liệu thiếu trong IndexedDB và cập nhật DOM
+    async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
+        const dbName = String(item.dom).replace(/\./g, '');  // Tên cơ sở dữ liệu tương ứng với objectStoreName
+        await checkAndCreateObjectStore(dbName, dbName);
+        const idsToFetch = [];
+        const objDatav = {};
+
+        for (const id of arrId) {
+            const data = await getDataFromIndexedDB(dbName, dbName, id);
+            if (!data) {
+                idsToFetch.push(id);
+            } else {
+                objDatav[id] = data;
             }
-    
-            if (idsToFetch.length > 0) {
-                await fetchDataAndUpdateDOM(item, idsToFetch, focusDom);
-            }
-        } catch (error) {
-          console.error('Error in getMissingDataFromIndexedDB:', error);
+        }
+        
+        if (objDatav && Object.keys(objDatav).length > 0) { 
+            await updateDomWithData(focusDom, objDatav, item);
+        }
+        if (idsToFetch && idsToFetch.length > 0) {
+            fetchDataAndUpdateDOM(item, idsToFetch, focusDom);
         }
     }
-    
+
     // Hàm cập nhật DOM với dữ liệu
     function updateDomWithData(focusDom, objData, item) {
         focusDom.each(function () {
             if ($(this).prop("tagName") == "SELECT") {
                 const selectData = $(this);
                 const tmp = $(this).attr("data-format") || item.formated;
-    
                 selectData.find("option").each(function () {
                     const v = $(this).val();
                     if (objData[v]) {
@@ -2027,27 +1849,27 @@ const AutoloadDataService = (function () {
             }
         });
     }
-    
+
     // Hàm gọi API và cập nhật DOM
     async function fetchDataAndUpdateDOM(item, arrId, focusDom) {
         const inqId = arrId;
         let objParams = {};
-    
+
         if (item.version === 2) {
             objParams[item.fk] = inqId;
         } else {
             objParams[item.fk] = { inq: inqId };
         }
-    
-        var urlQuery = item.url;
+
+        // Replace url arg
+        let urlQuery = item.url;
         if (item.url_arg) {
             $.each(item.url_arg, function (k, v) {
                 urlQuery = urlQuery.replace("{" + k + "}", objParams[v]);
                 delete objParams[v];
             });
         }
-    
-        var dataGet = {};
+        let dataGet = {};
         if (!$.isEmptyObject(objParams)) {
             if (item.version == 2) {
                 dataGet = { filter: objParams, limit: 1000 };
@@ -2060,32 +1882,38 @@ const AutoloadDataService = (function () {
                 };
             }
         }
-    
+        
+        // Ktra query bắt buộc
         try {
             const response = await ajaxRequest(urlQuery, dataGet, item);
             if (response.error) {
                 return false;
             }
-    
             const objDatav = {};
             for (const value of response) {
                 const id = value[item.fk];
                 objDatav[id] = value;
-    
-                const data_save = { ...value };
-                delete data_save._id;
-    
-                if (Object.keys(objDatav).length > 0) {
+                let data_save = {};
+                if (item.indexdFormat) {
+                    const keys = item.indexdFormat;
+                    data_save = Object.fromEntries(
+                        Object.entries(value).filter(([key]) => keys.includes(key))
+                    );
+                } else {
+                    data_save = { ...value }
+                    delete data_save._id;
+                }
+                if (objDatav && Object.keys(objDatav).length > 0) { 
                     await updateDomWithData(focusDom, objDatav, item);
                 }
-                await saveDataToIndexedDB(item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
+                await saveDataToIndexedDB(item.dom, item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
             }
-    
         } catch (error) {
-          console.error("Error in AJAX request:", error);
+            console.log("Error in AJAX request:", error);
         }
     }
-    
+
+    // Hàm gửi yêu cầu AJAX
     function ajaxRequest(url, dataGet, item) {
         return new Promise((resolve, reject) => {
             $.ajax({
