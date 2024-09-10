@@ -655,6 +655,14 @@ const AutoloadDataService = (function () {
             version: 2,
         },
 
+        suppliers: {
+            url: window.API_SERVICE_URL_V2 + "/asset/suppliers",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
+
         ///// end asset /////
     };
     var arrDomAutoFill = [
@@ -1469,6 +1477,15 @@ const AutoloadDataService = (function () {
             dom: ".em-asset_allocation_detail",
             attr: "data-id",
             formated: "$(title)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/suppliers",
+            dom: ".em-suppliers",
+            attr: "data-id",
+            formated: "$(name)",
             query: ["_id"],
             fk: "_id",
             version: 2,
