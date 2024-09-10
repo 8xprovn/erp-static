@@ -1710,11 +1710,11 @@ const AutoloadDataService = (function () {
                 }
                 
 
-                if(item.indexedDB && item.indexedDB == 'yes') {
-                  if (objParams._id && objParams._id.length > 0) {
-                    getMissingDataFromIndexedDB(objParams._id, item, focusDom)
-                  }
-                } else {
+                // if(item.indexedDB && item.indexedDB == 'yes') {
+                //   if (objParams._id && objParams._id.length > 0) {
+                //     getMissingDataFromIndexedDB(objParams._id, item, focusDom)
+                //   }
+                // } else {
 
                   //replace url arg
                   var urlQuery = item.url;
@@ -1824,7 +1824,7 @@ const AutoloadDataService = (function () {
                     },
                     error: function () { },
                   });
-                }
+                // }
             }
         });
     };
