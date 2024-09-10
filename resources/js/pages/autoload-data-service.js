@@ -651,7 +651,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-detail",
             formated: "$(title)",
             id: "_id",
-            query: ["_id"],
+            query: ["_id", "allocated_entity", "related_id"],
             version: 2,
         },
 
