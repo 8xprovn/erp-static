@@ -2053,9 +2053,17 @@ const AutoloadDataService = (function () {
             for (const value of response) {
                 const id = value[item.fk];
                 objDatav[id] = value;
-    
-                const data_save = { ...value };
-                delete data_save._id;
+                
+                let data_save = {};
+                if (item.indexdFormat) {
+                    const keys = item.indexdFormat;
+                    data_save = Object.fromEntries(
+                        Object.entries(value).filter(([key]) => keys.includes(key))
+                    );
+                } else {
+                    data_save = { ...value }
+                    delete data_save._id;
+                }
     
                 if (Object.keys(objDatav).length > 0) {
                     await updateDomWithData(focusDom, objDatav, item);
