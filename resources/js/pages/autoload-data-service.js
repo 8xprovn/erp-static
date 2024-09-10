@@ -761,6 +761,8 @@ const AutoloadDataService = (function () {
             ],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status', 'type', 'email', 'phone', 'status', 'price', 'salary', 'method', 'teacher_type', 'rate'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/lms/setting-shifts",
@@ -1821,7 +1823,6 @@ const AutoloadDataService = (function () {
     function setDatabaseVersion(version) {
         localStorage.setItem(DB_VERSION_KEY, version);
     }
-    
     // Hàm mở IndexedDB với object store cụ thể
     async function openIndexedDB(objectStoreName) {
         objectStoreName = String(objectStoreName).replace(/\./g, '');
@@ -1865,15 +1866,15 @@ const AutoloadDataService = (function () {
                         
                         // Đóng cơ sở dữ liệu hiện tại và đợi một khoảng thời gian ngắn
                         db.close();
-                        await new Promise(resolve => setTimeout(resolve, 500)); // Đợi cơ sở dữ liệu đóng
+                        await new Promise(resolve => setTimeout(resolve, 100)); // Đợi cơ sở dữ liệu đóng
     
                         // Mở cơ sở dữ liệu với phiên bản mới
-                        return openIndexedDB(objectStoreName);
+                        return await openIndexedDB(objectStoreName);
                     } else {
                         return currentDb;
                     }
                 } catch (error) {
-                    console.error(`Lỗi khi kiểm tra object store: ${error}`);
+                    console.log(`Lỗi khi kiểm tra object store: ${error}`);
                     throw error;
                 } finally {
                     delete dbPromises[objectStoreName]; // Xóa bỏ promise sau khi hoàn tất
@@ -1886,12 +1887,10 @@ const AutoloadDataService = (function () {
     // Hàm lấy dữ liệu từ IndexedDB
     async function getDataFromIndexedDB(selectedId, objectStoreName) {
         objectStoreName = String(objectStoreName).replace(/\./g, '');
-    
         return new Promise((resolve, reject) => {
             if (!db) {
                 return reject('Database is not initialized');
             }
-    
             const transaction = db.transaction([objectStoreName], 'readonly');
             const objectStore = transaction.objectStore(objectStoreName);
             const request = objectStore.get(Number(selectedId));
@@ -1933,7 +1932,7 @@ const AutoloadDataService = (function () {
     async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
         try {
             await checkAndCreateObjectStore(item.dom); // Đảm bảo object store đã được tạo
-    
+            await new Promise(resolve => setTimeout(resolve, 1000));
             const idsToFetch = [];
             const objDatav = {};
     
@@ -1954,7 +1953,7 @@ const AutoloadDataService = (function () {
                 await fetchDataAndUpdateDOM(item, idsToFetch, focusDom);
             }
         } catch (error) {
-          console.error('Error in getMissingDataFromIndexedDB:', error);
+          console.log('Error in getMissingDataFromIndexedDB:', error);
         }
     }
     
@@ -2048,7 +2047,7 @@ const AutoloadDataService = (function () {
             }
     
         } catch (error) {
-          console.error("Error in AJAX request:", error);
+          console.log("Error in AJAX request:", error);
         }
     }
     
