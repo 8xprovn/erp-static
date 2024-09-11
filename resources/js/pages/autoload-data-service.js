@@ -978,6 +978,8 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status', 'parent', 'manager_id', 'code'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/hr/setting/category",
