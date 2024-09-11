@@ -725,6 +725,8 @@ const AutoloadDataService = (function () {
             query: ["brand_id", "contact_id", "status", "course_level_id", "type"], // query ko bat buoc
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','course_level_id', 'description', 'lesson_num', 'number_unit', 'status', 'unit', 'price', 'type', 'type_code'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/lms/course-levels",
@@ -1687,53 +1689,334 @@ const AutoloadDataService = (function () {
             }
         });
     };
-    let dbs = {};  // Đối tượng để lưu trữ các kết nối đến các cơ sở dữ liệu khác nhau
-    const DB_VERSION_KEY = 'dbVersion';
-    const DEFAULT_DB_VERSION = 1;
+    // let dbs = {};  // Đối tượng để lưu trữ các kết nối đến các cơ sở dữ liệu khác nhau
+    // const DB_VERSION_KEY = 'dbVersion';
+    // const DEFAULT_DB_VERSION = 1;
 
-    // Lấy phiên bản cơ sở dữ liệu từ localStorage
-    function getDatabaseVersion(dbName) {
-        const version = localStorage.getItem(`${DB_VERSION_KEY}_${dbName}`);
-        return version ? parseInt(version, 10) : DEFAULT_DB_VERSION;
-    }
+    // // Lấy phiên bản cơ sở dữ liệu từ localStorage
+    // function getDatabaseVersion(dbName) {
+    //     const version = localStorage.getItem(`${DB_VERSION_KEY}_${dbName}`);
+    //     return version ? parseInt(version, 10) : DEFAULT_DB_VERSION;
+    // }
 
-    // Đặt phiên bản cơ sở dữ liệu vào localStorage
-    function setDatabaseVersion(dbName, version) {
-        localStorage.setItem(`${DB_VERSION_KEY}_${dbName}`, version);
-    }
+    // // Đặt phiên bản cơ sở dữ liệu vào localStorage
+    // function setDatabaseVersion(dbName, version) {
+    //     localStorage.setItem(`${DB_VERSION_KEY}_${dbName}`, version);
+    // }
 
-    // Mở một cơ sở dữ liệu IndexedDB cụ thể với tên và phiên bản
-    function openIndexedDB(dbName, objectStoreName) {
-        return new Promise((resolve, reject) => {
-            let version = getDatabaseVersion(dbName);
-            const request = indexedDB.open(dbName, version);
+    // // Mở một cơ sở dữ liệu IndexedDB cụ thể với tên và phiên bản
+    // function openIndexedDB(dbName, objectStoreName) {
+    //     return new Promise((resolve, reject) => {
+    //         let version = getDatabaseVersion(dbName);
+    //         const request = indexedDB.open(dbName, version);
 
-            request.onupgradeneeded = (event) => {
-                const db = event.target.result;
-                if (!db.objectStoreNames.contains(objectStoreName)) {
-                    db.createObjectStore(objectStoreName, { keyPath: '_id' });
+    //         request.onupgradeneeded = (event) => {
+    //             const db = event.target.result;
+    //             if (!db.objectStoreNames.contains(objectStoreName)) {
+    //                 db.createObjectStore(objectStoreName, { keyPath: '_id' });
+    //             }
+    //         };
+
+    //         request.onsuccess = (event) => {
+    //             dbs[dbName] = event.target.result;
+    //             resolve(dbs[dbName]);
+    //         };
+
+    //         request.onerror = (event) => {
+    //             reject(`IndexedDB error: ${event.target.errorCode}`);
+    //         };
+    //     });
+    // }
+
+    // // Lấy dữ liệu từ một cơ sở dữ liệu cụ thể
+    // function getDataFromIndexedDB(dbName, objectStoreName, selectedId) {
+    //     return new Promise((resolve, reject) => {
+    //         if (!dbs[dbName]) {
+    //             return reject('Database is not initialized');
+    //         }
+
+    //         const transaction = dbs[dbName].transaction([objectStoreName], 'readonly');
+    //         const objectStore = transaction.objectStore(objectStoreName);
+    //         const request = objectStore.get(Number(selectedId));
+
+    //         request.onsuccess = (event) => {
+    //             resolve(request.result ? request.result : null);
+    //         };
+
+    //         request.onerror = (event) => {
+    //             reject('Error querying IndexedDB');
+    //         };
+    //     });
+    // }
+
+    // // Lưu dữ liệu vào một cơ sở dữ liệu cụ thể
+    // function saveDataToIndexedDB(dbName, objectStoreName, id, data) {
+    //     dbName = String(dbName).replace(/\./g, '');
+    //     objectStoreName = String(objectStoreName).replace(/\./g, '');
+    //     return new Promise((resolve, reject) => {
+    //         if (!dbs[dbName]) {
+    //             return reject('Database is not initialized');
+    //         }
+
+    //         const transaction = dbs[dbName].transaction([objectStoreName], 'readwrite');
+    //         const objectStore = transaction.objectStore(objectStoreName);
+    //         const request = objectStore.put({ _id: id, ...data });
+
+    //         request.onsuccess = () => {
+    //             resolve();
+    //         };
+
+    //         request.onerror = (event) => {
+    //             reject(`Error saving to IndexedDB: ${event.target.errorCode}`);
+    //         };
+    //     });
+    // }
+
+    // // Kiểm tra và tạo object store trong cơ sở dữ liệu
+    // function checkAndCreateObjectStore(dbName, objectStoreName) {
+    //     return new Promise(async (resolve, reject) => {
+    //         try {
+    //             // Mở cơ sở dữ liệu
+    //             const existingDB = await openIndexedDB(dbName, objectStoreName);
+    //             if (!existingDB.objectStoreNames.contains(objectStoreName)) {
+    //                 // Tăng phiên bản và mở lại cơ sở dữ liệu để tạo object store mới
+    //                 let version = getDatabaseVersion(dbName) + 1;
+    //                 setDatabaseVersion(dbName, version);
+    //                 existingDB.close();
+    //                 await new Promise(resolve => setTimeout(resolve, 200)); 
+    //                 const newDB = await openIndexedDB(dbName, objectStoreName);
+    //                 resolve(newDB);
+    //             } else {
+    //                 resolve(existingDB);
+    //             }
+    //         } catch (error) {
+    //             reject(`Lỗi khi kiểm tra object store: ${error}`);
+    //         }
+    //     });
+    // }
+
+    // // Hàm kiểm tra dữ liệu thiếu trong IndexedDB và cập nhật DOM
+    // async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
+    //     const dbName = String(item.dom).replace(/\./g, '');  // Tên cơ sở dữ liệu tương ứng với objectStoreName
+    //     await checkAndCreateObjectStore(dbName, dbName);
+    //     const idsToFetch = [];
+    //     const objDatav = {};
+
+    //     for (const id of arrId) {
+    //         const data = await getDataFromIndexedDB(dbName, dbName, id);
+    //         if (!data) {
+    //             idsToFetch.push(id);
+    //         } else {
+    //             objDatav[id] = data;
+    //         }
+    //     }
+        
+    //     if (objDatav && Object.keys(objDatav).length > 0) { 
+    //         await updateDomWithData(focusDom, objDatav, item);
+    //     }
+    //     if (idsToFetch && idsToFetch.length > 0) {
+    //         fetchDataAndUpdateDOM(item, idsToFetch, focusDom);
+    //     }
+    // }
+
+    // // Hàm cập nhật DOM với dữ liệu
+    // function updateDomWithData(focusDom, objData, item) {
+    //     focusDom.each(function () {
+    //         if ($(this).prop("tagName") == "SELECT") {
+    //             const selectData = $(this);
+    //             const tmp = $(this).attr("data-format") || item.formated;
+    //             selectData.find("option").each(function () {
+    //                 const v = $(this).val();
+    //                 if (objData[v]) {
+    //                     const replaced = formatReplace(tmp, objData[v]);
+    //                     $(this).text(replaced);
+    //                     setTimeout(() => {
+    //                         selectData.trigger("change_select2");
+    //                     }, 1000);
+    //                 }
+    //             });
+    //             selectData.trigger("change");
+    //         } else {
+    //             const v = $(this).attr(item.attr);
+    //             if (objData[v]) {
+    //                 const tmp = $(this).attr("data-format") || item.formated;
+    //                 if (item.link) {
+    //                     $(this).html(
+    //                         `<a href="${formatReplace(item.link, objData[v])}" class="load_not_ajax" target="_blank">
+    //                             ${formatReplace(tmp, objData[v])}
+    //                         </a>`
+    //                     );
+    //                 } else {
+    //                     $(this).text(formatReplace(tmp, objData[v]));
+    //                 }
+    //             }
+    //         }
+    //     });
+    // }
+
+    // // Hàm gọi API và cập nhật DOM
+    // async function fetchDataAndUpdateDOM(item, arrId, focusDom) {
+    //     const inqId = arrId;
+    //     let objParams = {};
+
+    //     if (item.version === 2) {
+    //         objParams[item.fk] = inqId;
+    //     } else {
+    //         objParams[item.fk] = { inq: inqId };
+    //     }
+
+    //     // Replace url arg
+    //     let urlQuery = item.url;
+    //     if (item.url_arg) {
+    //         $.each(item.url_arg, function (k, v) {
+    //             urlQuery = urlQuery.replace("{" + k + "}", objParams[v]);
+    //             delete objParams[v];
+    //         });
+    //     }
+    //     let dataGet = {};
+    //     if (!$.isEmptyObject(objParams)) {
+    //         if (item.version == 2) {
+    //             dataGet = { filter: objParams, limit: 1000 };
+    //         } else {
+    //             dataGet = {
+    //                 filter: JSON.stringify({
+    //                     where: objParams,
+    //                     limit: 500,
+    //                 }),
+    //             };
+    //         }
+    //     }
+        
+    //     // Ktra query bắt buộc
+    //     try {
+    //         const response = await ajaxRequest(urlQuery, dataGet, item);
+    //         if (response.error) {
+    //             return false;
+    //         }
+    //         const objDatav = {};
+    //         for (const value of response) {
+    //             const id = value[item.fk];
+    //             objDatav[id] = value;
+    //             let data_save = {};
+    //             if (item.indexdFormat) {
+    //                 const keys = item.indexdFormat;
+    //                 data_save = Object.fromEntries(
+    //                     Object.entries(value).filter(([key]) => keys.includes(key))
+    //                 );
+    //             } else {
+    //                 data_save = { ...value }
+    //                 delete data_save._id;
+    //             }
+    //             if (objDatav && Object.keys(objDatav).length > 0) { 
+    //                 await updateDomWithData(focusDom, objDatav, item);
+    //             }
+    //             await saveDataToIndexedDB(item.dom, item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
+    //         }
+    //     } catch (error) {
+    //         console.log("Error in AJAX request:", error);
+    //     }
+    // }
+
+    // // Hàm gửi yêu cầu AJAX
+    // function ajaxRequest(url, dataGet, item) {
+    //     return new Promise((resolve, reject) => {
+    //         $.ajax({
+    //             url: url,
+    //             type: "GET",
+    //             dataType: "json",
+    //             data: dataGet,
+    //             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+    //             headers: {
+    //                 Authorization: "Bearer " + getCookie("imap_authen_access_token"),
+    //             },
+    //             success: function (response) {
+    //                 resolve(response);
+    //             },
+    //             error: function (error) {
+    //                 reject(error);
+    //             }
+    //         });
+    //     });
+    // }
+    const VERSION = 1;  // Đặt phiên bản cho cơ sở dữ liệu
+    const dbName = "ERPDBV1";  // Tên cơ sở dữ liệu
+    //luc them ojectstorename cần tăng version lên
+    const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course"];  // Danh sách các tên ObjectStore
+    const CLEAR_DELAY = 3 * 24 * 60 * 60 * 1000; ; //Thời gian trì hoãn xóa dữ liệu
+
+    let db = null;  // Đối tượng để lưu trữ kết nối đến cơ sở dữ liệu
+
+    // Tạo cơ sở dữ liệu với nhiều object store
+    function createDatabaseWithStores() {
+        const version = VERSION;
+        const request = indexedDB.open(dbName, version);
+
+        request.onupgradeneeded = function(event) {
+            const db = event.target.result;
+            let  storeCreated = false;
+            
+            objectStoreNames.forEach(storeName => {
+            storeName = String(storeName).replace(/\./g, '');
+                if (!db.objectStoreNames.contains(storeName)) {
+                    db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+                    storeCreated = true;
                 }
+            });
+        
+            
+            if (storeCreated) {
+            // Nếu có object store mới được tạo ra, đặt lịch trình xóa dữ liệu
+            setClearDataScheduled();
+            }
+        };
+
+        request.onsuccess = function(event) {
+            db = event.target.result;
+        };
+
+        request.onerror = function(event) {
+            console.log("Lỗi cơ sở dữ liệu: " + event.target.errorCode);
+        };
+    }
+
+    // Mở cơ sở dữ liệu và lưu trữ kết nối
+    function openIndexedDB() {
+        return new Promise((resolve, reject) => {
+            if (db) {
+                resolve(db);
+                return;
+            }
+
+            const request = indexedDB.open(dbName, VERSION);
+
+            request.onupgradeneeded = function(event) {
+                const db = event.target.result;
+                objectStoreNames.forEach(storeName => {
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+                    }
+                });
             };
 
-            request.onsuccess = (event) => {
-                dbs[dbName] = event.target.result;
-                resolve(dbs[dbName]);
+            request.onsuccess = function(event) {
+                db = event.target.result;
+                resolve(db);
             };
 
-            request.onerror = (event) => {
+            request.onerror = function(event) {
                 reject(`IndexedDB error: ${event.target.errorCode}`);
             };
         });
     }
 
-    // Lấy dữ liệu từ một cơ sở dữ liệu cụ thể
-    function getDataFromIndexedDB(dbName, objectStoreName, selectedId) {
+    // Lấy dữ liệu từ một object store trong cơ sở dữ liệu cụ thể
+    function getDataFromIndexedDB(objectStoreName, selectedId) {
         return new Promise((resolve, reject) => {
-            if (!dbs[dbName]) {
+            if (!db) {
                 return reject('Database is not initialized');
             }
 
-            const transaction = dbs[dbName].transaction([objectStoreName], 'readonly');
+            const transaction = db.transaction([objectStoreName], 'readonly');
             const objectStore = transaction.objectStore(objectStoreName);
             const request = objectStore.get(Number(selectedId));
 
@@ -1747,18 +2030,17 @@ const AutoloadDataService = (function () {
         });
     }
 
-    // Lưu dữ liệu vào một cơ sở dữ liệu cụ thể
-    function saveDataToIndexedDB(dbName, objectStoreName, id, data) {
-        dbName = String(dbName).replace(/\./g, '');
+    // Lưu dữ liệu vào một object store trong cơ sở dữ liệu cụ thể
+    function saveDataToIndexedDB(objectStoreName, id, data) {
         objectStoreName = String(objectStoreName).replace(/\./g, '');
         return new Promise((resolve, reject) => {
-            if (!dbs[dbName]) {
+            if (!db) {
                 return reject('Database is not initialized');
             }
 
-            const transaction = dbs[dbName].transaction([objectStoreName], 'readwrite');
+            const transaction = db.transaction([objectStoreName], 'readwrite');
             const objectStore = transaction.objectStore(objectStoreName);
-            const request = objectStore.put({ _id: id, ...data });
+            const request = objectStore.put({ id: id, ...data });
 
             request.onsuccess = () => {
                 resolve();
@@ -1770,48 +2052,32 @@ const AutoloadDataService = (function () {
         });
     }
 
-    // Kiểm tra và tạo object store trong cơ sở dữ liệu
-    function checkAndCreateObjectStore(dbName, objectStoreName) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                // Mở cơ sở dữ liệu
-                const existingDB = await openIndexedDB(dbName, objectStoreName);
-                if (!existingDB.objectStoreNames.contains(objectStoreName)) {
-                    // Tăng phiên bản và mở lại cơ sở dữ liệu để tạo object store mới
-                    let version = getDatabaseVersion(dbName) + 1;
-                    setDatabaseVersion(dbName, version);
-                    existingDB.close();
-                    await new Promise(resolve => setTimeout(resolve, 200)); 
-                    const newDB = await openIndexedDB(dbName, objectStoreName);
-                    resolve(newDB);
-                } else {
-                    resolve(existingDB);
-                }
-            } catch (error) {
-                reject(`Lỗi khi kiểm tra object store: ${error}`);
-            }
-        });
-    }
-
     // Hàm kiểm tra dữ liệu thiếu trong IndexedDB và cập nhật DOM
     async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
-        const dbName = String(item.dom).replace(/\./g, '');  // Tên cơ sở dữ liệu tương ứng với objectStoreName
-        await checkAndCreateObjectStore(dbName, dbName);
+        const objectStoreName = String(item.dom).replace(/\./g, '');  // Tên object store
+
+        // Mở cơ sở dữ liệu nếu chưa được mở
+        await openIndexedDB();
+
         const idsToFetch = [];
         const objDatav = {};
 
+        // Lấy dữ liệu từ IndexedDB
         for (const id of arrId) {
-            const data = await getDataFromIndexedDB(dbName, dbName, id);
+            const data = await getDataFromIndexedDB(objectStoreName, id);
             if (!data) {
-                idsToFetch.push(id);
+                idsToFetch.push(id);  // Thêm vào danh sách các ID cần lấy thêm dữ liệu
             } else {
-                objDatav[id] = data;
+                objDatav[id] = data;  // Lưu dữ liệu vào object
             }
         }
-        
-        if (objDatav && Object.keys(objDatav).length > 0) { 
+
+        // Cập nhật DOM với dữ liệu đã có
+        if (objDatav && Object.keys(objDatav).length > 0) {
             await updateDomWithData(focusDom, objDatav, item);
         }
+
+        // Lấy thêm dữ liệu từ nguồn bên ngoài nếu cần
         if (idsToFetch && idsToFetch.length > 0) {
             fetchDataAndUpdateDOM(item, idsToFetch, focusDom);
         }
@@ -1908,7 +2174,7 @@ const AutoloadDataService = (function () {
                 if (objDatav && Object.keys(objDatav).length > 0) { 
                     await updateDomWithData(focusDom, objDatav, item);
                 }
-                await saveDataToIndexedDB(item.dom, item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
+                await saveDataToIndexedDB(item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
             }
         } catch (error) {
             console.log("Error in AJAX request:", error);
@@ -1935,6 +2201,61 @@ const AutoloadDataService = (function () {
                 }
             });
         });
+    }
+    // set thoi gian xoa data
+    function setClearDataScheduled() {
+    const now = Date.now();
+    const clearTime = now + CLEAR_DELAY;
+    
+    localStorage.setItem('clearDataIndexDBScheduled', clearTime.toString());
+    }
+    // check thoi gian xoa data
+    function checkAndPerformScheduledClear() {
+    const scheduledClearTime = localStorage.getItem('clearDataIndexDBScheduled');
+
+    if (scheduledClearTime) {
+        const now = Date.now();
+        if (now >= parseInt(scheduledClearTime, 10)) {
+            // Nếu đến thời gian xóa dữ liệu, thực hiện xóa
+            clearAllObjectStores().catch(error => console.log(`Error in scheduled clear: ${error}`));
+        }
+    } else {
+        setClearDataScheduled();
+    }
+    }
+    // xoa data
+    function clearAllObjectStores() {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const db = await openIndexedDB();
+            const transaction = db.transaction(objectStoreNames, 'readwrite');
+
+            objectStoreNames.forEach(storeName => {
+                const objectStore = transaction.objectStore(storeName);
+                const request = objectStore.clear();
+
+                request.onsuccess = () => {
+                    console.log(`Cleared ${storeName}`);
+                };
+
+                request.onerror = (event) => {
+                    console.log(`Error clearing ${storeName}: ${event.target.errorCode}`);
+                };
+            });
+
+            transaction.oncomplete = () => {
+                // Đặt lại thời gian xóa sau khi xóa dữ liệu
+                setClearDataScheduled();
+                resolve();
+            };
+
+            transaction.onerror = (event) => {
+                reject(`Error clearing object stores: ${event.target.errorCode}`);
+            };
+        } catch (error) {
+            reject(`Error in clearAllObjectStores: ${error}`);
+        }
+    });
     }
     var selectData = function (parentDom) {
         var __cache = [];
@@ -2186,6 +2507,8 @@ const AutoloadDataService = (function () {
             //console.log(parentDom);
             replaceData(parentDom);
             selectData(parentDom);
+            createDatabaseWithStores();
+            checkAndPerformScheduledClear();
         },
     };
 })();
