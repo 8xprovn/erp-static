@@ -651,12 +651,20 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-detail",
             formated: "$(title)",
             id: "_id",
-            query: ["_id"],
+            query: ["_id", "allocated_entity", "related_id"],
             version: 2,
         },
 
         suppliers: {
             url: window.API_SERVICE_URL_V2 + "/asset/suppliers",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
+
+        allocation_reason: {
+            url: window.API_SERVICE_URL_V2 + "/asset/allocation-reason",
             formated: "$(name)",
             id: "_id",
             query: ["_id"],
@@ -1486,6 +1494,15 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/asset/suppliers",
             dom: ".em-suppliers",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/allocation-reason",
+            dom: ".em-allocation_reason",
             attr: "data-id",
             formated: "$(name)",
             query: ["_id"],
