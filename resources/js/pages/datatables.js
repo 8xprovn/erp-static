@@ -134,6 +134,43 @@ var Datatable = function() {
         }
 
 
+        if ($('.datatable-fixed-left-search').length > 0) {
+            if ($.fn.DataTable.isDataTable('.datatable-fixed-left-search')) {
+                $('.datatable-fixed-left-search').DataTable().destroy();
+            }
+            //var  setTimeout(function(){
+                //fixedTable.columns.adjust();
+                $('.datatable-fixed-left-search').each(function(){
+                    var dataPosition = $(this).attr("data-position") || 1;
+                    var dataRightPosition = $(this).attr("data-right-position") || 0;
+                    var fixedColumns =  {
+                        leftColumns: dataPosition,
+                    };
+                    if (dataRightPosition > 0) {
+                        fixedColumns.rightColumns = dataRightPosition;
+                    }
+                    var fixedTable = $(this).DataTable({
+                        scrollX: true,
+                        paging: false,
+                        dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
+                        searching: true,
+                        bInfo : false,
+                        ordering: false,
+                        scrollY: '60vh',
+                        scrollCollapse: true,
+                        //fixedColumns: true,
+                        fixedColumns: fixedColumns,
+                        buttons: [],
+                        
+                    }); 
+                    arrTimeout.push(setInterval(function(){
+                         fixedTable.columns.adjust();
+                    }, 2000));
+                })
+            //}, 2000);
+        }
+
+
 
 
         // Left and right fixed columns
@@ -170,6 +207,35 @@ var Datatable = function() {
         // if (setTimeoutTable){
         //     clearTimeout(setTimeoutTable);
         // }
+
+        var dataTableConfigSearch = {
+            responsive: true,
+            scrollX: false,
+            dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
+            retrieve: true,
+            scrollY: '60vh',
+            scrollCollapse: true,
+            paging: false,
+            searching: true,
+            bInfo : false,
+            ordering: false,
+            buttons: [ 
+                // {
+                //     text: 'Hiển thị',
+                //     extend: 'colvis',
+                //     className: 'btn btn-teal ml-2 dropdown-toggle'
+                // }
+            ],
+            //stateSave: true
+            //paging: false
+            /*columnDefs: [
+                {
+                    className: 'control',
+                    orderable: false,
+                    targets: -1
+                }
+            ]*/
+        }
         
 
         parentDom.find('.datatable-fixed-both').each(function(){
@@ -181,6 +247,23 @@ var Datatable = function() {
         if ($('.datatable-fixed-both').length > 0) {
             arrWait.push(setTimeout(function(){
                 var fixedTable = parentDom.find('.datatable-fixed-both').DataTable(dataTableConfig)
+                fixedTable.buttons().container().appendTo(".datatable-button");
+                arrTimeout.push(setInterval(function(){
+                    fixedTable.columns.adjust();
+                }, 2000));
+            }, 3000)
+            );
+        }
+
+        parentDom.find('.datatable-fixed-both-search').each(function(){
+            if ($.fn.DataTable.fnIsDataTable(this)) {
+                this.distroy();
+            }
+        });
+        //fixedTable.columns.adjust();
+        if ($('.datatable-fixed-both-search').length > 0) {
+            arrWait.push(setTimeout(function(){
+                var fixedTable = parentDom.find('.datatable-fixed-both-search').DataTable(dataTableConfigSearch)
                 fixedTable.buttons().container().appendTo(".datatable-button");
                 arrTimeout.push(setInterval(function(){
                     fixedTable.columns.adjust();

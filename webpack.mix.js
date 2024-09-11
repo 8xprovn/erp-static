@@ -17,7 +17,7 @@ const mix = require('laravel-mix');
 // 	'resources/js/components/invoice.js'
 // ];
 
-mix.js('resources/js/app.js', 'public/js')
+mix.js('resources/js/app.js', 'public/master/js')
     .sass('resources/sass/app.scss', 'public/master/css')
 mix.scripts([
     'resources/js/main/bootstrap.bundle.min.js',

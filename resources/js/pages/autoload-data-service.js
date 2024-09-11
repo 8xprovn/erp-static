@@ -251,7 +251,7 @@ const AutoloadDataService = (function () {
             //'search_param': 'name',
             formated: "$(name)",
             id: "_id",
-            query: ["brand_id", "contact_id", "status", "course_level_id"],
+            query: ["brand_id", "contact_id", "status", "course_level_id", "type"],
             version: 2,
         },
         "course-search": {
@@ -563,8 +563,115 @@ const AutoloadDataService = (function () {
             query: ["_id","name", "code", "status", "type", "type_module"],
             version: 2,
         },
+        payroll_template: {
+            url: window.API_SERVICE_URL_V2 + "/payroll/payroll-template",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
 
         /////// End payroll v2////////
+
+
+        ///// asset /////
+        allocation_type: {
+            url: window.API_SERVICE_URL_V2 + "/asset/allocation-type",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "is_template"],
+            version: 2,
+        },
+
+        allocation_template: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-template",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
+
+        asset_unit: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-units",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
+
+        asset_attribute: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-attributes",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
+
+        asset_category: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-categories",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "status"],
+            version: 2,
+        },
+
+        assets: {
+            url: window.API_SERVICE_URL_V2 + "/asset/assets",
+            formated: "$(title) - $(code)",
+            id: "_id",
+            query: ["_id", "unit_id", "category_id"],
+            version: 2,
+        },
+
+        asset_attribute_group: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset_attribute_group",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "asset_id"],
+            version: 2,
+        },
+
+        asset_setting_key: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset_setting_key",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
+
+        asset_allocation: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation",
+            formated: "$(title) - $(code)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
+
+        asset_allocation_detail: {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-detail",
+            formated: "$(title)",
+            id: "_id",
+            query: ["_id", "allocated_entity", "related_id"],
+            version: 2,
+        },
+
+        suppliers: {
+            url: window.API_SERVICE_URL_V2 + "/asset/suppliers",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
+
+        allocation_reason: {
+            url: window.API_SERVICE_URL_V2 + "/asset/allocation-reason",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
+
+        ///// end asset /////
     };
     var arrDomAutoFill = [
         {
@@ -577,6 +684,8 @@ const AutoloadDataService = (function () {
             query: ["type", "branch_id", "manager_id", "department_id"],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'status'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/brand",
@@ -586,6 +695,8 @@ const AutoloadDataService = (function () {
             query: ["_id", "status"],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status'],
         },
         ////////////// EDU //////////
         {
@@ -611,7 +722,7 @@ const AutoloadDataService = (function () {
             dom: ".em-course",
             attr: "data-id",
             formated: "$(name)",
-            query: ["brand_id", "contact_id", "status", "course_level_id"], // query ko bat buoc
+            query: ["brand_id", "contact_id", "status", "course_level_id", "type"], // query ko bat buoc
             fk: "_id",
             version: 2,
         },
@@ -666,6 +777,8 @@ const AutoloadDataService = (function () {
             ],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status', 'type', 'email', 'phone', 'status', 'price', 'salary', 'method', 'teacher_type', 'rate'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/lms/setting-shifts",
@@ -832,6 +945,8 @@ const AutoloadDataService = (function () {
             query: ["brand_id", "city_code"],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/city",
@@ -871,6 +986,8 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status', 'parent', 'manager_id', 'code'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/hr/setting/category",
@@ -1093,6 +1210,15 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
+            url: window.API_SERVICE_URL_V2 + "/finance/transaction-type",
+            dom: ".finance-transaction-type",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
             url: window.API_SERVICE_URL + "/finance/vouchers-category",
             dom: ".finance_vouchers_category",
             attr: "data-id",
@@ -1260,16 +1386,137 @@ const AutoloadDataService = (function () {
             query: ["_id", "status"],
             fk: "_id",
             version: 2,
-        }
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/payroll/payroll-template",
+            dom: ".em-payroll-template",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
 
 
         /////// End payroll v2////////
+
+        ///// asset /////
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/allocation-type",
+            dom: ".em-allocation-type",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "is_template"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-template",
+            dom: ".em-allocation-template",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-units",
+            dom: ".em-asset-unit",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-attributes",
+            dom: ".em-asset-attribute",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-categories",
+            dom: ".em-asset-category",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/assets",
+            dom: ".em-asset",
+            attr: "data-id",
+            formated: "$(title) - $(code)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset_attribute_group",
+            dom: ".em-asset_attribute_group",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset_setting_key",
+            dom: ".em-asset_setting_key",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation",
+            dom: ".em-asset_allocation",
+            attr: "data-id",
+            formated: "$(title) - $(code)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/asset-allocation-detail",
+            dom: ".em-asset_allocation_detail",
+            attr: "data-id",
+            formated: "$(title)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/suppliers",
+            dom: ".em-suppliers",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/allocation-reason",
+            dom: ".em-allocation_reason",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        }
+        ///// end asset /////
     ];
 
     //
     // Setup module components
     //
 
+    
     // Basic Datatable examples
     var replaceData = function (parentDom) {
         $.each(arrDomAutoFill, function (idx, item) {
@@ -1277,6 +1524,7 @@ const AutoloadDataService = (function () {
             if (!focusDom.length) {
                 return true;
             }
+            
 
             /////////// FIX TAM CHO CAC DOM DANG CHAY ///////////
 
@@ -1319,34 +1567,41 @@ const AutoloadDataService = (function () {
                 } else {
                     objParams[item.fk] = { inq: inqId };
                 }
+                
 
-                //replace url arg
-                var urlQuery = item.url;
-                if (item.url_arg) {
-                    $.each(item.url_arg, function (k, v) {
-                        urlQuery = urlQuery.replace(
-                            "{" + k + "}",
-                            objParams[v]
-                        );
-                        delete objParams[v];
-                    });
-                }
-                var dataGet = {};
-                if (!$.isEmptyObject(objParams)) {
-                    if (item.version == 2) {
-                        dataGet = { filter: objParams, limit: 1000 };
-                    } else {
-                        dataGet = {
-                            filter: JSON.stringify({
-                                where: objParams,
-                                limit: 500,
-                            }),
-                        };
-                    }
-                }
-                //console.log(urlQuery,objParams);
-                // ktra query bat buoc
-                $.ajax({
+                if(item.indexedDB && item.indexedDB == 'yes') {
+                  if (objParams._id && objParams._id.length > 0) {
+                    getMissingDataFromIndexedDB(objParams._id, item, focusDom)
+                  }
+                } else {
+
+                  //replace url arg
+                  var urlQuery = item.url;
+                  if (item.url_arg) {
+                      $.each(item.url_arg, function (k, v) {
+                          urlQuery = urlQuery.replace(
+                              "{" + k + "}",
+                              objParams[v]
+                          );
+                          delete objParams[v];
+                      });
+                  }
+                  var dataGet = {};
+                  if (!$.isEmptyObject(objParams)) {
+                      if (item.version == 2) {
+                          dataGet = { filter: objParams, limit: 1000 };
+                      } else {
+                          dataGet = {
+                              filter: JSON.stringify({
+                                  where: objParams,
+                                  limit: 500,
+                              }),
+                          };
+                      }
+                  }
+                  // ktra query bat buoc
+                  
+                  $.ajax({
                     url: urlQuery,
                     type: "GET",
                     dataType: "json",
@@ -1427,10 +1682,260 @@ const AutoloadDataService = (function () {
                         });
                     },
                     error: function () { },
-                });
+                  });
+                }
             }
         });
     };
+    let dbs = {};  // Đối tượng để lưu trữ các kết nối đến các cơ sở dữ liệu khác nhau
+    const DB_VERSION_KEY = 'dbVersion';
+    const DEFAULT_DB_VERSION = 1;
+
+    // Lấy phiên bản cơ sở dữ liệu từ localStorage
+    function getDatabaseVersion(dbName) {
+        const version = localStorage.getItem(`${DB_VERSION_KEY}_${dbName}`);
+        return version ? parseInt(version, 10) : DEFAULT_DB_VERSION;
+    }
+
+    // Đặt phiên bản cơ sở dữ liệu vào localStorage
+    function setDatabaseVersion(dbName, version) {
+        localStorage.setItem(`${DB_VERSION_KEY}_${dbName}`, version);
+    }
+
+    // Mở một cơ sở dữ liệu IndexedDB cụ thể với tên và phiên bản
+    function openIndexedDB(dbName, objectStoreName) {
+        return new Promise((resolve, reject) => {
+            let version = getDatabaseVersion(dbName);
+            const request = indexedDB.open(dbName, version);
+
+            request.onupgradeneeded = (event) => {
+                const db = event.target.result;
+                if (!db.objectStoreNames.contains(objectStoreName)) {
+                    db.createObjectStore(objectStoreName, { keyPath: '_id' });
+                }
+            };
+
+            request.onsuccess = (event) => {
+                dbs[dbName] = event.target.result;
+                resolve(dbs[dbName]);
+            };
+
+            request.onerror = (event) => {
+                reject(`IndexedDB error: ${event.target.errorCode}`);
+            };
+        });
+    }
+
+    // Lấy dữ liệu từ một cơ sở dữ liệu cụ thể
+    function getDataFromIndexedDB(dbName, objectStoreName, selectedId) {
+        return new Promise((resolve, reject) => {
+            if (!dbs[dbName]) {
+                return reject('Database is not initialized');
+            }
+
+            const transaction = dbs[dbName].transaction([objectStoreName], 'readonly');
+            const objectStore = transaction.objectStore(objectStoreName);
+            const request = objectStore.get(Number(selectedId));
+
+            request.onsuccess = (event) => {
+                resolve(request.result ? request.result : null);
+            };
+
+            request.onerror = (event) => {
+                reject('Error querying IndexedDB');
+            };
+        });
+    }
+
+    // Lưu dữ liệu vào một cơ sở dữ liệu cụ thể
+    function saveDataToIndexedDB(dbName, objectStoreName, id, data) {
+        dbName = String(dbName).replace(/\./g, '');
+        objectStoreName = String(objectStoreName).replace(/\./g, '');
+        return new Promise((resolve, reject) => {
+            if (!dbs[dbName]) {
+                return reject('Database is not initialized');
+            }
+
+            const transaction = dbs[dbName].transaction([objectStoreName], 'readwrite');
+            const objectStore = transaction.objectStore(objectStoreName);
+            const request = objectStore.put({ _id: id, ...data });
+
+            request.onsuccess = () => {
+                resolve();
+            };
+
+            request.onerror = (event) => {
+                reject(`Error saving to IndexedDB: ${event.target.errorCode}`);
+            };
+        });
+    }
+
+    // Kiểm tra và tạo object store trong cơ sở dữ liệu
+    function checkAndCreateObjectStore(dbName, objectStoreName) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                // Mở cơ sở dữ liệu
+                const existingDB = await openIndexedDB(dbName, objectStoreName);
+                if (!existingDB.objectStoreNames.contains(objectStoreName)) {
+                    // Tăng phiên bản và mở lại cơ sở dữ liệu để tạo object store mới
+                    let version = getDatabaseVersion(dbName) + 1;
+                    setDatabaseVersion(dbName, version);
+                    existingDB.close();
+                    await new Promise(resolve => setTimeout(resolve, 200)); 
+                    const newDB = await openIndexedDB(dbName, objectStoreName);
+                    resolve(newDB);
+                } else {
+                    resolve(existingDB);
+                }
+            } catch (error) {
+                reject(`Lỗi khi kiểm tra object store: ${error}`);
+            }
+        });
+    }
+
+    // Hàm kiểm tra dữ liệu thiếu trong IndexedDB và cập nhật DOM
+    async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
+        const dbName = String(item.dom).replace(/\./g, '');  // Tên cơ sở dữ liệu tương ứng với objectStoreName
+        await checkAndCreateObjectStore(dbName, dbName);
+        const idsToFetch = [];
+        const objDatav = {};
+
+        for (const id of arrId) {
+            const data = await getDataFromIndexedDB(dbName, dbName, id);
+            if (!data) {
+                idsToFetch.push(id);
+            } else {
+                objDatav[id] = data;
+            }
+        }
+        
+        if (objDatav && Object.keys(objDatav).length > 0) { 
+            await updateDomWithData(focusDom, objDatav, item);
+        }
+        if (idsToFetch && idsToFetch.length > 0) {
+            fetchDataAndUpdateDOM(item, idsToFetch, focusDom);
+        }
+    }
+
+    // Hàm cập nhật DOM với dữ liệu
+    function updateDomWithData(focusDom, objData, item) {
+        focusDom.each(function () {
+            if ($(this).prop("tagName") == "SELECT") {
+                const selectData = $(this);
+                const tmp = $(this).attr("data-format") || item.formated;
+                selectData.find("option").each(function () {
+                    const v = $(this).val();
+                    if (objData[v]) {
+                        const replaced = formatReplace(tmp, objData[v]);
+                        $(this).text(replaced);
+                        setTimeout(() => {
+                            selectData.trigger("change_select2");
+                        }, 1000);
+                    }
+                });
+                selectData.trigger("change");
+            } else {
+                const v = $(this).attr(item.attr);
+                if (objData[v]) {
+                    const tmp = $(this).attr("data-format") || item.formated;
+                    if (item.link) {
+                        $(this).html(
+                            `<a href="${formatReplace(item.link, objData[v])}" class="load_not_ajax" target="_blank">
+                                ${formatReplace(tmp, objData[v])}
+                            </a>`
+                        );
+                    } else {
+                        $(this).text(formatReplace(tmp, objData[v]));
+                    }
+                }
+            }
+        });
+    }
+
+    // Hàm gọi API và cập nhật DOM
+    async function fetchDataAndUpdateDOM(item, arrId, focusDom) {
+        const inqId = arrId;
+        let objParams = {};
+
+        if (item.version === 2) {
+            objParams[item.fk] = inqId;
+        } else {
+            objParams[item.fk] = { inq: inqId };
+        }
+
+        // Replace url arg
+        let urlQuery = item.url;
+        if (item.url_arg) {
+            $.each(item.url_arg, function (k, v) {
+                urlQuery = urlQuery.replace("{" + k + "}", objParams[v]);
+                delete objParams[v];
+            });
+        }
+        let dataGet = {};
+        if (!$.isEmptyObject(objParams)) {
+            if (item.version == 2) {
+                dataGet = { filter: objParams, limit: 1000 };
+            } else {
+                dataGet = {
+                    filter: JSON.stringify({
+                        where: objParams,
+                        limit: 500,
+                    }),
+                };
+            }
+        }
+        
+        // Ktra query bắt buộc
+        try {
+            const response = await ajaxRequest(urlQuery, dataGet, item);
+            if (response.error) {
+                return false;
+            }
+            const objDatav = {};
+            for (const value of response) {
+                const id = value[item.fk];
+                objDatav[id] = value;
+                let data_save = {};
+                if (item.indexdFormat) {
+                    const keys = item.indexdFormat;
+                    data_save = Object.fromEntries(
+                        Object.entries(value).filter(([key]) => keys.includes(key))
+                    );
+                } else {
+                    data_save = { ...value }
+                    delete data_save._id;
+                }
+                if (objDatav && Object.keys(objDatav).length > 0) { 
+                    await updateDomWithData(focusDom, objDatav, item);
+                }
+                await saveDataToIndexedDB(item.dom, item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
+            }
+        } catch (error) {
+            console.log("Error in AJAX request:", error);
+        }
+    }
+
+    // Hàm gửi yêu cầu AJAX
+    function ajaxRequest(url, dataGet, item) {
+        return new Promise((resolve, reject) => {
+            $.ajax({
+                url: url,
+                type: "GET",
+                dataType: "json",
+                data: dataGet,
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                headers: {
+                    Authorization: "Bearer " + getCookie("imap_authen_access_token"),
+                },
+                success: function (response) {
+                    resolve(response);
+                },
+                error: function (error) {
+                    reject(error);
+                }
+            });
+        });
+    }
     var selectData = function (parentDom) {
         var __cache = [];
         parentDom.find(".select2_suggest").each(function () {
