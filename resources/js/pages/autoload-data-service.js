@@ -1691,7 +1691,7 @@ const AutoloadDataService = (function () {
     };
     
     const VERSION = 1;  // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV1";  // Tên cơ sở dữ liệu
+    const dbName = "ERPDBV2";  // Tên cơ sở dữ liệu
     //luc them ojectstorename cần tăng version lên
     const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course"];  // Danh sách các tên ObjectStore
     const CLEAR_DELAY = 3 * 24 * 60 * 60 * 1000; ; //Thời gian trì hoãn xóa dữ liệu
@@ -1710,7 +1710,7 @@ const AutoloadDataService = (function () {
             objectStoreNames.forEach(storeName => {
             storeName = String(storeName).replace(/\./g, '');
                 if (!db.objectStoreNames.contains(storeName)) {
-                    db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+                    db.createObjectStore(storeName, { keyPath: "_id", autoIncrement: true });
                     storeCreated = true;
                 }
             });
@@ -1745,7 +1745,7 @@ const AutoloadDataService = (function () {
                 const db = event.target.result;
                 objectStoreNames.forEach(storeName => {
                     if (!db.objectStoreNames.contains(storeName)) {
-                        db.createObjectStore(storeName, { keyPath: "id", autoIncrement: true });
+                        db.createObjectStore(storeName, { keyPath: "_id", autoIncrement: true });
                     }
                 });
             };
@@ -1792,7 +1792,7 @@ const AutoloadDataService = (function () {
 
             const transaction = db.transaction([objectStoreName], 'readwrite');
             const objectStore = transaction.objectStore(objectStoreName);
-            const request = objectStore.put({ id: id, ...data });
+            const request = objectStore.put({ _id: id, ...data });
 
             request.onsuccess = () => {
                 resolve();
