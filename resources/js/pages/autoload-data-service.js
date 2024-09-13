@@ -852,15 +852,6 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
-            url: window.API_SERVICE_URL_V2 + "/hr/setting-shifts",
-            dom: ".em-hr-shifts",
-            attr: "data-id",
-            formated: "$(name)",
-            query: ["_id"],
-            fk: "_id",
-            version: 2,
-        },
-        {
             url: window.API_SERVICE_URL_V2 + "/hr/positions",
             dom: ".em-position",
             attr: "data-id",
