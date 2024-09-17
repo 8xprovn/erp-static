@@ -2254,6 +2254,7 @@ const AutoloadDataService = (function () {
                     //return $request;
                 },
             },
+            ...(option.multiple && { multiple: true }),
             templateResult: function (data) {
                 return $($.parseHTML(data.html));
             },
