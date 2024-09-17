@@ -670,7 +670,13 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             version: 2,
         },
-
+        sub_asset: {
+            url: window.API_SERVICE_URL_V2 + "/asset/sub-asset",
+            formated: "$(code)",
+            id: "_id",
+            query: ["_id", "asset_id", "attribute_id"],
+            version: 2,
+        },
         ///// end asset /////
     };
     var arrDomAutoFill = [
@@ -1507,6 +1513,15 @@ const AutoloadDataService = (function () {
             dom: ".em-allocation_reason",
             attr: "data-id",
             formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/sub-asset",
+            dom: ".em-sub_asset",
+            attr: "data-id",
+            formated: "$(code)",
             query: ["_id"],
             fk: "_id",
             version: 2,
