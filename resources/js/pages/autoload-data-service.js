@@ -674,7 +674,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/asset/sub-asset",
             formated: "$(code)",
             id: "_id",
-            query: ["_id", "asset_id", "attribute_id"],
+            query: ["_id", "asset_id", "attribute_id", 'status'],
             version: 2,
         },
         ///// end asset /////
