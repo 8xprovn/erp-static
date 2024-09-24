@@ -1716,7 +1716,7 @@ const AutoloadDataService = (function () {
         });
     };
     
-    const VERSION = 2;  // Đặt phiên bản cho cơ sở dữ liệu
+    const VERSION = 10;  // Đặt phiên bản cho cơ sở dữ liệu
     const dbName = "ERPDBV2";  // Tên cơ sở dữ liệu
     //luc them ojectstorename cần tăng version lên
     const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course", "em-sys-city"];  // Danh sách các tên ObjectStore
