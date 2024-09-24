@@ -1796,7 +1796,7 @@ const AutoloadDataService = (function () {
 
             const transaction = db.transaction([objectStoreName], 'readonly');
             const objectStore = transaction.objectStore(objectStoreName);
-            const request = objectStore.get(Number(selectedId));
+            const request = objectStore.get(selectedId);
 
             request.onsuccess = (event) => {
                 resolve(request.result ? request.result : null);
