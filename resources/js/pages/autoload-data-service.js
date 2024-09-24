@@ -1716,8 +1716,8 @@ const AutoloadDataService = (function () {
         });
     };
     
-    const VERSION = 10;  // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV2";  // Tên cơ sở dữ liệu
+    const VERSION = 1;  // Đặt phiên bản cho cơ sở dữ liệu
+    const dbName = "ERPDBV3";  // Tên cơ sở dữ liệu
     //luc them ojectstorename cần tăng version lên
     const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course", "em-sys-city"];  // Danh sách các tên ObjectStore
     const CLEAR_DELAY = 3 * 24 * 60 * 60 * 1000; ; //Thời gian trì hoãn xóa dữ liệu
