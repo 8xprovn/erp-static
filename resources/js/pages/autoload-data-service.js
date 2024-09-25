@@ -670,7 +670,13 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             version: 2,
         },
-
+        sub_asset: {
+            url: window.API_SERVICE_URL_V2 + "/asset/sub-asset",
+            formated: "$(code)",
+            id: "_id",
+            query: ["_id", "asset_id", "attribute_id", 'status', 'status_detail', 'allocation_status'],
+            version: 2,
+        }
         ///// end asset /////
     };
     var arrDomAutoFill = [
@@ -957,6 +963,8 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status'],
         },
         {
             url: window.API_SERVICE_URL + "/org/location-cities",
@@ -1510,6 +1518,24 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             fk: "_id",
             version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/sub-asset",
+            dom: ".em-sub_asset",
+            attr: "data-id",
+            formated: "$(code)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/asset/entity-asset",
+            dom: ".em-entity_asset",
+            attr: "data-id",
+            formated: "$(_id)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
         }
         ///// end asset /////
     ];
@@ -1691,9 +1717,9 @@ const AutoloadDataService = (function () {
     };
     
     const VERSION = 1;  // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV2";  // Tên cơ sở dữ liệu
+    const dbName = "ERPDBV3";  // Tên cơ sở dữ liệu
     //luc them ojectstorename cần tăng version lên
-    const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course"];  // Danh sách các tên ObjectStore
+    const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course", "em-sys-city"];  // Danh sách các tên ObjectStore
     const CLEAR_DELAY = 3 * 24 * 60 * 60 * 1000; ; //Thời gian trì hoãn xóa dữ liệu
 
     let db = null;  // Đối tượng để lưu trữ kết nối đến cơ sở dữ liệu
@@ -1770,7 +1796,7 @@ const AutoloadDataService = (function () {
 
             const transaction = db.transaction([objectStoreName], 'readonly');
             const objectStore = transaction.objectStore(objectStoreName);
-            const request = objectStore.get(Number(selectedId));
+            const request = objectStore.get(selectedId);
 
             request.onsuccess = (event) => {
                 resolve(request.result ? request.result : null);
@@ -2239,6 +2265,7 @@ const AutoloadDataService = (function () {
                     //return $request;
                 },
             },
+            ...(option.multiple && { multiple: true }),
             templateResult: function (data) {
                 return $($.parseHTML(data.html));
             },
