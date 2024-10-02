@@ -1811,7 +1811,11 @@ const AutoloadDataService = (function () {
 
             const transaction = db.transaction([objectStoreName], 'readonly');
             const objectStore = transaction.objectStore(objectStoreName);
-            const request = objectStore.get(selectedId);
+            var id = Number(selectedId);
+            if (isNaN(id) || id <= 0) {  // Kiểm tra xem id có phải là số và lớn hơn 0
+              id = 0;
+            }
+            const request = objectStore.get(id);
 
             request.onsuccess = (event) => {
                 resolve(request.result ? request.result : null);
