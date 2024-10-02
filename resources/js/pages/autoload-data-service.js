@@ -516,6 +516,13 @@ const AutoloadDataService = (function () {
             query: ["topic_id", "status", "_id"],
             version: 2,
         },
+        callcenter_ticket_process: {
+            url: window.API_SERVICE_URL_V2 + "/call-center/ticket-proccess",
+            formated: "$(name)",
+            id: "_id",
+            query: ["topic_id", "_id"],
+            version: 2,
+        },
         "core-service": {
             url: window.API_SERVICE_URL_V2 + "/core/services",
             formated: "$(name)",
@@ -1335,6 +1342,14 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
+            url: window.API_SERVICE_URL_V2 + "/call-center/ticket-proccess",
+            dom: ".em-ticket-proccess",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
             url: window.API_SERVICE_URL_V2 + "/call-center/ticket",
             dom: ".em-ticket",
             attr: "data-id",
@@ -1796,7 +1811,11 @@ const AutoloadDataService = (function () {
 
             const transaction = db.transaction([objectStoreName], 'readonly');
             const objectStore = transaction.objectStore(objectStoreName);
-            const request = objectStore.get(selectedId);
+            var id = Number(selectedId);
+            if (isNaN(id) || id <= 0) {  // Kiểm tra xem id có phải là số và lớn hơn 0
+              id = 0;
+            }
+            const request = objectStore.get(id);
 
             request.onsuccess = (event) => {
                 resolve(request.result ? request.result : null);
