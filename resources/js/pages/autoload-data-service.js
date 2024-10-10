@@ -1918,6 +1918,9 @@ const AutoloadDataService = (function () {
     // Hàm gọi API và cập nhật DOM
     async function fetchDataAndUpdateDOM(item, arrId, focusDom) {
         const inqId = arrId;
+        if (inqId.length === 1 && inqId[0] == 0) {
+            return false;
+        }
         let objParams = {};
 
         if (item.version === 2) {
