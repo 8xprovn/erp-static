@@ -184,6 +184,7 @@ var DateTimePickers = function() {
                 } else {
                     alert('Ngày nhập không đúng định dạng dd/mm/yyyy!'); 
                     $(this).siblings('input[type=hidden]').val(''); 
+                    $(this).val(''); 
                 }
             }
         });
