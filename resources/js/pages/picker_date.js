@@ -158,7 +158,7 @@ var DateTimePickers = function() {
         $('.datepicker').pickadate({
             format: 'dd/mm/yyyy',
             formatSubmit: 'yyyy-mm-dd',
-            //editable: true,
+            editable: true,
             selectYears: 100,
             selectMonths: true,
             hiddenName: true
