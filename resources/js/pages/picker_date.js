@@ -155,13 +155,38 @@ var DateTimePickers = function() {
         var date = new Date(); 
         var maxYear = new Date().getFullYear() + 20;
         // Basic options
-        $('.datepicker').pickadate({
-            format: 'dd/mm/yyyy',
-            formatSubmit: 'yyyy-mm-dd',
-            //editable: true,
-            selectYears: 100,
-            selectMonths: true,
-            hiddenName: true
+        $('.datepicker').each(function() {
+            var isEditable = $(this).data('edit') === true; // Kiểm tra data-edit
+            $(this).pickadate({
+                format: 'dd/mm/yyyy',
+                formatSubmit: 'yyyy-mm-dd',
+                selectYears: 100,
+                selectMonths: true,
+                hiddenName: true,
+                editable: isEditable, // Thiết lập editable
+                onSet: function(context) {
+                    if (context.select) {
+                        this.$node.trigger('blur');
+                    }
+                }
+            });
+        });
+
+        // Thêm sự kiện blur cho tất cả các ô datepicker
+        $('.datepicker').on('blur', function() {
+            var input = $(this).val();
+            var regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/; 
+            if (input.trim() !== '') {
+                if (regex.test(input)) {
+                    var dateArray = input.split('/');
+                    var submitDate = dateArray[2] + '-' + dateArray[1] + '-' + dateArray[0]; 
+                    $(this).siblings('input[type=hidden]').val(submitDate); 
+                } else {
+                    alert('Ngày nhập không đúng định dạng dd/mm/yyyy!'); 
+                    $(this).siblings('input[type=hidden]').val(''); 
+                    $(this).val(''); 
+                }
+            }
         });
     };
     var _componentPickatime = function() {

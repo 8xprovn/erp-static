@@ -642,7 +642,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/asset/asset_setting_key",
             formated: "$(name)",
             id: "_id",
-            query: ["_id"],
+            query: ["_id", "asset_category_id"],
             version: 2,
         },
 
@@ -1918,6 +1918,9 @@ const AutoloadDataService = (function () {
     // Hàm gọi API và cập nhật DOM
     async function fetchDataAndUpdateDOM(item, arrId, focusDom) {
         const inqId = arrId;
+        if (inqId.length === 1 && inqId[0] == 0) {
+            return false;
+        }
         let objParams = {};
 
         if (item.version === 2) {
