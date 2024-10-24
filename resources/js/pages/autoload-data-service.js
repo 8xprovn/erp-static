@@ -602,7 +602,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/asset/asset-units",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "status"],
+            query: ["_id", "status", "asset_category_id"],
             version: 2,
         },
 
