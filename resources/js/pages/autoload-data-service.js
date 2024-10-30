@@ -82,6 +82,20 @@ const AutoloadDataService = (function () {
             ],
             version: 2,
         },
+        employee_v2: {
+            url: window.API_SERVICE_URL_V2 + "/hr/employees",
+            formated: "$(fullname) ($(email))",
+            id: "_id",
+            query: [
+                "type",
+                "manager_id",
+                "branch_id",
+                "status",
+                "department_id",
+                "_id",
+            ],
+            version: 2,
+        },
         department: {
             url: window.API_SERVICE_URL_V2 + "/hr/departments",
             id: "_id",
