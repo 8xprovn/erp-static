@@ -143,6 +143,13 @@ const AutoloadDataService = (function () {
             id: "_id",
             version: 2,
         },
+        salary_type: {
+            url: window.API_SERVICE_URL_V2 + "/hr/salary-type",
+            formated: "$(name)",
+            id: "_id",
+            query: ["status"],
+            version: 2,
+        },
         /////////////// ORG ////////////////
         branch: {
             url: window.API_SERVICE_URL_V2 + "/org/branch",
@@ -879,6 +886,15 @@ const AutoloadDataService = (function () {
             attr: "data-id",
             formated: "$(name)",
             query: ["_id", "status", "department_id", "job_title_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/hr/salary-type",
+            dom: ".em-salary-type",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
             fk: "_id",
             version: 2,
         },
