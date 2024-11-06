@@ -2732,7 +2732,7 @@
                 success: function (response) {
                     if (response.html) {
                         $(_box_comment).append(response.html);
-                        $(_page).attr("data-page", p + 1);
+                        $(_page).attr("data-page", Number(p) + 1);
                         $("#list_comment").trigger("add_dom");
                     }
                 },
