@@ -82,6 +82,20 @@ const AutoloadDataService = (function () {
             ],
             version: 2,
         },
+        employee_v2: {
+            url: window.API_SERVICE_URL_V2 + "/hr/employees",
+            formated: "$(fullname) ($(email))",
+            id: "_id",
+            query: [
+                "type",
+                "manager_id",
+                "branch_id",
+                "status",
+                "department_id",
+                "_id",
+            ],
+            version: 2,
+        },
         department: {
             url: window.API_SERVICE_URL_V2 + "/hr/departments",
             id: "_id",
@@ -609,7 +623,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/asset/asset-units",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "status"],
+            query: ["_id", "status", "asset_category_id"],
             version: 2,
         },
 
@@ -649,7 +663,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/asset/asset_setting_key",
             formated: "$(name)",
             id: "_id",
-            query: ["_id"],
+            query: ["_id", "asset_category_id"],
             version: 2,
         },
 
