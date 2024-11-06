@@ -1784,7 +1784,6 @@
             {
                 key: "filter",
                 value: function filter(pattern, arr, opts) {
-                    console.log(pattern);
                     var _this2 = this;
                     opts = opts || {};
                     let arrs = arr.reduce(function (prev, element, idx, arr) {
@@ -1816,7 +1815,6 @@
                     //     if (compare) return compare;
                     //     return a.index - b.index;
                     // });
-                    console.log(arrs);
                     return arrs;
                 },
             },
@@ -1914,7 +1912,7 @@
                 _ref$menuShowMinLengt = _ref.menuShowMinLength,
                 menuShowMinLength =
                     _ref$menuShowMinLengt === void 0
-                        ? 0
+                        ? 2
                         : _ref$menuShowMinLengt;
 
             _classCallCheck(this, Tribute);
@@ -2657,13 +2655,17 @@
         lookup: "fullname", // Specifies which key will be included in the tribute
         fillAttr: "fullname", // Specifies which attribute to fill the textarea with upon selection
         allowSpaces: true,
+        menuItemTemplate: function (item) {
+            // Hiển thị cả fullname và (_id)
+            return `${item.original.fullname} (${item.original._id})`;
+        },
         selectTemplate: function (item) {
             if (typeof item === "undefined") return null;
             if (this.range.isContentEditable(this.current.element)) {
                 return `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
             }
 
-            return "@" + item.original.fullname;
+            return `@${item.original.fullname} (${item.original._id})`;
         },
         requireLeadingSpace: false,
     });
@@ -2710,7 +2712,6 @@
             let _box_comment = $(this)
                 .closest("#box-comment")
                 .find("#list_comment");
-            console.log(_box_comment);
             let p = $(_page).attr("data-page");
             let l = $(_page).attr("data-limit");
 
@@ -2751,7 +2752,6 @@
 
                 if (_count_comment_parent && _count_comment) { 
                     let count = _count_comment - _count_comment_parent;
-                    console.log(count);
                     let html = `<div id="paginate_comment" class="text-center pb-1 text-primary"> Xem thêm (${count}) </div>`;
                     if (count > 0) $(this).find("#box-load-page").html(html);
                     else $(this).find("#box-load-page").html('').hide();
@@ -2864,7 +2864,6 @@
                     async: true,
 
                     success: function (response) {
-                        console.log($(_this).closest("li").find("i").length);
                         if (response.type == "like") {
                             $(_this)
                                 .closest("li")
