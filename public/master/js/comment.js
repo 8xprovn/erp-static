@@ -2752,7 +2752,7 @@
 
                 if (_count_comment_parent && _count_comment) { 
                     let count = _count_comment - _count_comment_parent;
-                    let html = `<div id="paginate_comment" class="text-center pb-1 text-primary"> Xem thêm (${count}) </div>`;
+                    let html = `<div id="paginate_comment" class="btn btn-info btn-sm btn-block text-center pb-1"> More </div>`;
                     if (count > 0) $(this).find("#box-load-page").html(html);
                     else $(this).find("#box-load-page").html('').hide();
                 }
@@ -2991,7 +2991,7 @@
                   attr.relate_id || 0
               }">
               <input type="hidden" name="type" value="${attr.type || 0}">
-              <div class="input_comment_data" id="form_commet_id_465" placeholder="Enter some text here" contenteditable="true" data-tribute="true"></div>
+              <div class="input_comment_data" id="form_commet_id_465" placeholder="Add comment" contenteditable="true" data-tribute="true"></div>
               <input type="hidden" name="content" value="">
               <button type="submit" class="btn btn-sm btn-primary mt-1"> Send</button>
           </form>`;

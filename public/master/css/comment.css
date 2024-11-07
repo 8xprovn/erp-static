@@ -69,3 +69,5 @@
 .tribute-container .menu-highlighted {
   font-weight: bold;
 }
+.media:first-child{margin-top:1rem !important}
+.list-inline {margin-bottom: 0 !important;}
