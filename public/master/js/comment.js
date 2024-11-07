@@ -2991,9 +2991,18 @@
                   attr.relate_id || 0
               }">
               <input type="hidden" name="type" value="${attr.type || 0}">
-              <div class="input_comment_data" id="form_commet_id_465" placeholder="Add comment" contenteditable="true" data-tribute="true"></div>
-              <input type="hidden" name="content" value="">
-              <button type="submit" class="btn btn-sm btn-primary mt-1"> Send</button>
+                <div class="comment-box">
+                    <div class="mb-2">
+                        <p class="input_comment_data" id="form_commet_id_{{ rand(1, 1000) }}" contenteditable="true"
+                        placeholder="Add a comment..."></p>
+                    </div>
+                    <input type="hidden" name="content" value="">
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary btn-add-comment">
+                            Send
+                        </button>
+                    </div>
+                </div>
           </form>`;
         };
 
