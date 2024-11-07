@@ -2752,7 +2752,7 @@
 
                 if (_count_comment_parent && _count_comment) { 
                     let count = _count_comment - _count_comment_parent;
-                    let html = `<div id="paginate_comment" class="btn btn-info btn-sm text-center pb-1"> More </div>`;
+                    let html = `<div id="paginate_comment" class="btn btn-info btn-sm d-block text-center pb-1"> More </div>`;
                     if (count > 0) $(this).find("#box-load-page").html(html);
                     else $(this).find("#box-load-page").html('').hide();
                 }
