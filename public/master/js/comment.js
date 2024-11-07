@@ -2933,6 +2933,13 @@
                                 else $(_dom_reply).html(parseInt(count) - 1);
                             }
                             $(_dom).remove();
+                            let number_comment = $('#number_comment');
+                            if (number_comment) {
+                                let count = $(number_comment).html();
+                                if (!count || parseInt(count) < 1)
+                                    $(number_comment).html(1);
+                                else $(number_comment).html(parseInt(count) - 1);
+                            }
                         },
                         error: function (e) {
                             show_notify_error(e.responseText);
@@ -2973,6 +2980,16 @@
                             if (!count || parseInt(count) < 1)
                                 $(_dom_reply).html(1);
                             else $(_dom_reply).html(parseInt(count) + 1);
+                        }
+                        if ($(_dom_reload).is('#list_comment')) {
+                            $("#list_comment").scrollTop($("#list_comment")[0].scrollHeight);
+                        }
+                        let number_comment = $('#number_comment');
+                        if (number_comment) {
+                            let count = $(number_comment).html();
+                            if (!count || parseInt(count) < 1)
+                                $(number_comment).html(1);
+                            else $(number_comment).html(parseInt(count) + 1);
                         }
                     },
                 });
