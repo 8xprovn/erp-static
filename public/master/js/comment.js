@@ -2631,9 +2631,13 @@
     var tribute = new Tribute({
         // menuContainer: document.getElementById('content'),
         values: function (text, cb) {
+            var cookie_name_value = getCookie("cookie_name"); // Lấy giá trị từ cookie với tên cụ thể
+            if (typeof cookie_name_value === 'undefined' || cookie_name_value === null) {
+                return false;
+            }
             $.ajax({
                 headers: {
-                    Authorization: "Bearer " + getCookie(cookie_name),
+                    Authorization: "Bearer " + cookie_name_value,
                     "Content-Type": "application/json",
                 },
                 url: _url_search.replace("{keyword}", text),
