@@ -107,7 +107,22 @@ const Layout = function () {
                         })
                         $(document).trigger(self.attr("data-trigger") , Object.assign(objData , data) );
                     }
+
                     var popupId = self.attr("data-popup-id");
+
+                    // Execute callback if data-callback attribute is provided
+                    if (self.attr("data-callback")) {
+                        let callbackFunction = window[self.attr("data-callback")];
+                        if (typeof callbackFunction === "function") {
+                            callbackFunction(data);
+                        }
+                    }
+
+                    if (self.attr("data-not-refesh") && self.attr("data-not-refesh")=='true') {
+                        $( '#' + popupId ).modal( 'hide' ).data( 'bs.modal', null );
+                        return true;
+                    }
+
                     if (self.attr("data-redirect-load-modal") && self.attr("data-redirect-load-modal") == 'true') {
                         let _url = data.redirect_uri || '';
                         $.ajax({
@@ -147,6 +162,7 @@ const Layout = function () {
                         redirectAjaxUrl(window.location.href);
                         return true;
                     } 
+                    
                     
                     if (redirect_uri == 'popup_close')
                     {

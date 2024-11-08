@@ -58,4 +58,5 @@ mix.styles([
     'resources/js/vendors/filepond/filepond.css',
     'resources/js/vendors/filepond/filepond.css',
     'css/custom.css',
+    'public/master/css/comment.css'
 ], 'public/master/css/vendors.css')
