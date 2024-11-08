@@ -50,8 +50,7 @@ mix.scripts([
     'resources/js/vendors/filepond/filepond-plugin-image-preview.js',
     'resources/js/vendors/filepond/filepond-plugin-media-preview.js',
     'resources/js/vendors/tinymce/tinymce.min.js',
-    'resources/js/app/*',
-    'public/master/js/comment.js'
+    'resources/js/app/*'
 ], 'public/master/js/vendors.js').minify('public/master/js/vendors.js');
 mix.styles([
     'resources/js/vendors/filepond/filepond-plugin-image-preview.css',
