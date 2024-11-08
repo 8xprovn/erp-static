@@ -11,5 +11,6 @@ component_inventory = require('./components/inventory.js');
 component_notification = require('./components/notification.js');
 component_callback = require('./components/callcenter.js');
 component_assets = require('./components/asset.js');
+component_task = require('./components/task.js');
 
 

@@ -1784,7 +1784,6 @@
             {
                 key: "filter",
                 value: function filter(pattern, arr, opts) {
-                    console.log(pattern);
                     var _this2 = this;
                     opts = opts || {};
                     let arrs = arr.reduce(function (prev, element, idx, arr) {
@@ -1816,7 +1815,6 @@
                     //     if (compare) return compare;
                     //     return a.index - b.index;
                     // });
-                    console.log(arrs);
                     return arrs;
                 },
             },
@@ -1914,7 +1912,7 @@
                 _ref$menuShowMinLengt = _ref.menuShowMinLength,
                 menuShowMinLength =
                     _ref$menuShowMinLengt === void 0
-                        ? 0
+                        ? 2
                         : _ref$menuShowMinLengt;
 
             _classCallCheck(this, Tribute);
@@ -2657,13 +2655,17 @@
         lookup: "fullname", // Specifies which key will be included in the tribute
         fillAttr: "fullname", // Specifies which attribute to fill the textarea with upon selection
         allowSpaces: true,
+        menuItemTemplate: function (item) {
+            // Hiển thị cả fullname và (_id)
+            return `${item.original.fullname} (${item.original._id})`;
+        },
         selectTemplate: function (item) {
             if (typeof item === "undefined") return null;
             if (this.range.isContentEditable(this.current.element)) {
                 return `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
             }
 
-            return "@" + item.original.fullname;
+            return `@${item.original.fullname} (${item.original._id})`;
         },
         requireLeadingSpace: false,
     });
@@ -2710,7 +2712,6 @@
             let _box_comment = $(this)
                 .closest("#box-comment")
                 .find("#list_comment");
-            console.log(_box_comment);
             let p = $(_page).attr("data-page");
             let l = $(_page).attr("data-limit");
 
@@ -2731,7 +2732,7 @@
                 success: function (response) {
                     if (response.html) {
                         $(_box_comment).append(response.html);
-                        $(_page).attr("data-page", p + 1);
+                        $(_page).attr("data-page", Number(p) + 1);
                         $("#list_comment").trigger("add_dom");
                     }
                 },
@@ -2751,8 +2752,7 @@
 
                 if (_count_comment_parent && _count_comment) { 
                     let count = _count_comment - _count_comment_parent;
-                    console.log(count);
-                    let html = `<div id="paginate_comment" class="text-center pb-1 text-primary"> Xem thêm (${count}) </div>`;
+                    let html = `<div id="paginate_comment" class="btn btn-info btn-sm d-block text-center pb-1"> More </div>`;
                     if (count > 0) $(this).find("#box-load-page").html(html);
                     else $(this).find("#box-load-page").html('').hide();
                 }
@@ -2864,7 +2864,6 @@
                     async: true,
 
                     success: function (response) {
-                        console.log($(_this).closest("li").find("i").length);
                         if (response.type == "like") {
                             $(_this)
                                 .closest("li")
@@ -2934,6 +2933,13 @@
                                 else $(_dom_reply).html(parseInt(count) - 1);
                             }
                             $(_dom).remove();
+                            let number_comment = $('#number_comment');
+                            if (number_comment) {
+                                let count = $(number_comment).html();
+                                if (!count || parseInt(count) < 1)
+                                    $(number_comment).html(1);
+                                else $(number_comment).html(parseInt(count) - 1);
+                            }
                         },
                         error: function (e) {
                             show_notify_error(e.responseText);
@@ -2975,6 +2981,16 @@
                                 $(_dom_reply).html(1);
                             else $(_dom_reply).html(parseInt(count) + 1);
                         }
+                        if ($(_dom_reload).is('#list_comment')) {
+                            $("#list_comment").scrollTop($("#list_comment")[0].scrollHeight);
+                        }
+                        let number_comment = $('#number_comment');
+                        if (number_comment) {
+                            let count = $(number_comment).html();
+                            if (!count || parseInt(count) < 1)
+                                $(number_comment).html(1);
+                            else $(number_comment).html(parseInt(count) + 1);
+                        }
                     },
                 });
             }
@@ -2992,9 +3008,18 @@
                   attr.relate_id || 0
               }">
               <input type="hidden" name="type" value="${attr.type || 0}">
-              <div class="input_comment_data" id="form_commet_id_465" placeholder="Enter some text here" contenteditable="true" data-tribute="true"></div>
-              <input type="hidden" name="content" value="">
-              <button type="submit" class="btn btn-sm btn-primary mt-1"> Send</button>
+                <div class="comment-box">
+                    <div class="mb-2">
+                        <p class="input_comment_data" id="form_commet_id_{{ rand(1, 1000) }}" contenteditable="true"
+                        placeholder="Add a comment..."></p>
+                    </div>
+                    <input type="hidden" name="content" value="">
+                    <div class="text-right">
+                        <button type="submit" class="btn btn-primary btn-add-comment">
+                            Send
+                        </button>
+                    </div>
+                </div>
           </form>`;
         };
 
