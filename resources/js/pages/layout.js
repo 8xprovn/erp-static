@@ -107,6 +107,12 @@ const Layout = function () {
                         })
                         $(document).trigger(self.attr("data-trigger") , Object.assign(objData , data) );
                     }
+
+                    if (self.attr("data-not-refesh") && self.attr("data-not-refesh")=='true') {
+                        $( '#' + popupId ).modal( 'hide' ).data( 'bs.modal', null );
+                        return true;
+                    }
+
                     var popupId = self.attr("data-popup-id");
                     if (self.attr("data-redirect-load-modal") && self.attr("data-redirect-load-modal") == 'true') {
                         let _url = data.redirect_uri || '';
