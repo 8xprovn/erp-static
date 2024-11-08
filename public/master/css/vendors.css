@@ -2075,3 +2075,116 @@
 }
 
 .dataTable td {white-space: nowrap;}
+
+.input_comment_data {
+  outline: none;
+  border: 1px solid #eee;
+  padding: 3px 5px;
+  border-radius: 5px;
+  font-size: 15px;
+  min-height: 64px;
+  cursor: text;
+}
+
+.input_comment_data:focus {
+  border-color: #d1d1d1;
+  background-color: #fbfbfb;
+}
+
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  display: block;
+  color: #ccc;
+}
+
+#test-autocomplete-container {
+  position: relative;
+}
+
+#test-autocomplete-textarea-container {
+  position: relative;
+}
+
+.float-right {
+  float: right;
+}
+
+.tribute-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: auto;
+  overflow: auto;
+  display: block;
+  z-index: 999999;
+}
+
+.tribute-container ul {
+  margin: 0;
+  margin-top: 2px;
+  padding: 0;
+  list-style: none;
+  background: #efefef;
+}
+
+.tribute-container li {
+  padding: 5px 5px;
+  cursor: pointer;
+}
+
+.tribute-container li.highlight {
+  background: #ddd;
+}
+
+.tribute-container li span {
+  font-weight: bold;
+}
+
+.tribute-container li.no-match {
+  cursor: default;
+}
+
+.tribute-container .menu-highlighted {
+  font-weight: bold;
+}
+.media:first-child{margin-top:1rem !important}
+.list-inline {margin-bottom: 0 !important;}
+.comment-box {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}
+
+.input_comment_data {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  min-height: 50px;
+  width: 100%;
+  outline: none;
+  resize: vertical;
+  background-color: #fff;
+  font-size: 14px;
+  color: #333;
+}
+
+.input_comment_data:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+.btn-add-comment {
+  background-color: #007bff;
+  color: white;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-add-comment:hover {
+  background-color: #0056b3;
+}

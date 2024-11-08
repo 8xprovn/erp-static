@@ -20,6 +20,7 @@ component_inventory = __webpack_require__(/*! ./components/inventory.js */ "./re
 component_notification = __webpack_require__(/*! ./components/notification.js */ "./resources/js/components/notification.js");
 component_callback = __webpack_require__(/*! ./components/callcenter.js */ "./resources/js/components/callcenter.js");
 component_assets = __webpack_require__(/*! ./components/asset.js */ "./resources/js/components/asset.js");
+component_task = __webpack_require__(/*! ./components/task.js */ "./resources/js/components/task.js");
 
 /***/ }),
 
@@ -919,6 +920,24 @@ module.exports = function () {
       var topic_id = params.topic_id;
       delete params.topic_id;
       helpers.curlgetapi(API_SERVICE_URL + '/pm/ticket-topics/' + topic_id, params, callback);
+    }
+  };
+}();
+
+/***/ }),
+
+/***/ "./resources/js/components/task.js":
+/*!*****************************************!*\
+  !*** ./resources/js/components/task.js ***!
+  \*****************************************/
+/***/ ((module) => {
+
+module.exports = function () {
+  return {
+    getProjectDetail: function getProjectDetail(params, callback) {
+      var project_id = params.project_id;
+      delete params.project_id;
+      helpers.curlgetapi(API_SERVICE_URL_V2 + '/task/projects/' + project_id, params, callback);
     }
   };
 }();
