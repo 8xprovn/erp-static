@@ -2787,9 +2787,6 @@
 
         $.ajaxSetup({
             beforeSend: function (xhr) {
-                if (typeof cookie_name === 'undefined' || cookie_name === null) {
-                    return false;
-                }
                 xhr.setRequestHeader(
                     "Authorization",
                     "Bearer " + getCookie(cookie_name)
