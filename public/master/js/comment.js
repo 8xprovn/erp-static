@@ -2785,6 +2785,17 @@
             }
         );
 
+        $(document).on("paste", ".input_comment_data", function (e) {
+            e.preventDefault(); // Ngăn chặn dán nội dung mặc định
+        
+            // Lấy nội dung từ clipboard và xóa các thẻ không mong muốn hoặc style
+            var clipboardData = (e.originalEvent || e).clipboardData || window.clipboardData;
+            var text = clipboardData.getData('text/plain'); // Chỉ lấy dữ liệu dạng văn bản thuần
+        
+            // Đưa nội dung đã làm sạch vào trường contenteditable
+            document.execCommand("insertText", false, text);
+        });
+
         $.ajaxSetup({
             beforeSend: function (xhr) {
                 if (typeof cookie_name === 'undefined' || cookie_name === null) {
