@@ -2665,7 +2665,7 @@
         selectTemplate: function (item) {
             if (typeof item === "undefined") return null;
             if (this.range.isContentEditable(this.current.element)) {
-                return `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
+                return `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" class="font-weight-bold">${item.original.fullname}</span>`;
             }
 
             return `@${item.original.fullname} (${item.original._id})`;
