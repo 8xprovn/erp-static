@@ -2821,9 +2821,16 @@
                 .on("click", ".action-reply", function (e) {
                     e.preventDefault();
 
-                    $(".box-form-reply").html("");
+                    
                     let _parent_dom = $(this).closest(".box-parent-comment");
                     let _form = $(_parent_dom).find(".box-form-reply");
+
+                    if (_form.html().trim() !== "") {
+                        // Nếu đã có nội dung, xóa nội dung (ẩn đi)
+                        _form.html("");
+                        return;
+                    }
+                    $(".box-form-reply").html("");
                     let parent_id = $(_form).attr("data-parent-id");
                     let relate_type = $(_form).attr("data-relate-type");
                     let type = $(_form).attr("data-type");
