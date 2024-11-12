@@ -2966,6 +2966,10 @@
                 formJSON[this.name] = this.value || "";
             });
             formJSON["data_type"] = "html";
+            if (!formJSON["content"] || formJSON["content"].trim() === "") {
+                alert("Comment không được để trống!"); // Bắn thông báo
+                return; // Dừng xử lý nếu cần
+            }
             if (formJSON) {
                 $.ajax({
                     type: "POST",
