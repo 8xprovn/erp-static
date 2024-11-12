@@ -2631,13 +2631,12 @@
     var tribute = new Tribute({
         // menuContainer: document.getElementById('content'),
         values: function (text, cb) {
-            var cookie_name_value = getCookie("cookie_name"); // Lấy giá trị từ cookie với tên cụ thể
-            if (typeof cookie_name_value === 'undefined' || cookie_name_value === null) {
+            if (typeof cookie_name === 'undefined' || cookie_name === null) {
                 return false;
             }
             $.ajax({
                 headers: {
-                    Authorization: "Bearer " + cookie_name_value,
+                    Authorization: "Bearer " + getCookie(cookie_name),
                     "Content-Type": "application/json",
                 },
                 url: _url_search.replace("{keyword}", text),
@@ -2719,6 +2718,9 @@
             let p = $(_page).attr("data-page");
             let l = $(_page).attr("data-limit");
 
+            if (typeof cookie_name === 'undefined' || cookie_name === null) {
+                return false;
+            }
             $.ajax({
                 type: "GET",
                 headers: {
@@ -2783,8 +2785,22 @@
             }
         );
 
+        $(document).on("paste", ".input_comment_data", function (e) {
+            e.preventDefault(); // Ngăn chặn dán nội dung mặc định
+        
+            // Lấy nội dung từ clipboard và xóa các thẻ không mong muốn hoặc style
+            var clipboardData = (e.originalEvent || e).clipboardData || window.clipboardData;
+            var text = clipboardData.getData('text/plain'); // Chỉ lấy dữ liệu dạng văn bản thuần
+        
+            // Đưa nội dung đã làm sạch vào trường contenteditable
+            document.execCommand("insertText", false, text);
+        });
+
         $.ajaxSetup({
             beforeSend: function (xhr) {
+                if (typeof cookie_name === 'undefined' || cookie_name === null) {
+                    return false;
+                }
                 xhr.setRequestHeader(
                     "Authorization",
                     "Bearer " + getCookie(cookie_name)
@@ -2816,9 +2832,16 @@
                 .on("click", ".action-reply", function (e) {
                     e.preventDefault();
 
-                    $(".box-form-reply").html("");
+                    
                     let _parent_dom = $(this).closest(".box-parent-comment");
                     let _form = $(_parent_dom).find(".box-form-reply");
+
+                    if (_form.html().trim() !== "") {
+                        // Nếu đã có nội dung, xóa nội dung (ẩn đi)
+                        _form.html("");
+                        return;
+                    }
+                    $(".box-form-reply").html("");
                     let parent_id = $(_form).attr("data-parent-id");
                     let relate_type = $(_form).attr("data-relate-type");
                     let type = $(_form).attr("data-type");
@@ -2961,6 +2984,10 @@
                 formJSON[this.name] = this.value || "";
             });
             formJSON["data_type"] = "html";
+            if (!formJSON["content"] || formJSON["content"].trim() === "") {
+                alert("Comment không được để trống!"); // Bắn thông báo
+                return; // Dừng xử lý nếu cần
+            }
             if (formJSON) {
                 $.ajax({
                     type: "POST",
