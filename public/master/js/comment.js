@@ -2665,7 +2665,14 @@
         selectTemplate: function (item) {
             if (typeof item === "undefined") return null;
             if (this.range.isContentEditable(this.current.element)) {
-                return `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
+                var htmlmen = `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
+                if (item.original && item.original.type) {
+                    htmlmen = ` data-original-id="${item.original._id}" title="${item.original.email}" >
+                                    <a href="/hr/employee/profile/${item.original._id}" class="load_not_ajax" target="_blank">
+                                    ${item.original.fullname}
+                                    </a></span>`;
+                }
+                return htmlmen;
             }
 
             return `@${item.original.fullname} (${item.original._id})`;
@@ -2740,6 +2747,7 @@
                         $(_box_comment).append(response.html);
                         $(_page).attr("data-page", Number(p) + 1);
                         $("#list_comment").trigger("add_dom");
+                        $('#box-comment').trigger( "MainContentReloaded", [] );
                     }
                 },
             });
