@@ -2655,7 +2655,10 @@
                 },
             });
         },
-        lookup: "fullname", // Specifies which key will be included in the tribute
+        lookup: function (item) {
+            // Tìm kiếm dựa trên fullname và _id
+            return item.fullname + ' ' + item._id;
+        },  // Specifies which key will be included in the tribute
         fillAttr: "fullname", // Specifies which attribute to fill the textarea with upon selection
         allowSpaces: true,
         menuItemTemplate: function (item) {
@@ -2666,8 +2669,15 @@
             if (typeof item === "undefined") return null;
             if (this.range.isContentEditable(this.current.element)) {
                 var htmlmen = `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
-                if (item.original && item.original.type) {
-                    htmlmen = `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" >
+                if (typeof cookie_name !== 'undefined' && cookie_name && cookie_name == 'imap_authen_access_token') {
+                    var titleV = `${item.original.email || ''}`;
+                    if (item.original.job_title_name && item.original.job_title_name != "") {
+                        titleV+=` - ${item.original.job_title_name}`;
+                    }
+                    if (item.original.position_name && item.original.position_name != "") {
+                        titleV+=` - ${item.original.position_name}`;
+                    }
+                    htmlmen = `<span contenteditable="false" data-original-id="${item.original._id}" title="${titleV}" >
                                     <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax" target="_blank">
                                     ${item.original.fullname}
                                     </a></span>`;
@@ -2854,12 +2864,17 @@
                     let relate_type = $(_form).attr("data-relate-type");
                     let type = $(_form).attr("data-type");
                     let relate_id = $(_form).attr("data-relate-id");
+                    let created_by = $(_form).attr("data-reply-created_by");
+                    let fullname = $(_form).attr("data-reply-by-name");
+                    let email = $(_form).attr("data-reply-by-email");
+                    let jobtitle = $(_form).attr("data-reply-jobtitle");
+                    let position = $(_form).attr("data-reply-position");
 
                     let _form_html = create_form_add({
                         parent_id,
                         type,
                         relate_id,
-                        relate_type,
+                        relate_type,created_by, email, jobtitle, position, fullname
                     });
                     $(_form).html(_form_html);
                     $(_form).trigger("add_dom");
@@ -3036,6 +3051,17 @@
         };
 
         const create_form_add = (attr) => {
+            var titleV = `${attr.email || ''}`;
+                if (attr.jobtitle && attr.jobtitle != "") {
+                    titleV+=` - ${attr.jobtitle}`;
+                }
+                if (attr.position && attr.position != "") {
+                    titleV+=` - ${attr.position}`;
+                }
+            var htmlmen = ` <span contenteditable="false" data-original-id="${attr.created_by}" title="${titleV}">
+                            <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax" target="_blank">
+                            ${attr.fullname}
+                            </a></span> `;
             return `<form action="" class="create_comment mt-2">
               <input type="hidden" name="parent_id" value="${
                   attr.parent_id || 0
@@ -3050,9 +3076,9 @@
                 <div class="comment-box">
                     <div class="mb-2">
                         <p class="input_comment_data" id="form_commet_id_{{ rand(1, 1000) }}" contenteditable="true"
-                        placeholder="Add a comment..."></p>
+                        placeholder="Add a comment...">${htmlmen}</p>
                     </div>
-                    <input type="hidden" name="content" value="">
+                    <input type="hidden" name="content" value='${htmlmen}'>
                     <div class="text-right">
                         <button type="submit" class="btn btn-primary btn-add-comment">
                             Send
