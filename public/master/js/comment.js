@@ -2668,7 +2668,7 @@
                 var htmlmen = `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
                 if (item.original && item.original.type) {
                     htmlmen = `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" >
-                                    <a href="/hr/employee/profile/${item.original._id}" class="load_not_ajax" target="_blank">
+                                    <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax" target="_blank">
                                     ${item.original.fullname}
                                     </a></span>`;
                 }
