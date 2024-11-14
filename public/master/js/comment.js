@@ -2672,7 +2672,7 @@
                 if (typeof cookie_name !== 'undefined' && cookie_name && cookie_name == 'imap_authen_access_token') {
                     var titleV = `${item.original.email || ''}`;
                     htmlmen = `<span data-original-id="${item.original._id}" title="${titleV}" >
-                                    <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax" target="_blank">
+                                    <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax user-name" data-user-id=${item.original._id} target="_blank">
                                     ${item.original.fullname}
                                     </a></span>`;
                 }
@@ -3045,7 +3045,7 @@
         const create_form_add = (attr) => {
             var titleV = `${attr.email || ''}`;
             var htmlmen = ` <span data-original-id="${attr.created_by}" title="${titleV}">
-                            <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax" target="_blank">
+                            <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax user-name" data-user-id=${attr.created_by} target="_blank">
                             ${attr.fullname}
                             </a></span> `;
             return `<form action="" class="create_comment mt-2">
@@ -3081,3 +3081,107 @@
         };
     })();
 })(jQuery);
+
+$(document).ready(function () {
+    console.log(111);
+    
+    let isHoveringPopup = false; // Biến trạng thái để theo dõi hover vào popup
+    let hoverTimer; // Biến lưu trữ ID của setTimeout
+    let popup;
+
+    // Gắn sự kiện hover cho user-name và AJAX khi hover vào
+    $('body').on('mouseenter', '.user-name', function (e) { // Dùng body để ủy quyền sự kiện
+        console.log(11111);
+        
+        const userId = $(this).data('user-id');
+        const profile = $(this).data('comment-id');
+        const offset = $(this).offset();
+        const element = $(this);
+
+        // Hủy bỏ timer nếu hover vào nhanh hơn
+        clearTimeout(hoverTimer);
+        if (typeof userId === 'undefined' || userId === null) {
+            return false;
+        }
+
+        // Trì hoãn việc hiển thị popup
+        hoverTimer = setTimeout(function () {
+            if (typeof cookie_name === 'undefined' || cookie_name === null) {
+                return false;
+            }
+            $.ajax({
+                headers: {
+                    Authorization: "Bearer " + getCookie(cookie_name),
+                    "Content-Type": "application/json",
+                },
+                url: _url_search_full.replace("{keyword}", userId),
+                method: "GET", // The HTTP method to use for the request
+                dataType: "json", // The type of data expected back from the server
+                success: function (data) {
+                    if (!data || data.length === 0) {
+                        return false; // Nếu mảng rỗng, thoát khỏi hàm
+                    }
+                    const firstElement = data[0];
+                    const imageUrl = window.location.origin + '/images/user-profile.png';
+                    var htmlV = ` <div class="our-team">
+                            <div class="picture">
+                                <img class="img-fluid" src="${imageUrl}">
+                            </div>
+                            <div class="team-content">
+                                <h3 class="name">${firstElement.fullname}</h3> <!-- Cập nhật tên người dùng -->`;
+                    if (firstElement.job_title_name && firstElement.job_title_name != "") {
+                        htmlV+=`<h4 class="title">${firstElement.job_title_name}</h4>`
+                    }
+                    if (firstElement.position_name && firstElement.position_name != "") {
+                        htmlV+=`<h4 class="title">${firstElement.position_name}</h4>`
+                    }
+                     htmlV+=`</div>
+                            <ul class="social">
+                                <li><a href="/hr/employee/profile/${firstElement._id}" class="load_not_ajax" target="_blank" aria-hidden="true">Profile</a></li>
+                            </ul>
+                        </div>`;
+                    
+                    // Tạo hoặc lấy phần tử popup
+                    popup = $('#profile-popup');
+                    if (!popup.length) {
+                        popup = $('<div id="profile-popup" class="profile-popup"></div>').appendTo('body');
+                    }
+
+                    // Cập nhật vị trí và nội dung cho popup
+                    popup.css({
+                        position: 'fixed',
+                        top: offset.top - $(window).scrollTop() + element.outerHeight(),
+                        left: offset.left - $(window).scrollLeft(),
+                        display: 'block',
+                        zIndex: 9999,
+                        'min-width': '300px',
+                    }).html(htmlV).fadeIn(200);
+
+                    // Giữ popup khi hover vào chính nó
+                    popup.on('mouseenter', function () {
+                        isHoveringPopup = true;
+                        $(this).show();
+                    }).on('mouseleave', function () {
+                        isHoveringPopup = false;
+                        $(this).fadeOut(100);
+                    });
+                    
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.error("Error fetching users:", textStatus, errorThrown);
+                },
+            });
+            
+        }, 2000); // Chạy sự kiện sau 2 giây
+    });
+
+    // Ẩn popup khi di chuột ra ngoài cả .user-name và popup
+    $('body').on('mouseleave', '.user-name, #profile-popup', function () { // Dùng body để ủy quyền sự kiện
+        // Sử dụng setTimeout để đảm bảo popup không bị ẩn ngay lập tức
+        setTimeout(function () {
+            if (!isHoveringPopup && !$('.user-name:hover').length && !$('#profile-popup:hover').length) {
+                popup && popup.fadeOut(100);
+            }
+        }, 100);
+    });
+});
