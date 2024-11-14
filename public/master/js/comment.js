@@ -2668,7 +2668,7 @@
         selectTemplate: function (item) {
             if (typeof item === "undefined") return null;
             if (this.range.isContentEditable(this.current.element)) {
-                var htmlmen = `<span contenteditable="false" data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
+                var htmlmen = `<span data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
                 if (typeof cookie_name !== 'undefined' && cookie_name && cookie_name == 'imap_authen_access_token') {
                     var titleV = `${item.original.email || ''}`;
                     if (item.original.job_title_name && item.original.job_title_name != "") {
@@ -2677,7 +2677,7 @@
                     if (item.original.position_name && item.original.position_name != "") {
                         titleV+=` - ${item.original.position_name}`;
                     }
-                    htmlmen = `<span contenteditable="false" data-original-id="${item.original._id}" title="${titleV}" >
+                    htmlmen = `<span data-original-id="${item.original._id}" title="${titleV}" >
                                     <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax" target="_blank">
                                     ${item.original.fullname}
                                     </a></span>`;
@@ -3058,7 +3058,7 @@
                 if (attr.position && attr.position != "") {
                     titleV+=` - ${attr.position}`;
                 }
-            var htmlmen = ` <span contenteditable="false" data-original-id="${attr.created_by}" title="${titleV}">
+            var htmlmen = ` <span data-original-id="${attr.created_by}" title="${titleV}">
                             <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax" target="_blank">
                             ${attr.fullname}
                             </a></span> `;
