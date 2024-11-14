@@ -2672,7 +2672,7 @@
                 if (typeof cookie_name !== 'undefined' && cookie_name && cookie_name == 'imap_authen_access_token') {
                     var titleV = `${item.original.email || ''}`;
                     htmlmen = `<span data-original-id="${item.original._id}" title="${titleV}" >
-                                    <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax" target="_blank">
+                                    <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax user-name" data-user-id=${item.original._id} target="_blank">
                                     ${item.original.fullname}
                                     </a></span>`;
                 }
@@ -3045,7 +3045,7 @@
         const create_form_add = (attr) => {
             var titleV = `${attr.email || ''}`;
             var htmlmen = ` <span data-original-id="${attr.created_by}" title="${titleV}">
-                            <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax" target="_blank">
+                            <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax user-name" data-user-id=${attr.created_by} target="_blank">
                             ${attr.fullname}
                             </a></span> `;
             return `<form action="" class="create_comment mt-2">
