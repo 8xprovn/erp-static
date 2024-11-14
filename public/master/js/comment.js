@@ -3083,7 +3083,6 @@
 })(jQuery);
 
 $(document).ready(function () {
-    console.log(111);
     
     let isHoveringPopup = false; // Biến trạng thái để theo dõi hover vào popup
     let hoverTimer; // Biến lưu trữ ID của setTimeout
@@ -3091,10 +3090,8 @@ $(document).ready(function () {
 
     // Gắn sự kiện hover cho user-name và AJAX khi hover vào
     $('body').on('mouseenter', '.user-name', function (e) { // Dùng body để ủy quyền sự kiện
-        console.log(11111);
         
         const userId = $(this).data('user-id');
-        const profile = $(this).data('comment-id');
         const offset = $(this).offset();
         const element = $(this);
 
@@ -3122,7 +3119,7 @@ $(document).ready(function () {
                         return false; // Nếu mảng rỗng, thoát khỏi hàm
                     }
                     const firstElement = data[0];
-                    const imageUrl = window.location.origin + '/images/user-profile.png';
+                    const imageUrl = 'https://erp-staging.ebomb.edu.vn/support/images/user-profile.png';
                     var htmlV = ` <div class="our-team">
                             <div class="picture">
                                 <img class="img-fluid" src="${imageUrl}">
