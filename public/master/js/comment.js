@@ -3273,8 +3273,7 @@ $(document).ready(function () {
         if (data.position_id && data.position_id !== "") {
             htmlV += `<h4 class="title em-position" data-id=${data.position_id}>${data.position_id}</h4>`;
         }
-        htmlV += `</div>
-        </div>`;
+        htmlV += `</div><ul class="social"><li></li></ul></div>`;
 
         // Khởi tạo Tooltip với nội dung mới
         element.tooltip({
