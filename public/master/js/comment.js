@@ -3118,7 +3118,10 @@ $(document).ready(function () {
                     if (!data || data.length === 0) {
                         return false; // Nếu mảng rỗng, thoát khỏi hàm
                     }
-                    const firstElement = data[0];
+                    const firstElement = data;
+                    if (!data._id) {
+                        return false; // Nếu mảng rỗng, thoát khỏi hàm
+                    }
                     const imageUrl = 'https://erp-staging.ebomb.edu.vn/support/images/user-profile.png';
                     var htmlV = ` <div class="our-team">
                             <div class="picture">
