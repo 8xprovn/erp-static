@@ -719,7 +719,7 @@ const AutoloadDataService = (function () {
             fk: "_id",
             version: 2,
             indexedDB:'yes',
-            indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'status'],
+            indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'status', 'job_title_id', 'position_id'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/brand",
@@ -893,6 +893,8 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/hr/allowances",
@@ -1051,6 +1053,8 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/hr/documents",
@@ -1762,9 +1766,9 @@ const AutoloadDataService = (function () {
     };
     
     const VERSION = 1;  // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV3";  // Tên cơ sở dữ liệu
+    const dbName = "ERPDBV4";  // Tên cơ sở dữ liệu
     //luc them ojectstorename cần tăng version lên
-    const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course", "em-sys-city"];  // Danh sách các tên ObjectStore
+    const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course", "em-sys-city", "em-position", 'em-job-title'];  // Danh sách các tên ObjectStore
     const CLEAR_DELAY = 3 * 24 * 60 * 60 * 1000; ; //Thời gian trì hoãn xóa dữ liệu
 
     let db = null;  // Đối tượng để lưu trữ kết nối đến cơ sở dữ liệu
@@ -2341,6 +2345,7 @@ const AutoloadDataService = (function () {
             createDatabaseWithStores();
             checkAndPerformScheduledClear();
         },
+        getDataFromIndexedDB: getDataFromIndexedDB
     };
 })();
 // Initialize module
