@@ -3132,9 +3132,6 @@ $(document).ready(function () {
                         htmlV += `<h4 class="title">${firstElement.position_name}</h4>`;
                     }
                     htmlV += `</div>
-                        <ul class="social">
-                            <li><a href="/hr/employee/profile/${firstElement._id}" class="load_not_ajax" target="_blank" aria-hidden="true">Profile</a></li>
-                        </ul>
                     </div>`;
 
                     // Khởi tạo Tooltip với nội dung mới
