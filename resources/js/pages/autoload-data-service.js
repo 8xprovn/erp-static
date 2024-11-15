@@ -2345,6 +2345,7 @@ const AutoloadDataService = (function () {
             createDatabaseWithStores();
             checkAndPerformScheduledClear();
         },
+        getDataFromIndexedDB: getDataFromIndexedDB
     };
 })();
 // Initialize module
