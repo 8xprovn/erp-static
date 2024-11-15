@@ -1,3 +1,4 @@
+autoload = __webpack_require__("./resources/js/pages/autoload-data-service.js");
 (function (global, factory) {
     typeof exports === "object" && typeof module !== "undefined"
         ? (module.exports = factory())
@@ -3080,98 +3081,6 @@
     })();
 })(jQuery);
 
-$(document).ready(function () {
-    let hoverTimer;
-    let isHoveringTooltip = false; // Biến để theo dõi việc hover vào tooltip
-
-    // Gắn sự kiện hover cho user-name và AJAX khi hover vào
-    $('body').on('mouseenter', '.user-name', function () {
-        const userId = $(this).data('user-id');
-        const element = $(this);
-
-        // Hủy bỏ timer nếu hover vào nhanh hơn
-        clearTimeout(hoverTimer);
-        if (typeof userId === 'undefined' || userId === null) {
-            return false;
-        }
-
-        // Trì hoãn việc hiển thị tooltip
-        hoverTimer = setTimeout(function () {
-            if (typeof cookie_name === 'undefined' || cookie_name === null) {
-                return false;
-            }
-            $.ajax({
-                headers: {
-                    Authorization: "Bearer " + getCookie(cookie_name),
-                    "Content-Type": "application/json",
-                },
-                url: _url_search_full.replace("{keyword}", userId),
-                method: "GET",
-                dataType: "json",
-                success: function (data) {
-                    if (!data || data.length === 0) {
-                        return false;
-                    }
-                    const firstElement = data;
-                    if (!data._id) {
-                        return false;
-                    }
-
-                    const imageUrl = 'https://erp-staging.ebomb.edu.vn/support/images/user-profile.png';
-                    let htmlV = `<div class="our-team">
-                        <div class="picture">
-                            <img class="img-fluid" src="${imageUrl}">
-                        </div>
-                        <div class="team-content">
-                            <h3 class="name">${firstElement.fullname}</h3>`;
-                    if (firstElement.job_title_name && firstElement.job_title_name !== "") {
-                        htmlV += `<h4 class="title">${firstElement.job_title_name}</h4>`;
-                    }
-                    if (firstElement.position_name && firstElement.position_name !== "") {
-                        htmlV += `<h4 class="title">${firstElement.position_name}</h4>`;
-                    }
-                    htmlV += `</div>
-                        <ul class="social">
-                            <li><a href="/hr/employee/profile/${firstElement._id}" class="load_not_ajax" target="_blank" aria-hidden="true">Profile</a></li>
-                        </ul>
-                    </div>`;
-
-                    // Khởi tạo Tooltip với nội dung mới
-                    element.tooltip({
-                        template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner custom-tooltip"></div></div>',
-                        title: htmlV,
-                        html: true, // Cho phép HTML trong tooltip
-                        placement: 'top',
-                        trigger: 'manual'
-                    }).tooltip('show');
-
-                    // Thêm sự kiện hover vào chính tooltip
-                    $('.tooltip').on('mouseenter', function () {
-                        isHoveringTooltip = true;
-                    }).on('mouseleave', function () {
-                        isHoveringTooltip = false;
-                        element.tooltip('hide'); // Ẩn tooltip khi rời khỏi
-                    });
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    console.error("Error fetching users:", textStatus, errorThrown);
-                },
-            });
-
-        }, 2000); // Chạy sự kiện sau 0.5 giây
-    });
-
-    // Ẩn tooltip khi chuột rời khỏi .user-name
-    $('body').on('mouseleave', '.user-name', function () {
-        const element = $(this);
-        setTimeout(function () {
-            if (!isHoveringTooltip) {
-                element.tooltip('hide');
-            }
-        }, 100);
-    });
-});
-
 // $(document).ready(function () {
 //     let hoverTimer;
 //     let isHoveringTooltip = false; // Biến để theo dõi việc hover vào tooltip
@@ -3192,37 +3101,50 @@ $(document).ready(function () {
 //             if (typeof cookie_name === 'undefined' || cookie_name === null) {
 //                 return false;
 //             }
-//             const dommm = 'em-profile';
-//             const data = autoload.getDataFromIndexedDB(dommm, userId);
-//             console.log(data);
-            
-//             const imageUrl = 'https://erp-staging.ebomb.edu.vn/support/images/user-profile.png';
+//             $.ajax({
+//                 headers: {
+//                     Authorization: "Bearer " + getCookie(cookie_name),
+//                     "Content-Type": "application/json",
+//                 },
+//                 url: _url_search_full.replace("{keyword}", userId),
+//                 method: "GET",
+//                 dataType: "json",
+//                 success: function (data) {
+//                     if (!data || data.length === 0) {
+//                         return false;
+//                     }
+//                     const firstElement = data;
+//                     if (!data._id) {
+//                         return false;
+//                     }
+
+//                     const imageUrl = 'https://erp-staging.ebomb.edu.vn/support/images/user-profile.png';
 //                     let htmlV = `<div class="our-team">
 //                         <div class="picture">
 //                             <img class="img-fluid" src="${imageUrl}">
 //                         </div>
 //                         <div class="team-content">
-//                             <h3 class="name em-profile" data-id="${userId}">${userId}</h3>`;
-                    
+//                             <h3 class="name">${firstElement.fullname}</h3>`;
+//                     if (firstElement.job_title_name && firstElement.job_title_name !== "") {
+//                         htmlV += `<h4 class="title">${firstElement.job_title_name}</h4>`;
+//                     }
+//                     if (firstElement.position_name && firstElement.position_name !== "") {
+//                         htmlV += `<h4 class="title">${firstElement.position_name}</h4>`;
+//                     }
 //                     htmlV += `</div>
 //                         <ul class="social">
-//                             <li><a href="/hr/employee/profile/${userId}"  class="load_not_ajax" target="_blank" aria-hidden="true">Profile</a></li>
+//                             <li><a href="/hr/employee/profile/${firstElement._id}" class="load_not_ajax" target="_blank" aria-hidden="true">Profile</a></li>
 //                         </ul>
 //                     </div>`;
 
 //                     // Khởi tạo Tooltip với nội dung mới
 //                     element.tooltip({
 //                         template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner custom-tooltip"></div></div>',
-//                         title:userId,
+//                         title: htmlV,
 //                         html: true, // Cho phép HTML trong tooltip
 //                         placement: 'top',
 //                         trigger: 'manual'
 //                     }).tooltip('show');
-//                     const tooltipInstance = element.data('bs.tooltip');
-//                     const $tooltip = tooltipInstance.getTipElement();
-//                     $($tooltip).find('.tooltip-inner').html(htmlV);
-//                     $('.tooltip-inner').trigger( "MainContentReloaded", [] );
-                    
 
 //                     // Thêm sự kiện hover vào chính tooltip
 //                     $('.tooltip').on('mouseenter', function () {
@@ -3231,6 +3153,11 @@ $(document).ready(function () {
 //                         isHoveringTooltip = false;
 //                         element.tooltip('hide'); // Ẩn tooltip khi rời khỏi
 //                     });
+//                 },
+//                 error: function (jqXHR, textStatus, errorThrown) {
+//                     console.error("Error fetching users:", textStatus, errorThrown);
+//                 },
+//             });
 
 //         }, 2000); // Chạy sự kiện sau 0.5 giây
 //     });
@@ -3245,3 +3172,77 @@ $(document).ready(function () {
 //         }, 100);
 //     });
 // });
+
+$(document).ready(function () {
+    let hoverTimer;
+    let isHoveringTooltip = false; // Biến để theo dõi việc hover vào tooltip
+
+    // Gắn sự kiện hover cho user-name và AJAX khi hover vào
+    $('body').on('mouseenter', '.user-name', function () {
+        const userId = $(this).data('user-id');
+        const element = $(this);
+
+        // Hủy bỏ timer nếu hover vào nhanh hơn
+        clearTimeout(hoverTimer);
+        if (typeof userId === 'undefined' || userId === null) {
+            return false;
+        }
+
+        // Trì hoãn việc hiển thị tooltip
+        hoverTimer = setTimeout(function () {
+            if (typeof cookie_name === 'undefined' || cookie_name === null) {
+                return false;
+            }
+            const dommm = 'em-profile';
+            const data = autoload.getDataFromIndexedDB(dommm, userId);
+            console.log(data);
+            
+            const imageUrl = 'https://erp-staging.ebomb.edu.vn/support/images/user-profile.png';
+                    let htmlV = `<div class="our-team">
+                        <div class="picture">
+                            <img class="img-fluid" src="${imageUrl}">
+                        </div>
+                        <div class="team-content">
+                            <h3 class="name em-profile" data-id="${userId}">${userId}</h3>`;
+                    
+                    htmlV += `</div>
+                        <ul class="social">
+                            <li><a href="/hr/employee/profile/${userId}"  class="load_not_ajax" target="_blank" aria-hidden="true">Profile</a></li>
+                        </ul>
+                    </div>`;
+
+                    // Khởi tạo Tooltip với nội dung mới
+                    element.tooltip({
+                        template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner custom-tooltip"></div></div>',
+                        title:userId,
+                        html: true, // Cho phép HTML trong tooltip
+                        placement: 'top',
+                        trigger: 'manual'
+                    }).tooltip('show');
+                    const tooltipInstance = element.data('bs.tooltip');
+                    const $tooltip = tooltipInstance.getTipElement();
+                    $($tooltip).find('.tooltip-inner').html(htmlV);
+                    $('.tooltip-inner').trigger( "MainContentReloaded", [] );
+                    
+
+                    // Thêm sự kiện hover vào chính tooltip
+                    $('.tooltip').on('mouseenter', function () {
+                        isHoveringTooltip = true;
+                    }).on('mouseleave', function () {
+                        isHoveringTooltip = false;
+                        element.tooltip('hide'); // Ẩn tooltip khi rời khỏi
+                    });
+
+        }, 2000); // Chạy sự kiện sau 0.5 giây
+    });
+
+    // Ẩn tooltip khi chuột rời khỏi .user-name
+    $('body').on('mouseleave', '.user-name', function () {
+        const element = $(this);
+        setTimeout(function () {
+            if (!isHoveringTooltip) {
+                element.tooltip('hide');
+            }
+        }, 100);
+    });
+});
