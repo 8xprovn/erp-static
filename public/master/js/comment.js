@@ -1,5 +1,4 @@
 
-import { getDataFromIndexedDB } from "./resources/js/pages/autoload-data-service.js";
 (function (global, factory) {
     typeof exports === "object" && typeof module !== "undefined"
         ? (module.exports = factory())
@@ -2629,458 +2628,458 @@ import { getDataFromIndexedDB } from "./resources/js/pages/autoload-data-service
 });
 
 /// code
-(function ($) {
-    var tribute = new Tribute({
-        // menuContainer: document.getElementById('content'),
-        values: function (text, cb) {
-            if (typeof cookie_name === 'undefined' || cookie_name === null) {
-                return false;
-            }
-            $.ajax({
-                headers: {
-                    Authorization: "Bearer " + getCookie(cookie_name),
-                    "Content-Type": "application/json",
-                },
-                url: _url_search.replace("{keyword}", text),
-                method: "GET", // The HTTP method to use for the request
-                dataType: "json", // The type of data expected back from the server
-                success: function (data) {
-                    cb(data);
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    // A function to be called if the request fails
-                    console.error(
-                        "Error fetching users:",
-                        textStatus,
-                        errorThrown
-                    );
-                },
-            });
-        },
-        lookup: function (item) {
-            // Tìm kiếm dựa trên fullname và _id
-            return item.fullname + ' ' + item._id;
-        },  // Specifies which key will be included in the tribute
-        fillAttr: "fullname", // Specifies which attribute to fill the textarea with upon selection
-        allowSpaces: true,
-        menuItemTemplate: function (item) {
-            // Hiển thị cả fullname và (_id)
-            return `${item.original.fullname} (${item.original._id})`;
-        },
-        selectTemplate: function (item) {
-            if (typeof item === "undefined") return null;
-            if (this.range.isContentEditable(this.current.element)) {
-                var htmlmen = `<span data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
-                if (typeof cookie_name !== 'undefined' && cookie_name && cookie_name == 'imap_authen_access_token') {
-                    htmlmen = `<span data-original-id="${item.original._id}" >
-                                    <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax user-name" data-user-id=${item.original._id} target="_blank">
-                                    ${item.original.fullname}
-                                    </a></span>`;
-                }
-                return htmlmen;
-            }
+// (function ($) {
+//     var tribute = new Tribute({
+//         // menuContainer: document.getElementById('content'),
+//         values: function (text, cb) {
+//             if (typeof cookie_name === 'undefined' || cookie_name === null) {
+//                 return false;
+//             }
+//             $.ajax({
+//                 headers: {
+//                     Authorization: "Bearer " + getCookie(cookie_name),
+//                     "Content-Type": "application/json",
+//                 },
+//                 url: _url_search.replace("{keyword}", text),
+//                 method: "GET", // The HTTP method to use for the request
+//                 dataType: "json", // The type of data expected back from the server
+//                 success: function (data) {
+//                     cb(data);
+//                 },
+//                 error: function (jqXHR, textStatus, errorThrown) {
+//                     // A function to be called if the request fails
+//                     console.error(
+//                         "Error fetching users:",
+//                         textStatus,
+//                         errorThrown
+//                     );
+//                 },
+//             });
+//         },
+//         lookup: function (item) {
+//             // Tìm kiếm dựa trên fullname và _id
+//             return item.fullname + ' ' + item._id;
+//         },  // Specifies which key will be included in the tribute
+//         fillAttr: "fullname", // Specifies which attribute to fill the textarea with upon selection
+//         allowSpaces: true,
+//         menuItemTemplate: function (item) {
+//             // Hiển thị cả fullname và (_id)
+//             return `${item.original.fullname} (${item.original._id})`;
+//         },
+//         selectTemplate: function (item) {
+//             if (typeof item === "undefined") return null;
+//             if (this.range.isContentEditable(this.current.element)) {
+//                 var htmlmen = `<span data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
+//                 if (typeof cookie_name !== 'undefined' && cookie_name && cookie_name == 'imap_authen_access_token') {
+//                     htmlmen = `<span data-original-id="${item.original._id}" >
+//                                     <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax user-name" data-user-id=${item.original._id} target="_blank">
+//                                     ${item.original.fullname}
+//                                     </a></span>`;
+//                 }
+//                 return htmlmen;
+//             }
 
-            return `@${item.original.fullname} (${item.original._id})`;
-        },
-        requireLeadingSpace: false,
-    });
-    let _url_list = "";
-    document.addEventListener("DOMContentLoaded", function () {
-        if ($(document).find("#comment_employee_html").length > 0) {
-            _url_list = $("#comment_employee_html").attr("data-url");
-            $.ajax({
-                type: "GET",
-                headers: {
-                    Authorization:
-                        "Bearer " + getCookie("imap_authen_access_token"),
-                },
-                url: _url_list,
-                dataType: "JSON",
-                success: function (response) {
-                    $("#comment_employee_html").html(response.html);
-                    $("#comment_employee_html").trigger("add_dom");
-                },
-            });
-        }
-        if ($(document).find("#comment_html").length > 0) {
-            _url_list = $("#comment_html").attr("data-url");
-            $.ajax({
-                type: "GET",
-                headers: {
-                    Authorization:
-                        "Bearer " + getCookie("imap_authen_user_access_token"),
-                    token: $('meta[name="contact-token"]').attr("content"),
-                    "Content-Type": "application/json",
-                    "contact-id": $('meta[name="contact-id"]').attr("content"),
-                },
-                url: _url_list,
-                dataType: "JSON",
-                success: function (response) {
-                    $("#comment_html").html(response.html);
-                    $("#comment_html").trigger("add_dom");
-                },
-            });
-        }
+//             return `@${item.original.fullname} (${item.original._id})`;
+//         },
+//         requireLeadingSpace: false,
+//     });
+//     let _url_list = "";
+//     document.addEventListener("DOMContentLoaded", function () {
+//         if ($(document).find("#comment_employee_html").length > 0) {
+//             _url_list = $("#comment_employee_html").attr("data-url");
+//             $.ajax({
+//                 type: "GET",
+//                 headers: {
+//                     Authorization:
+//                         "Bearer " + getCookie("imap_authen_access_token"),
+//                 },
+//                 url: _url_list,
+//                 dataType: "JSON",
+//                 success: function (response) {
+//                     $("#comment_employee_html").html(response.html);
+//                     $("#comment_employee_html").trigger("add_dom");
+//                 },
+//             });
+//         }
+//         if ($(document).find("#comment_html").length > 0) {
+//             _url_list = $("#comment_html").attr("data-url");
+//             $.ajax({
+//                 type: "GET",
+//                 headers: {
+//                     Authorization:
+//                         "Bearer " + getCookie("imap_authen_user_access_token"),
+//                     token: $('meta[name="contact-token"]').attr("content"),
+//                     "Content-Type": "application/json",
+//                     "contact-id": $('meta[name="contact-id"]').attr("content"),
+//                 },
+//                 url: _url_list,
+//                 dataType: "JSON",
+//                 success: function (response) {
+//                     $("#comment_html").html(response.html);
+//                     $("#comment_html").trigger("add_dom");
+//                 },
+//             });
+//         }
 
-        $(document).on("click", "#paginate_comment", function () {
-            let _page = $(this).closest("#box-load-page");
-            let _box_comment = $(this)
-                .closest("#box-comment")
-                .find("#list_comment");
-            let p = $(_page).attr("data-page");
-            let l = $(_page).attr("data-limit");
+//         $(document).on("click", "#paginate_comment", function () {
+//             let _page = $(this).closest("#box-load-page");
+//             let _box_comment = $(this)
+//                 .closest("#box-comment")
+//                 .find("#list_comment");
+//             let p = $(_page).attr("data-page");
+//             let l = $(_page).attr("data-limit");
 
-            if (typeof cookie_name === 'undefined' || cookie_name === null) {
-                return false;
-            }
-            $.ajax({
-                type: "GET",
-                headers: {
-                    Authorization: "Bearer " + getCookie(cookie_name),
-                    token: $('meta[name="contact-token"]').attr("content"),
-                    "Content-Type": "application/json",
-                    "contact-id": $('meta[name="contact-id"]').attr("content"),
-                },
-                data: {
-                    page: p,
-                    limit: l,
-                },
-                url: _url_list,
-                dataType: "JSON",
-                success: function (response) {
-                    if (response.html) {
-                        $(_box_comment).append(response.html);
-                        $(_page).attr("data-page", Number(p) + 1);
-                        $("#list_comment").trigger("add_dom");
-                        $('#box-comment').trigger( "MainContentReloaded", [] );
-                    }
-                },
-            });
-        });
+//             if (typeof cookie_name === 'undefined' || cookie_name === null) {
+//                 return false;
+//             }
+//             $.ajax({
+//                 type: "GET",
+//                 headers: {
+//                     Authorization: "Bearer " + getCookie(cookie_name),
+//                     token: $('meta[name="contact-token"]').attr("content"),
+//                     "Content-Type": "application/json",
+//                     "contact-id": $('meta[name="contact-id"]').attr("content"),
+//                 },
+//                 data: {
+//                     page: p,
+//                     limit: l,
+//                 },
+//                 url: _url_list,
+//                 dataType: "JSON",
+//                 success: function (response) {
+//                     if (response.html) {
+//                         $(_box_comment).append(response.html);
+//                         $(_page).attr("data-page", Number(p) + 1);
+//                         $("#list_comment").trigger("add_dom");
+//                         $('#box-comment').trigger( "MainContentReloaded", [] );
+//                     }
+//                 },
+//             });
+//         });
 
-        $(document).on(
-            "add_dom",
-            "#comment_html,#list_comment,#comment_employee_html, .box-form-reply",
-            function () {
-                let _count_comment_parent = $(this).find(
-                    ".box-parent-comment"
-                ).length;
-                let _count_comment = $(this)
-                    .find("#box-comment")
-                    .attr("data-count");
+//         $(document).on(
+//             "add_dom",
+//             "#comment_html,#list_comment,#comment_employee_html, .box-form-reply",
+//             function () {
+//                 let _count_comment_parent = $(this).find(
+//                     ".box-parent-comment"
+//                 ).length;
+//                 let _count_comment = $(this)
+//                     .find("#box-comment")
+//                     .attr("data-count");
 
-                if (_count_comment_parent && _count_comment) { 
-                    let count = _count_comment - _count_comment_parent;
-                    let html = `<div id="paginate_comment" class="btn btn-info btn-sm btn-block text-center pb-1 d-none" style="padding: .115rem .475rem !important;"> More </div>`;
-                    if (count > 0) $(this).find("#box-load-page").html(html);
-                    else $(this).find("#box-load-page").html('').hide();
-                }
+//                 if (_count_comment_parent && _count_comment) { 
+//                     let count = _count_comment - _count_comment_parent;
+//                     let html = `<div id="paginate_comment" class="btn btn-info btn-sm btn-block text-center pb-1 d-none" style="padding: .115rem .475rem !important;"> More </div>`;
+//                     if (count > 0) $(this).find("#box-load-page").html(html);
+//                     else $(this).find("#box-load-page").html('').hide();
+//                 }
 
-                if ($(".input_comment_data").length > 0) {
-                    $(".input_comment_data").each(function (index, item) {
-                        let _id = $(item).attr("id");
-                        tribute.attach(document.getElementById(_id));
+//                 if ($(".input_comment_data").length > 0) {
+//                     $(".input_comment_data").each(function (index, item) {
+//                         let _id = $(item).attr("id");
+//                         tribute.attach(document.getElementById(_id));
 
-                        $(item).on("keyup", function () {
-                            $(item)
-                                .closest("form")
-                                .find('input[name="content"]')
-                                .val($(this).html());
-                        });
-                        $(item).on("tribute-replaced", function () {
-                            $(item)
-                                .closest("form")
-                                .find('input[name="content"]')
-                                .val($(this).html());
-                        });
-                    });
-                }
-            }
-        );
+//                         $(item).on("keyup", function () {
+//                             $(item)
+//                                 .closest("form")
+//                                 .find('input[name="content"]')
+//                                 .val($(this).html());
+//                         });
+//                         $(item).on("tribute-replaced", function () {
+//                             $(item)
+//                                 .closest("form")
+//                                 .find('input[name="content"]')
+//                                 .val($(this).html());
+//                         });
+//                     });
+//                 }
+//             }
+//         );
 
-        $(document).on("paste", ".input_comment_data", function (e) {
-            e.preventDefault(); // Ngăn chặn dán nội dung mặc định
+//         $(document).on("paste", ".input_comment_data", function (e) {
+//             e.preventDefault(); // Ngăn chặn dán nội dung mặc định
         
-            // Lấy nội dung từ clipboard và xóa các thẻ không mong muốn hoặc style
-            var clipboardData = (e.originalEvent || e).clipboardData || window.clipboardData;
-            var text = clipboardData.getData('text/plain'); // Chỉ lấy dữ liệu dạng văn bản thuần
+//             // Lấy nội dung từ clipboard và xóa các thẻ không mong muốn hoặc style
+//             var clipboardData = (e.originalEvent || e).clipboardData || window.clipboardData;
+//             var text = clipboardData.getData('text/plain'); // Chỉ lấy dữ liệu dạng văn bản thuần
         
-            // Đưa nội dung đã làm sạch vào trường contenteditable
-            document.execCommand("insertText", false, text);
-        });
+//             // Đưa nội dung đã làm sạch vào trường contenteditable
+//             document.execCommand("insertText", false, text);
+//         });
 
-        $.ajaxSetup({
-            beforeSend: function (xhr) {
-                if (typeof cookie_name === 'undefined' || cookie_name === null) {
-                    return false;
-                }
-                xhr.setRequestHeader(
-                    "Authorization",
-                    "Bearer " + getCookie(cookie_name)
-                );
-                xhr.setRequestHeader("Content-Type", "application/json");
-                if ($('meta[name="contact-id"]').length > 0)
-                    xhr.setRequestHeader(
-                        "contact-id",
-                        $('meta[name="contact-id"]').attr("content")
-                    );
-                if ($('meta[name="contact-token"]').length > 0)
-                    xhr.setRequestHeader(
-                        "token",
-                        $('meta[name="contact-token"]').attr("content")
-                    );
-                // Thêm bất kỳ tiêu đề nào khác bạn cần gửi với mỗi yêu cầu
-            },
-        });
+//         $.ajaxSetup({
+//             beforeSend: function (xhr) {
+//                 if (typeof cookie_name === 'undefined' || cookie_name === null) {
+//                     return false;
+//                 }
+//                 xhr.setRequestHeader(
+//                     "Authorization",
+//                     "Bearer " + getCookie(cookie_name)
+//                 );
+//                 xhr.setRequestHeader("Content-Type", "application/json");
+//                 if ($('meta[name="contact-id"]').length > 0)
+//                     xhr.setRequestHeader(
+//                         "contact-id",
+//                         $('meta[name="contact-id"]').attr("content")
+//                     );
+//                 if ($('meta[name="contact-token"]').length > 0)
+//                     xhr.setRequestHeader(
+//                         "token",
+//                         $('meta[name="contact-token"]').attr("content")
+//                     );
+//                 // Thêm bất kỳ tiêu đề nào khác bạn cần gửi với mỗi yêu cầu
+//             },
+//         });
 
-        Handle.init();
-    });
+//         Handle.init();
+//     });
 
-    let Handle = (function () {
-        const _dom_lis_comment = $("#list_comment");
+//     let Handle = (function () {
+//         const _dom_lis_comment = $("#list_comment");
 
-        const event = () => {
-            $(document)
-                .off("click", ".action-reply")
-                .on("click", ".action-reply", function (e) {
-                    e.preventDefault();
+//         const event = () => {
+//             $(document)
+//                 .off("click", ".action-reply")
+//                 .on("click", ".action-reply", function (e) {
+//                     e.preventDefault();
 
                     
-                    let _parent_dom = $(this).closest(".box-parent-comment");
-                    let _form = $(_parent_dom).find(".box-form-reply");
+//                     let _parent_dom = $(this).closest(".box-parent-comment");
+//                     let _form = $(_parent_dom).find(".box-form-reply");
 
-                    if (_form.html().trim() !== "") {
-                        // Nếu đã có nội dung, xóa nội dung (ẩn đi)
-                        _form.html("");
-                        return;
-                    }
-                    $(".box-form-reply").html("");
-                    let parent_id = $(_form).attr("data-parent-id");
-                    let relate_type = $(_form).attr("data-relate-type");
-                    let type = $(_form).attr("data-type");
-                    let relate_id = $(_form).attr("data-relate-id");
-                    let created_by = $(_form).attr("data-reply-created_by");
-                    let fullname = $(_form).attr("data-reply-by-name");
-                    let email = $(_form).attr("data-reply-by-email");
+//                     if (_form.html().trim() !== "") {
+//                         // Nếu đã có nội dung, xóa nội dung (ẩn đi)
+//                         _form.html("");
+//                         return;
+//                     }
+//                     $(".box-form-reply").html("");
+//                     let parent_id = $(_form).attr("data-parent-id");
+//                     let relate_type = $(_form).attr("data-relate-type");
+//                     let type = $(_form).attr("data-type");
+//                     let relate_id = $(_form).attr("data-relate-id");
+//                     let created_by = $(_form).attr("data-reply-created_by");
+//                     let fullname = $(_form).attr("data-reply-by-name");
+//                     let email = $(_form).attr("data-reply-by-email");
 
-                    let _form_html = create_form_add({
-                        parent_id,
-                        type,
-                        relate_id,
-                        relate_type,created_by, email, fullname
-                    });
-                    $(_form).html(_form_html);
-                    $(_form).trigger("add_dom");
-                });
+//                     let _form_html = create_form_add({
+//                         parent_id,
+//                         type,
+//                         relate_id,
+//                         relate_type,created_by, email, fullname
+//                     });
+//                     $(_form).html(_form_html);
+//                     $(_form).trigger("add_dom");
+//                 });
 
-            $(document).on("submit", "form.create_comment", function (e) {
-                e.preventDefault();
-                let _this = $(this);
-                let _parent_dom = $(this)
-                    .closest(".box-replys")
-                    .find(".replys-list");
-                call_ajax_form(_parent_dom, _this);
-            });
+//             $(document).on("submit", "form.create_comment", function (e) {
+//                 e.preventDefault();
+//                 let _this = $(this);
+//                 let _parent_dom = $(this)
+//                     .closest(".box-replys")
+//                     .find(".replys-list");
+//                 call_ajax_form(_parent_dom, _this);
+//             });
 
-            $(document).on("submit", "form#form_comment_parent", function (e) {
-                e.preventDefault();
-                let _this = $(this);
-                let _parent_dom = $(this).closest("body").find("#list_comment");
-                call_ajax_form(_parent_dom, _this);
-            });
+//             $(document).on("submit", "form#form_comment_parent", function (e) {
+//                 e.preventDefault();
+//                 let _this = $(this);
+//                 let _parent_dom = $(this).closest("body").find("#list_comment");
+//                 call_ajax_form(_parent_dom, _this);
+//             });
 
-            // edit_comment
-            $(document).on("click", ".like-comment", function (e) {
-                e.preventDefault();
-                let _this = $(this);
-                let relate_type = $(this).attr("data-relate-type");
-                let type = $(this).attr("data-type");
-                let relate_id = $(this).attr("data-relate-id");
-                $.ajax({
-                    url: url_like,
-                    type: "POST",
-                    data: JSON.stringify({ relate_id, relate_type, type }),
-                    contentType: "application/json;charset=utf-8",
-                    dataType: "JSON",
-                    cache: false,
-                    crossDomain: true,
-                    async: true,
+//             // edit_comment
+//             $(document).on("click", ".like-comment", function (e) {
+//                 e.preventDefault();
+//                 let _this = $(this);
+//                 let relate_type = $(this).attr("data-relate-type");
+//                 let type = $(this).attr("data-type");
+//                 let relate_id = $(this).attr("data-relate-id");
+//                 $.ajax({
+//                     url: url_like,
+//                     type: "POST",
+//                     data: JSON.stringify({ relate_id, relate_type, type }),
+//                     contentType: "application/json;charset=utf-8",
+//                     dataType: "JSON",
+//                     cache: false,
+//                     crossDomain: true,
+//                     async: true,
 
-                    success: function (response) {
-                        if (response.type == "like") {
-                            $(_this)
-                                .closest("li")
-                                .find("i")
-                                .css("color", "#008bf1");
-                        } else {
-                            $(_this)
-                                .closest("li")
-                                .find("i")
-                                .css("color", "rgba(0,0,0,.5)");
-                        }
+//                     success: function (response) {
+//                         if (response.type == "like") {
+//                             $(_this)
+//                                 .closest("li")
+//                                 .find("i")
+//                                 .css("color", "#008bf1");
+//                         } else {
+//                             $(_this)
+//                                 .closest("li")
+//                                 .find("i")
+//                                 .css("color", "rgba(0,0,0,.5)");
+//                         }
 
-                        $(_this)
-                            .closest("li")
-                            .find("span")
-                            .html(response.count || 0);
-                    },
-                });
-            });
-            $(document).on("click", ".delete-comment", function (e) {
-                e.preventDefault();
-                var _dom = $(this).closest(".item-comment");
-                // Setup
-                var _id = $(this).attr("data-id");
-                var url = url_remove_comment.replace(/:id/gi, _id);
+//                         $(_this)
+//                             .closest("li")
+//                             .find("span")
+//                             .html(response.count || 0);
+//                     },
+//                 });
+//             });
+//             $(document).on("click", ".delete-comment", function (e) {
+//                 e.preventDefault();
+//                 var _dom = $(this).closest(".item-comment");
+//                 // Setup
+//                 var _id = $(this).attr("data-id");
+//                 var url = url_remove_comment.replace(/:id/gi, _id);
 
-                var method = $(this).attr("method") || "POST";
+//                 var method = $(this).attr("method") || "POST";
 
-                var notice = new PNotify({
-                    title: "Xác nhận thông tin",
-                    text: "<p>Bạn có chắc muốn xóa không</p>",
-                    hide: false,
-                    type: "warning",
-                    confirm: {
-                        confirm: true,
-                        buttons: [
-                            {
-                                text: "Confirm",
-                                addClass: "btn btn-sm btn-primary",
-                            },
-                            {
-                                addClass: "btn btn-sm btn-link",
-                            },
-                        ],
-                    },
-                    buttons: {
-                        closer: false,
-                        sticker: false,
-                    },
-                });
+//                 var notice = new PNotify({
+//                     title: "Xác nhận thông tin",
+//                     text: "<p>Bạn có chắc muốn xóa không</p>",
+//                     hide: false,
+//                     type: "warning",
+//                     confirm: {
+//                         confirm: true,
+//                         buttons: [
+//                             {
+//                                 text: "Confirm",
+//                                 addClass: "btn btn-sm btn-primary",
+//                             },
+//                             {
+//                                 addClass: "btn btn-sm btn-link",
+//                             },
+//                         ],
+//                     },
+//                     buttons: {
+//                         closer: false,
+//                         sticker: false,
+//                     },
+//                 });
 
-                // On confirm
-                notice.get().on("pnotify.confirm", function () {
-                    $.ajax({
-                        type: method,
-                        url: url,
-                        //data: dataSerialize, // serializes the form's elements.
-                        dataType: "json",
-                        success: function (response) {
-                            let _dom_reply = $(_dom)
-                                .closest(".box-parent-comment")
-                                .find(".count_reply");
-                            if (_dom_reply) {
-                                let count = $(_dom_reply).html();
-                                if (!count || parseInt(count) < 1)
-                                    $(_dom_reply).html("");
-                                else $(_dom_reply).html(parseInt(count) - 1);
-                            }
-                            $(_dom).remove();
-                            let number_comment = $('#number_comment');
-                            if (number_comment) {
-                                let count = $(number_comment).html();
-                                if (!count || parseInt(count) < 1)
-                                    $(number_comment).html(1);
-                                else $(number_comment).html(parseInt(count) - 1);
-                            }
-                        },
-                        error: function (e) {
-                            show_notify_error(e.responseText);
-                        },
-                    });
-                });
-            });
-        };
+//                 // On confirm
+//                 notice.get().on("pnotify.confirm", function () {
+//                     $.ajax({
+//                         type: method,
+//                         url: url,
+//                         //data: dataSerialize, // serializes the form's elements.
+//                         dataType: "json",
+//                         success: function (response) {
+//                             let _dom_reply = $(_dom)
+//                                 .closest(".box-parent-comment")
+//                                 .find(".count_reply");
+//                             if (_dom_reply) {
+//                                 let count = $(_dom_reply).html();
+//                                 if (!count || parseInt(count) < 1)
+//                                     $(_dom_reply).html("");
+//                                 else $(_dom_reply).html(parseInt(count) - 1);
+//                             }
+//                             $(_dom).remove();
+//                             let number_comment = $('#number_comment');
+//                             if (number_comment) {
+//                                 let count = $(number_comment).html();
+//                                 if (!count || parseInt(count) < 1)
+//                                     $(number_comment).html(1);
+//                                 else $(number_comment).html(parseInt(count) - 1);
+//                             }
+//                         },
+//                         error: function (e) {
+//                             show_notify_error(e.responseText);
+//                         },
+//                     });
+//                 });
+//             });
+//         };
 
-        const call_ajax_form = (_dom_reload, _form) => {
-            var formArray = $(_form).serializeArray();
-            var formJSON = {};
+//         const call_ajax_form = (_dom_reload, _form) => {
+//             var formArray = $(_form).serializeArray();
+//             var formJSON = {};
 
-            $.each(formArray, function () {
-                formJSON[this.name] = this.value || "";
-            });
-            formJSON["data_type"] = "html";
-            if (!formJSON["content"] || formJSON["content"].trim() === "") {
-                alert("Comment không được để trống!"); // Bắn thông báo
-                return; // Dừng xử lý nếu cần
-            }
-            if (formJSON) {
-                $.ajax({
-                    type: "POST",
-                    data: JSON.stringify(formJSON),
+//             $.each(formArray, function () {
+//                 formJSON[this.name] = this.value || "";
+//             });
+//             formJSON["data_type"] = "html";
+//             if (!formJSON["content"] || formJSON["content"].trim() === "") {
+//                 alert("Comment không được để trống!"); // Bắn thông báo
+//                 return; // Dừng xử lý nếu cần
+//             }
+//             if (formJSON) {
+//                 $.ajax({
+//                     type: "POST",
+//                     data: JSON.stringify(formJSON),
 
-                    // contentType: "text/html;charset=utf-8",
-                    dataType: "HTML",
-                    cache: false,
-                    crossDomain: true,
-                    async: true,
-                    url: url_post_comment,
-                    success: function (response) {
-                        $(_dom_reload).append(response);
-                        $(_form).find("[name='content']").val("");
-                        $(_form).find(".input_comment_data").html("");
-                        let _dom_reply = $(_form)
-                            .closest(".box-parent-comment")
-                            .find(".count_reply");
-                        if (_dom_reply) {
-                            let count = $(_dom_reply).html();
-                            if (!count || parseInt(count) < 1)
-                                $(_dom_reply).html(1);
-                            else $(_dom_reply).html(parseInt(count) + 1);
-                        }
-                        if ($(_dom_reload).is('#list_comment')) {
-                            $("#list_comment").scrollTop($("#list_comment")[0].scrollHeight);
-                        }
-                        let number_comment = $('#number_comment');
-                        if (number_comment) {
-                            let count = $(number_comment).html();
-                            if (!count || parseInt(count) < 1)
-                                $(number_comment).html(1);
-                            else $(number_comment).html(parseInt(count) + 1);
-                        }
-                    },
-                });
-            }
-        };
+//                     // contentType: "text/html;charset=utf-8",
+//                     dataType: "HTML",
+//                     cache: false,
+//                     crossDomain: true,
+//                     async: true,
+//                     url: url_post_comment,
+//                     success: function (response) {
+//                         $(_dom_reload).append(response);
+//                         $(_form).find("[name='content']").val("");
+//                         $(_form).find(".input_comment_data").html("");
+//                         let _dom_reply = $(_form)
+//                             .closest(".box-parent-comment")
+//                             .find(".count_reply");
+//                         if (_dom_reply) {
+//                             let count = $(_dom_reply).html();
+//                             if (!count || parseInt(count) < 1)
+//                                 $(_dom_reply).html(1);
+//                             else $(_dom_reply).html(parseInt(count) + 1);
+//                         }
+//                         if ($(_dom_reload).is('#list_comment')) {
+//                             $("#list_comment").scrollTop($("#list_comment")[0].scrollHeight);
+//                         }
+//                         let number_comment = $('#number_comment');
+//                         if (number_comment) {
+//                             let count = $(number_comment).html();
+//                             if (!count || parseInt(count) < 1)
+//                                 $(number_comment).html(1);
+//                             else $(number_comment).html(parseInt(count) + 1);
+//                         }
+//                     },
+//                 });
+//             }
+//         };
 
-        const create_form_add = (attr) => {
-            var htmlmen = ` <span data-original-id="${attr.created_by}">
-                            <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax user-name" data-user-id=${attr.created_by} target="_blank">
-                            ${attr.fullname}
-                            </a></span> `;
-            return `<form action="" class="create_comment mt-2">
-              <input type="hidden" name="parent_id" value="${
-                  attr.parent_id || 0
-              }">
-              <input type="hidden" name="relate_type" value="${
-                  attr.relate_type || 0
-              }">
-              <input type="hidden" name="relate_id" value="${
-                  attr.relate_id || 0
-              }">
-              <input type="hidden" name="type" value="${attr.type || 0}">
-                <div class="comment-box">
-                    <div class="mb-2">
-                        <p class="input_comment_data" id="form_commet_id_{{ rand(1, 1000) }}" contenteditable="true"
-                        placeholder="Add a comment...">${htmlmen}</p>
-                    </div>
-                    <input type="hidden" name="content" value='${htmlmen}'>
-                    <div class="text-right">
-                        <button type="submit" class="btn btn-primary btn-add-comment">
-                            Send
-                        </button>
-                    </div>
-                </div>
-          </form>`;
-        };
+//         const create_form_add = (attr) => {
+//             var htmlmen = ` <span data-original-id="${attr.created_by}">
+//                             <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax user-name" data-user-id=${attr.created_by} target="_blank">
+//                             ${attr.fullname}
+//                             </a></span> `;
+//             return `<form action="" class="create_comment mt-2">
+//               <input type="hidden" name="parent_id" value="${
+//                   attr.parent_id || 0
+//               }">
+//               <input type="hidden" name="relate_type" value="${
+//                   attr.relate_type || 0
+//               }">
+//               <input type="hidden" name="relate_id" value="${
+//                   attr.relate_id || 0
+//               }">
+//               <input type="hidden" name="type" value="${attr.type || 0}">
+//                 <div class="comment-box">
+//                     <div class="mb-2">
+//                         <p class="input_comment_data" id="form_commet_id_{{ rand(1, 1000) }}" contenteditable="true"
+//                         placeholder="Add a comment...">${htmlmen}</p>
+//                     </div>
+//                     <input type="hidden" name="content" value='${htmlmen}'>
+//                     <div class="text-right">
+//                         <button type="submit" class="btn btn-primary btn-add-comment">
+//                             Send
+//                         </button>
+//                     </div>
+//                 </div>
+//           </form>`;
+//         };
 
-        return {
-            init: function () {
-                event(document);
-            },
-        };
-    })();
-})(jQuery);
+//         return {
+//             init: function () {
+//                 event(document);
+//             },
+//         };
+//     })();
+// })(jQuery);
 
 // $(document).ready(function () {
 //     let hoverTimer;
@@ -3195,7 +3194,13 @@ $(document).ready(function () {
                 return false;
             }
             const dommm = 'em-profile';
-            const data = getDataFromIndexedDB(dommm, userId);
+            window.AutoloadDataService.getDataFromIndexedDB(dommm, userId)
+            .then((data) => {
+                console.log(data);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
             console.log(data);
             
             const imageUrl = 'https://erp-staging.ebomb.edu.vn/support/images/user-profile.png';

@@ -1861,6 +1861,10 @@ const AutoloadDataService = (function () {
         });
     }
 
+    return {
+        getDataFromIndexedDB: getDataFromIndexedDB
+    };
+
     // Lưu dữ liệu vào một object store trong cơ sở dữ liệu cụ thể
     function saveDataToIndexedDB(objectStoreName, id, data) {
         objectStoreName = String(objectStoreName).replace(/\./g, '');
@@ -2347,6 +2351,7 @@ const AutoloadDataService = (function () {
         },
     };
 })();
+window.AutoloadDataService = AutoloadDataService;
 // Initialize module
 // ------------------------------
 $(document).on("DOMContentLoaded MainContentReloaded", function (e) {
