@@ -1,4 +1,5 @@
-autoload = __webpack_require__("./resources/js/pages/autoload-data-service.js");
+
+import { getDataFromIndexedDB } from "./resources/js/pages/autoload-data-service.js";
 (function (global, factory) {
     typeof exports === "object" && typeof module !== "undefined"
         ? (module.exports = factory())
@@ -3194,7 +3195,7 @@ $(document).ready(function () {
                 return false;
             }
             const dommm = 'em-profile';
-            const data = autoload.getDataFromIndexedDB(dommm, userId);
+            const data = getDataFromIndexedDB(dommm, userId);
             console.log(data);
             
             const imageUrl = 'https://erp-staging.ebomb.edu.vn/support/images/user-profile.png';
