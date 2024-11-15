@@ -3142,7 +3142,7 @@ $(document).ready(function () {
                         template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner custom-tooltip"></div></div>',
                         title: htmlV,
                         html: true, // Cho phép HTML trong tooltip
-                        placement: 'top',
+                        placement: 'left',
                         trigger: 'manual'
                     }).tooltip('show');
 
