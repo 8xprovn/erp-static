@@ -3213,7 +3213,7 @@ $(document).ready(function () {
                 fetchUserDataFromAPI(userId, element);
             }
 
-        }, 1400); // Chạy sự kiện sau 1 giây
+        }, 400); // Chạy sự kiện sau 1 giây
     });
 
     // Ẩn tooltip khi chuột rời khỏi .user-name
