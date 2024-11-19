@@ -3172,7 +3172,6 @@
 
 $(document).ready(function () {
     let hoverTimer;
-    let isHoveringTooltip = false; // Biến để theo dõi việc hover vào tooltip
 
     // Gắn sự kiện hover cho user-name và AJAX khi hover vào
     $('body').on('mouseenter', '.user-name', function () {
@@ -3183,6 +3182,10 @@ $(document).ready(function () {
         clearTimeout(hoverTimer);
         if (typeof userId === 'undefined' || userId === null) {
             return false;
+        }
+
+        if ($('.tooltip').is(':visible')) {
+            $('.tooltip').tooltip('hide'); // Nếu có tooltip đang hiển thị, không làm gì cả
         }
 
         // Trì hoãn việc hiển thị tooltip
@@ -3220,9 +3223,9 @@ $(document).ready(function () {
     $('body').on('mouseleave', '.user-name', function () {
         const element = $(this);
         setTimeout(function () {
-            if (!isHoveringTooltip) {
-                element.tooltip('hide');
-            }
+            
+            element.tooltip('hide');
+            
         }, 100);
     });
     
@@ -3288,14 +3291,6 @@ $(document).ready(function () {
         const $tooltip = tooltipInstance.getTipElement();
         $($tooltip).find('.tooltip-inner').html(htmlV);
         $('.tooltip-inner').trigger("MainContentReloaded", []);
-
-        // Thêm sự kiện hover vào chính tooltip
-        $('.tooltip').on('mouseenter', function () {
-            isHoveringTooltip = true;
-        }).on('mouseleave', function () {
-            isHoveringTooltip = false;
-            element.tooltip('hide'); // Ẩn tooltip khi rời khỏi
-        });
     }
 
 });
