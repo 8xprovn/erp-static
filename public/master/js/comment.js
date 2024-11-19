@@ -3172,6 +3172,8 @@
 
 $(document).ready(function () {
     let hoverTimer;
+    let tooltipTimer;
+    let isHoveringTooltip = false;
 
     // Gắn sự kiện hover cho user-name và AJAX khi hover vào
     $('body').on('mouseenter', '.user-name', function () {
@@ -3180,8 +3182,9 @@ $(document).ready(function () {
 
         // Hủy bỏ timer nếu hover vào nhanh hơn
         clearTimeout(hoverTimer);
+        clearTimeout(tooltipTimer);
         if ($('.tooltip').is(':visible')) {
-            $('.tooltip').tooltip('hide'); // Nếu có tooltip đang hiển thị, không làm gì cả
+            $('.tooltip').tooltip('hide');
         }
         if (typeof userId === 'undefined' || userId === null) {
             return false;
@@ -3215,17 +3218,18 @@ $(document).ready(function () {
                 fetchUserDataFromAPI(userId, element);
             }
 
-        }, 400); // Chạy sự kiện sau 1 giây
+        }, 500); // Chạy sự kiện sau 1 giây
     });
 
     // Ẩn tooltip khi chuột rời khỏi .user-name
     $('body').on('mouseleave', '.user-name', function () {
         const element = $(this);
-        setTimeout(function () {
-            if (element.data('bs.tooltip')) {
+        tooltipTimer = setTimeout(function () {
+            // Kiểm tra xem tooltip có tồn tại không và ẩn nó
+            if (element.data('bs.tooltip') && !isHoveringTooltip) {
                 element.tooltip('hide');
             }
-        }, 100);
+        }, 200);
     });
     
     // Hàm để gọi AJAX lấy dữ liệu nếu không có dữ liệu từ IndexedDB
@@ -3290,6 +3294,20 @@ $(document).ready(function () {
         const $tooltip = tooltipInstance.getTipElement();
         $($tooltip).find('.tooltip-inner').html(htmlV);
         $('.tooltip-inner').trigger("MainContentReloaded", []);
-    }
+        $('.tooltip').on('mouseenter', function () {
+            isHoveringTooltip = true;
+        }).on('mouseleave', function () {
+            isHoveringTooltip = false;
+            element.tooltip('hide'); // Ẩn tooltip khi rời khỏi
+        });
 
+    }
+    $('body').on("click", '.reply-more',function () {
+        const userId = $(this).data('id');
+        $('.reply-item-' + userId).removeClass('d-none');
+    
+        // Thêm lớp d-none đối với các phần tử có class reply-parents-userId
+        $('.reply-parents-' + userId).addClass('d-none');
+        
+    });
 });
