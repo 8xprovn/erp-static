@@ -3180,12 +3180,11 @@ $(document).ready(function () {
 
         // Hủy bỏ timer nếu hover vào nhanh hơn
         clearTimeout(hoverTimer);
-        if (typeof userId === 'undefined' || userId === null) {
-            return false;
-        }
-
         if ($('.tooltip').is(':visible')) {
             $('.tooltip').tooltip('hide'); // Nếu có tooltip đang hiển thị, không làm gì cả
+        }
+        if (typeof userId === 'undefined' || userId === null) {
+            return false;
         }
 
         // Trì hoãn việc hiển thị tooltip
@@ -3223,9 +3222,9 @@ $(document).ready(function () {
     $('body').on('mouseleave', '.user-name', function () {
         const element = $(this);
         setTimeout(function () {
-            
-            element.tooltip('hide');
-            
+            if (element.data('bs.tooltip')) {
+                element.tooltip('hide');
+            }
         }, 100);
     });
     
