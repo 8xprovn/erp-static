@@ -101,6 +101,7 @@ const Layout = (function () {
                         delay: 2000,
                         mouse_reset: false,
                     });
+                    
 
                     if (self.attr("data-reload-page") === "true") {
                         window.location.reload();
