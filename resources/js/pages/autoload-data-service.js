@@ -602,7 +602,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/payroll/cycle",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "status_payroll", "is_lock", "is_pay"],
+            query: ["_id", "status_payroll", "is_lock", "is_pay", 'payroll_template_id'],
             version: 2,
         },
 
@@ -1467,7 +1467,7 @@ const AutoloadDataService = (function () {
             dom: ".em-payroll-cycle",
             attr: "data-id",
             formated: "$(name)",
-            query: ["_id", "status_payroll", "is_lock", "is_pay"],
+            query: ["_id", "status_payroll", "is_lock", "is_pay", 'payroll_template_id'],
             fk: "_id",
             version: 2,
         },
