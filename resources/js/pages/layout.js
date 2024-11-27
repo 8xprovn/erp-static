@@ -456,6 +456,7 @@ const Layout = (function () {
 
         $("body").on("click", ".report_ajax_modal", function (e) {
             var self = $(this);
+            var url = self.attr("action") || window.location.href;
             var page_action = self.attr("data-page-action") || "export";
             self.hide();
             // Setup
@@ -485,7 +486,7 @@ const Layout = (function () {
             // On confirm
             notice.get().on("pnotify.confirm", function () {
                 $.ajax({
-                    url: window.location.href,
+                    url: url,
                     headers: { "page-action": page_action },
                     dataType: "json",
                     beforeSend: function (xhr) {
