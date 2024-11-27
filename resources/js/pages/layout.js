@@ -101,6 +101,13 @@ const Layout = (function () {
                         delay: 2000,
                         mouse_reset: false,
                     });
+                    
+
+                    if (self.attr("data-reload-page") === "true") {
+                        window.location.reload();
+                        return true;
+                    }
+
                     var redirect_uri = "";
                     if (data.redirect_uri) {
                         redirect_uri = data.redirect_uri;
