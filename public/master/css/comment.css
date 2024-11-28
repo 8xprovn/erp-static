@@ -220,3 +220,11 @@
       color: #2196f3cf;
       background-color: #f7f5ec;
 }
+
+.user-name {
+  font-weight: 500;
+  color: #333 !important;
+}
+.user-name a{
+  color: #333 !important;
+}
