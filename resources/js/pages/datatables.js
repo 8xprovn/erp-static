@@ -77,11 +77,22 @@ var Datatable = function() {
                     searching: true,
                     scrollY: '60vh',
                     scrollCollapse: true,
+                    createdRow: function(row, data, dataIndex) {
+                        // Kiểm tra điều kiện để thêm class "no-sort-row" vào hàng
+                        if ($(row).hasClass('no-sort-row')) {
+                            $(row).addClass('no-sort-row');
+                        }
+                    },
                     columnDefs: [
                         {
-                            targets: 'sum_all', // Cột có class 'auto'
-                            orderable: false, // Không cho phép sắp xếp
-                            searchable: false // (Tùy chọn) Không cho phép tìm kiếm trong cột này
+                            targets: '_all', // Áp dụng logic cho tất cả các cột
+                            render: function(data, type, row, meta) {
+                                // Nếu hàng có class "no-sort-row", vô hiệu hóa sắp xếp
+                                if ($(meta.row).hasClass('no-sort-row') && type === 'sort') {
+                                    return '';
+                                }
+                                return data;
+                            }
                         }
                     ],
                     buttons: {            
