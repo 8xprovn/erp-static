@@ -86,15 +86,40 @@ var Datatable = function() {
                         buttons: [
                             {
                                 extend: 'copyHtml5',
-                                footer: true, // Bao gồm footer trong bản copy
-                                text: 'Copy to Clipboard'
+                                footer: $('tfoot').length > 0, // Chỉ bao gồm footer nếu footer tồn tại
+                                text: 'Copy to Clipboard',
+                                customize: function (copyData) {
+                                    // Kiểm tra nếu footer không tồn tại, thoát sớm
+                                    if (!$('tfoot').length) return;
+
+                                    // Tạo dữ liệu tổng nếu có footer
+                                    var totalRow = [];
+                                    $('.datatable_report th').each(function (index) {
+                                        if ($(this).hasClass('sum-column')) {
+                                            // Tính tổng nếu cột có class 'sum-column'
+                                            var total = 0;
+                                            dataTableReport.column(index, { page: 'current' }).data().each(function (value) {
+                                                total += parseFloat(value) || 0;
+                                            });
+                                            totalRow.push(Math.round(total)); // Thêm tổng
+                                        } else {
+                                            totalRow.push(''); // Không có tổng thì để trống
+                                        }
+                                    });
+
+                                    // Thêm dòng tổng vào nội dung sao chép
+                                    copyData.body.push(totalRow);
+                                }
                             },
                             {
                                 extend: 'excelHtml5',
                                 footer: true, // Bao gồm footer khi xuất file Excel
                                 text: 'Export to Excel',
+                                title: 'Custom Title', 
                                 customize: function (xlsx) {
-                                    var sheet = xlsx.xl.worksheets['sheet1.xml']; // Truy cập sheet dữ liệu
+                                    if (!$('tfoot').length) return;
+                                    var sheet = xlsx.xl.worksheets['sheet1.xml']; // Truy cập sheet đầu tiên
+                                    $(sheet).find('sheetPr').attr('name', document.title || 'Sheet1');
                     
                                     // Tạo dòng tổng ở cuối
                                     var lastRow = $('row', sheet).last().attr('r'); // Lấy số thứ tự dòng cuối
@@ -128,7 +153,9 @@ var Datatable = function() {
                                 extend: 'csvHtml5',
                                 footer: true, // Bao gồm footer khi xuất file CSV
                                 text: 'Export to CSV',
+                                filename: document.title,
                                 customize: function (csv) {
+                                    if (!$('tfoot').length) return;
                                     var totalRow = [];
                                     $('.datatable_report th').each(function (index) {
                                         if ($(this).hasClass('sum-column')) {
@@ -152,7 +179,9 @@ var Datatable = function() {
                                 extend: 'pdfHtml5',
                                 footer: true, // Bao gồm footer trong file PDF
                                 text: 'Export to PDF',
+                                filename: document.title, 
                                 customize: function (doc) {
+                                    if (!$('tfoot').length) return;
                                     // Tạo dòng tổng
                                     var totalRow = [];
                                     $('.datatable_report th').each(function (index) {
@@ -176,6 +205,9 @@ var Datatable = function() {
                     
                     footerCallback: function (row, data, start, end, display) {
                         var api = this.api();
+                        if (!$('tfoot', this.table().container()).length) {
+                            return; // Thoát nếu không có footer
+                        }
                 
                         // Hàm tiện ích để định dạng số
                         var intVal = function (i) {
