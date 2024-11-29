@@ -92,7 +92,7 @@ var Datatable = function() {
                     },
                     footerCallback: function (row, data, start, end, display) {
                         var api = this.api();
-            
+                
                         // Hàm tiện ích để định dạng số
                         var intVal = function (i) {
                             return typeof i === 'string'
@@ -101,19 +101,19 @@ var Datatable = function() {
                                 ? i
                                 : 0;
                         };
-            
-                        // Lặp qua từng cột
+                
+                        // Lặp qua từng cột cần tính tổng
                         api.columns('.sum-column', { page: 'current' }).every(function () {
                             var column = this;
-            
-                            // Tính tổng cho cột hiện tại
+                
+                            // Tính tổng giá trị cột hiện tại
                             var total = column
                                 .data()
                                 .reduce(function (a, b) {
                                     return intVal(a) + intVal(b);
                                 }, 0);
-            
-                            // Đặt tổng vào footer
+                
+                            // Hiển thị tổng giá trị trong footer của cột
                             $(column.footer()).html(total.toFixed(2));
                         });
                     }
