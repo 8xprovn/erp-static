@@ -87,7 +87,7 @@ var Datatable = function() {
                             {
                                 extend: 'copyHtml5',
                                 footer: $('tfoot').length > 0, // Chỉ bao gồm footer nếu footer tồn tại
-                                text: 'Copy to Clipboard',
+                                text: 'Copy',
                                 customize: function (copyData) {
                                     // Kiểm tra nếu footer không tồn tại, thoát sớm
                                     if (!$('tfoot').length) return;
@@ -114,7 +114,7 @@ var Datatable = function() {
                             {
                                 extend: 'excelHtml5',
                                 footer: true, // Bao gồm footer khi xuất file Excel
-                                text: 'Export to Excel',
+                                text: 'Excel',
                                 title: 'Custom Title', 
                                 customize: function (xlsx) {
                                     if (!$('tfoot').length) return;
@@ -152,7 +152,7 @@ var Datatable = function() {
                             {
                                 extend: 'csvHtml5',
                                 footer: true, // Bao gồm footer khi xuất file CSV
-                                text: 'Export to CSV',
+                                text: 'CSV',
                                 filename: document.title,
                                 customize: function (csv) {
                                     if (!$('tfoot').length) return;
@@ -205,7 +205,7 @@ var Datatable = function() {
                     
                     footerCallback: function (row, data, start, end, display) {
                         var api = this.api();
-                        if (!$('tfoot', this.table().container()).length) {
+                        if (!$('tfoot', api.table().container()).length) {
                             return; // Thoát nếu không có footer
                         }
                 
