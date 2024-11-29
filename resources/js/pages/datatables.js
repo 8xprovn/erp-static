@@ -77,6 +77,13 @@ var Datatable = function() {
                     searching: true,
                     scrollY: '60vh',
                     scrollCollapse: true,
+                    columnDefs: [
+                        {
+                            targets: 'sum_all', // Cột có class 'auto'
+                            orderable: false, // Không cho phép sắp xếp
+                            searchable: false // (Tùy chọn) Không cho phép tìm kiếm trong cột này
+                        }
+                    ],
                     buttons: {            
                         dom: {
                             button: {
