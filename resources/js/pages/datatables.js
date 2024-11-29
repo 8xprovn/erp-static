@@ -89,43 +89,35 @@ var Datatable = function() {
                             'csvHtml5',
                             'pdfHtml5'
                         ]
+                    },
+                    footerCallback: function (row, data, start, end, display) {
+                        var api = this.api();
+            
+                        // Hàm tiện ích để định dạng số
+                        var intVal = function (i) {
+                            return typeof i === 'string'
+                                ? i.replace(/[\$,]/g, '') * 1
+                                : typeof i === 'number'
+                                ? i
+                                : 0;
+                        };
+            
+                        // Lặp qua từng cột
+                        api.columns('.sum-column', { page: 'current' }).every(function () {
+                            var column = this;
+            
+                            // Tính tổng cho cột hiện tại
+                            var total = column
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+            
+                            // Đặt tổng vào footer
+                            $(column.footer()).html(total.toFixed(2));
+                        });
                     }
                     
-                });
-                function calculateColumnTotalByClass(dataTable, columnClass) {
-                    var total = 0;
-            
-                    // Lặp qua tất cả các cột trong DataTable
-                    dataTable.columns().every(function () {
-                        var columnIndex = this.index();
-                        var headerClass = $(this.header()).attr('class') || '';
-            
-                        // Kiểm tra nếu class của cột chứa `columnClass`
-                        if (headerClass.includes(columnClass)) {
-                            // Lấy dữ liệu trong cột và tính tổng
-                            total += dataTable
-                                .column(columnIndex, { search: 'applied' }) // Lấy dữ liệu đã lọc
-                                .data()
-                                .reduce(function (subtotal, value) {
-                                    return subtotal + parseFloat(value) || 0; // Chuyển thành số và cộng dồn
-                                }, 0);
-                        }
-                    });
-            
-                    return total;
-                }
-            
-                // Tính tổng cho từng class
-                var columnClasses = ['sum-column']; // Danh sách các class cần tính tổng
-                columnClasses.forEach(function (columnClass) {
-                    var total = calculateColumnTotalByClass(dataTableReport, columnClass);
-            
-                    // Nếu có tổng thì hiển thị ra footer
-                    if (total !== 0) {
-                        $('.datatable-footer').append(
-                            '<div>Total for ' + columnClass + ': ' + total.toFixed(2) + '</div>'
-                        );
-                    }
                 });
             }, 2000);
         }
