@@ -126,13 +126,28 @@ var Datatable = function() {
                             }
                         },
                         buttons: [
-                            'copyHtml5',
-                            'csvHtml5',
-                            'pdfHtml5',
+                            {
+                                extend: 'copyHtml5',
+                                footer: true, // Bao gồm footer trong bản copy
+                                text: 'Copy',
+                                title: document.title,
+                            },
                             {
                                 extend: 'excelHtml5',
                                 footer: true, // Bao gồm footer khi xuất file Excel
                                 text: 'Excel',
+                                title: document.title,
+                            },
+                            {
+                                extend: 'csvHtml5',
+                                footer: true, // Bao gồm footer trong bản copy
+                                text: 'Export',
+                                title: document.title,
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                footer: true, // Bao gồm footer trong bản copy
+                                text: 'PDF',
                                 title: document.title,
                             },
                         ]
