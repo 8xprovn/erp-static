@@ -77,24 +77,6 @@ var Datatable = function() {
                     searching: true,
                     scrollY: '60vh',
                     scrollCollapse: true,
-                    createdRow: function(row, data, dataIndex) {
-                        // Kiểm tra điều kiện để thêm class "no-sort-row" vào hàng
-                        if ($(row).hasClass('no-sort-row')) {
-                            $(row).addClass('no-sort-row');
-                        }
-                    },
-                    columnDefs: [
-                        {
-                            targets: '_all', // Áp dụng logic cho tất cả các cột
-                            render: function(data, type, row, meta) {
-                                // Nếu hàng có class "no-sort-row", vô hiệu hóa sắp xếp
-                                if ($(meta.row).hasClass('no-sort-row') && type === 'sort') {
-                                    return '';
-                                }
-                                return data;
-                            }
-                        }
-                    ],
                     buttons: {            
                         dom: {
                             button: {
@@ -109,6 +91,41 @@ var Datatable = function() {
                         ]
                     }
                     
+                });
+                function calculateColumnTotalByClass(dataTable, columnClass) {
+                    var total = 0;
+            
+                    // Lặp qua tất cả các cột trong DataTable
+                    dataTable.columns().every(function () {
+                        var columnIndex = this.index();
+                        var headerClass = $(this.header()).attr('class') || '';
+            
+                        // Kiểm tra nếu class của cột chứa `columnClass`
+                        if (headerClass.includes(columnClass)) {
+                            // Lấy dữ liệu trong cột và tính tổng
+                            total += dataTable
+                                .column(columnIndex, { search: 'applied' }) // Lấy dữ liệu đã lọc
+                                .data()
+                                .reduce(function (subtotal, value) {
+                                    return subtotal + parseFloat(value) || 0; // Chuyển thành số và cộng dồn
+                                }, 0);
+                        }
+                    });
+            
+                    return total;
+                }
+            
+                // Tính tổng cho từng class
+                var columnClasses = ['sum-column']; // Danh sách các class cần tính tổng
+                columnClasses.forEach(function (columnClass) {
+                    var total = calculateColumnTotalByClass(dataTableReport, columnClass);
+            
+                    // Nếu có tổng thì hiển thị ra footer
+                    if (total !== 0) {
+                        $('.datatable-footer').append(
+                            '<div>Total for ' + columnClass + ': ' + total.toFixed(2) + '</div>'
+                        );
+                    }
                 });
             }, 2000);
         }
