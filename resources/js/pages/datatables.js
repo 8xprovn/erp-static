@@ -84,12 +84,96 @@ var Datatable = function() {
                             }
                         },
                         buttons: [
-                            'copyHtml5',
-                            'excelHtml5',
-                            'csvHtml5',
-                            'pdfHtml5'
+                            {
+                                extend: 'copyHtml5',
+                                footer: true, // Bao gồm footer trong bản copy
+                                text: 'Copy to Clipboard'
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                footer: true, // Bao gồm footer khi xuất file Excel
+                                text: 'Export to Excel',
+                                customize: function (xlsx) {
+                                    var sheet = xlsx.xl.worksheets['sheet1.xml']; // Truy cập sheet dữ liệu
+                    
+                                    // Tạo dòng tổng ở cuối
+                                    var lastRow = $('row', sheet).last().attr('r'); // Lấy số thứ tự dòng cuối
+                                    var newRowIndex = parseInt(lastRow) + 1; // Tạo dòng mới ngay sau đó
+                    
+                                    // Bắt đầu thêm dòng tổng
+                                    var totalRow = '<row r="' + newRowIndex + '">';
+                                    var columns = $('.datatable_report th').length; // Số cột trong bảng
+                    
+                                    for (var i = 1; i <= columns; i++) {
+                                        if ($('.datatable_report th:nth-child(' + i + ')').hasClass('sum-column')) {
+                                            // Nếu cột có class 'sum-column', tính tổng
+                                            var total = 0;
+                                            dataTableReport.column(i - 1, { page: 'current' }).data().each(function (value) {
+                                                total += parseFloat(value) || 0;
+                                            });
+                    
+                                            totalRow += '<c t="inlineStr"><is><t>' + Math.round(total) + '</t></is></c>'; // Ghi tổng
+                                        } else {
+                                            // Nếu không, để trống
+                                            totalRow += '<c t="inlineStr"><is><t></t></is></c>';
+                                        }
+                                    }
+                                    totalRow += '</row>';
+                    
+                                    // Thêm dòng tổng vào cuối file Excel
+                                    $(sheet).find('sheetData').append(totalRow);
+                                }
+                            },
+                            {
+                                extend: 'csvHtml5',
+                                footer: true, // Bao gồm footer khi xuất file CSV
+                                text: 'Export to CSV',
+                                customize: function (csv) {
+                                    var totalRow = [];
+                                    $('.datatable_report th').each(function (index) {
+                                        if ($(this).hasClass('sum-column')) {
+                                            // Nếu cột có class 'sum-column', tính tổng
+                                            var total = 0;
+                                            dataTableReport.column(index, { page: 'current' }).data().each(function (value) {
+                                                total += parseFloat(value) || 0;
+                                            });
+                                            totalRow.push(Math.round(total));
+                                        } else {
+                                            totalRow.push(''); // Không có tổng thì để trống
+                                        }
+                                    });
+                    
+                                    // Thêm dòng tổng vào cuối file CSV
+                                    csv += '\n' + totalRow.join(',');
+                                    return csv;
+                                }
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                footer: true, // Bao gồm footer trong file PDF
+                                text: 'Export to PDF',
+                                customize: function (doc) {
+                                    // Tạo dòng tổng
+                                    var totalRow = [];
+                                    $('.datatable_report th').each(function (index) {
+                                        if ($(this).hasClass('sum-column')) {
+                                            var total = 0;
+                                            dataTableReport.column(index, { page: 'current' }).data().each(function (value) {
+                                                total += parseFloat(value) || 0;
+                                            });
+                                            totalRow.push({ text: Math.round(total), style: 'tableFooter' });
+                                        } else {
+                                            totalRow.push({ text: '', style: 'tableFooter' });
+                                        }
+                                    });
+                    
+                                    // Thêm dòng tổng vào bảng
+                                    doc.content[1].table.body.push(totalRow);
+                                }
+                            }
                         ]
                     },
+                    
                     footerCallback: function (row, data, start, end, display) {
                         var api = this.api();
                 
@@ -114,7 +198,7 @@ var Datatable = function() {
                                 }, 0);
                 
                             // Hiển thị tổng giá trị trong footer của cột
-                            $(column.footer()).html(total.toFixed(2));
+                            $(column.footer()).html(Math.round(total));
                         });
                     }
                     
