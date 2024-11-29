@@ -94,6 +94,99 @@ var Datatable = function() {
                 });
             }, 2000);
         }
+        if ($('.datatable_report_sum').length > 0) {
+            setTimeout(function(){
+                var dataTableReport = parentDom.find('.datatable_report_sum').DataTable({
+                    // columnDefs: [
+                    // ],
+                    // scrollX: true,
+                    // scrollY: '55vh',
+                    //scrollCollapse: true,
+                    dom: '<"datatable-header"fBl><"datatable-scroll-wrap"t><"datatable-footer"ip>',
+                    language: {
+                        search: '<span>Filter:</span> _INPUT_',
+                        searchPlaceholder: 'Type to filter...',
+                        lengthMenu: '<span>Show:</span> _MENU_',
+                        paginate: { 'first': 'First', 'last': 'Last', 'next': $('html').attr('dir') == 'rtl' ? '&larr;' : '&rarr;', 'previous': $('html').attr('dir') == 'rtl' ? '&rarr;' : '&larr;' }
+                    },
+                    responsive: true,
+                    paging: false,
+                    autoWidth: true,
+                    processing: true,
+                    bInfo : false,
+                    ordering: true, 
+                    autoWidth: true,
+                    searching: true,
+                    scrollY: '60vh',
+                    scrollCollapse: true,
+                    buttons: {            
+                        dom: {
+                            button: {
+                                className: 'btn btn-light'
+                            }
+                        },
+                        buttons: [
+                            {
+                                extend: 'copyHtml5',
+                                footer: true, // Bao gồm footer trong bản copy
+                                text: 'Copy',
+                                title: document.title,
+                            },
+                            {
+                                extend: 'excelHtml5',
+                                footer: true, // Bao gồm footer khi xuất file Excel
+                                text: 'Excel',
+                                title: document.title,
+                            },
+                            {
+                                extend: 'csvHtml5',
+                                footer: true, // Bao gồm footer trong bản copy
+                                text: 'CSV',
+                                title: document.title,
+                            },
+                            {
+                                extend: 'pdfHtml5',
+                                footer: true, // Bao gồm footer trong bản copy
+                                text: 'PDF',
+                                title: document.title,
+                            },
+                        ]
+                    },
+                    
+                    footerCallback: function (row, data, start, end, display) {
+                        var api = this.api();
+                        if (!$('tfoot', api.table().container()).length) {
+                            return; // Thoát nếu không có footer
+                        }
+                
+                        // Hàm tiện ích để định dạng số
+                        var intVal = function (i) {
+                            return typeof i === 'string'
+                                ? i.replace(/[\$,]/g, '') * 1
+                                : typeof i === 'number'
+                                ? i
+                                : 0;
+                        };
+                
+                        // Lặp qua từng cột cần tính tổng
+                        api.columns('.sum-column', { page: 'current' }).every(function () {
+                            var column = this;
+                
+                            // Tính tổng giá trị cột hiện tại
+                            var total = column
+                                .data()
+                                .reduce(function (a, b) {
+                                    return intVal(a) + intVal(b);
+                                }, 0);
+                
+                            // Hiển thị tổng giá trị trong footer của cột
+                            $(column.footer()).html(Math.round(total));
+                        });
+                    }
+                    
+                });
+            }, 2000);
+        }
         // setTimeout(function(){
         //     dataTableReport.columns.adjust();
         // }, 3000);
