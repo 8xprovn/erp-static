@@ -141,7 +141,7 @@ var Datatable = function() {
                             {
                                 extend: 'csvHtml5',
                                 footer: true, // Bao gồm footer trong bản copy
-                                text: 'Export',
+                                text: 'CSV',
                                 title: document.title,
                             },
                             {
