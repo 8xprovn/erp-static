@@ -180,7 +180,8 @@ var Datatable = function() {
                                 }, 0);
                 
                             // Hiển thị tổng giá trị trong footer của cột
-                            $(column.footer()).html(Math.round(total));
+                            total = Math.round(total);
+                            $(column.footer()).html(total.toLocaleString('en-US'));
                         });
                     }
                     
