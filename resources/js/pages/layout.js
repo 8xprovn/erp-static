@@ -313,6 +313,119 @@ const Layout = (function () {
                 });
             });
         });
+
+        $("body").on("click", ".quick-action-confirm-loading", function () {
+            // Setup
+            var url = $(this).attr("action");
+            var method = $(this).attr("method") || "POST";
+            var content =
+                $(this).attr("content") ||
+                "Bạn có chắc muốn thực hiện thao tác không ?";
+            if (!url) {
+                show_notify_error("Lỗi mã code. Liên hệ với IT để được hỗ trợ");
+                return false;
+            }
+            var notice = new PNotify({
+                title: "Xác nhận thông tin",
+                text: "<p>" + content + "</p>",
+                hide: false,
+                type: "warning",
+                confirm: {
+                    confirm: true,
+                    buttons: [
+                        {
+                            text: "Đồng ý",
+                            addClass: "btn btn-sm btn-primary",
+                        },
+                        {
+                            addClass: "btn btn-sm btn-link",
+                        },
+                    ],
+                },
+                buttons: {
+                    closer: false,
+                    sticker: false,
+                },
+            });
+
+            // On confirm
+            notice.get().on("pnotify.confirm", function () {
+                var ajax_call_id = Math.random().toString(36).substring(2);
+                html =
+                    '<div id="' +
+                    ajax_call_id +
+                    '" class="modal right fade bd-example-modal-lg" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">\
+                            <div class="modal-dialog">\
+                            <div class="modal-content">\
+                                <div class="d-flex justify-content-center" style="position: absolute; top: 45%; left: 45%;">\
+                                    <div class="spinner-grow text-primary" role="status">\
+                                        <span class="sr-only">Loading...</span>\
+                                    </div>\
+                                    <div class="spinner-grow text-secondary" role="status">\
+                                        <span class="sr-only">Loading...</span>\
+                                    </div>\
+                                    <div class="spinner-grow text-success" role="status">\
+                                        <span class="sr-only">Loading...</span>\
+                                    </div>\
+                                    <div class="spinner-grow text-danger" role="status">\
+                                        <span class="sr-only">Loading...</span>\
+                                    </div>\
+                                    <div class="spinner-grow text-warning" role="status">\
+                                        <span class="sr-only">Loading...</span>\
+                                    </div>\
+                                </div>\
+                                <div class="modal-body-content d-none">\
+                                </div>\
+                            </div>\
+                            </div>\
+                        </div>';
+                $("body").append(html);
+                //console.log(url);
+                var body = $("#" + ajax_call_id);
+                body.modal();
+                $.ajax({
+                    type: method,
+                    url: url,
+                    //data: dataSerialize, // serializes the form's elements.
+                    dataType: "json",
+                    success: function (response) {
+                        body.find(".justify-content-center").remove();
+                        body.find(".modal-body-content").html(data);
+                        body.find(".page-header").remove();
+                        body.find(".content").removeClass("content");
+                        body.find(".card").removeClass("card");
+                        body.find(".card").removeClass("card");
+                        body.find("form").attr("data-redirect-uri", "popup_close");
+                        body.find("form").attr("data-popup-id", ajax_call_id);
+                        body.find(".modal-body-content").removeClass("d-none");
+                        //////////////////////
+                        body.on("hidden.bs.modal", function (e) {
+                            $(this).remove();
+                        });
+                        if (response.error || response.status == "error") {
+                            show_notify_error(response);
+                            return false;
+                        }
+                        new PNotify({
+                            title: "Success",
+                            text:
+                                typeof response.message != "undefined"
+                                    ? response.message
+                                    : "Đã cập nhật thông tin thành công",
+                            type: "success",
+                            styling: "bootstrap3",
+                            delay: 2000,
+                            mouse_reset: false,
+                        });
+                        redirectAjaxUrl(window.location.href);
+                    },
+                    error: function (e) {
+                        show_notify_error(e.responseText);
+                    },
+                });
+            });
+        });
+
         $("body").on("click", ".quick-action-not-confirm", function () {
             // Setup
             var url = $(this).attr("action");
