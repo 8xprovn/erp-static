@@ -420,6 +420,19 @@ const Layout = (function () {
                         redirectAjaxUrl(window.location.href);
                     },
                     error: function (e) {
+                        body.find(".justify-content-center").remove();
+                        body.find(".modal-body-content").html(data);
+                        body.find(".page-header").remove();
+                        body.find(".content").removeClass("content");
+                        body.find(".card").removeClass("card");
+                        body.find(".card").removeClass("card");
+                        body.find("form").attr("data-redirect-uri", "popup_close");
+                        body.find("form").attr("data-popup-id", ajax_call_id);
+                        body.find(".modal-body-content").removeClass("d-none");
+                        //////////////////////
+                        body.on("hidden.bs.modal", function (e) {
+                            $(this).remove();
+                        });
                         show_notify_error(e.responseText);
                     },
                 });
