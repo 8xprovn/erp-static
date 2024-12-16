@@ -551,6 +551,13 @@ const AutoloadDataService = (function () {
             query: ["name"],
             version: 2,
         },
+        "core-workflow": {
+            url: window.API_SERVICE_URL_V2 + "/core/workflows",
+            formated: "$(name)",
+            id: "_id",
+            query: ["name", "service_code", "service_id"],
+            version: 2,
+        },
         "core-event": {
             url: window.API_SERVICE_URL_V2 + "/core/events",
             formated: "$(name)",
@@ -1403,6 +1410,14 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/core/services",
             dom: ".em-core-service",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/core/workflows",
+            dom: ".em-core-workflow",
             attr: "data-id",
             formated: "$(name)",
             fk: "_id",

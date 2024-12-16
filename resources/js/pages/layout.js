@@ -313,6 +313,78 @@ const Layout = (function () {
                 });
             });
         });
+
+        $("body").on("click", ".quick-action-confirm-loading", function () {
+            // Setup
+            var url = $(this).attr("action");
+            var method = $(this).attr("method") || "POST";
+            var content =
+                $(this).attr("content") ||
+                "Bạn có chắc muốn thực hiện thao tác không ?";
+            if (!url) {
+                show_notify_error("Lỗi mã code. Liên hệ với IT để được hỗ trợ");
+                return false;
+            }
+            var notice = new PNotify({
+                title: "Xác nhận thông tin",
+                text: "<p>" + content + "</p>",
+                hide: false,
+                type: "warning",
+                confirm: {
+                    confirm: true,
+                    buttons: [
+                        {
+                            text: "Đồng ý",
+                            addClass: "btn btn-sm btn-primary",
+                        },
+                        {
+                            addClass: "btn btn-sm btn-link",
+                        },
+                    ],
+                },
+                buttons: {
+                    closer: false,
+                    sticker: false,
+                },
+            });
+
+            // On confirm
+            notice.get().on("pnotify.confirm", function () {
+                $.ajax({
+                    type: method,
+                    url: url,
+                    //data: dataSerialize, // serializes the form's elements.
+                    dataType: "json",
+                    beforeSend: function () {
+                        progress_loading.show();
+                    },
+                    success: function (response) {
+                        progress_loading.hide();
+                        if (response.error || response.status == "error") {
+                            show_notify_error(response);
+                            return false;
+                        }
+                        new PNotify({
+                            title: "Success",
+                            text:
+                                typeof response.message != "undefined"
+                                    ? response.message
+                                    : "Đã cập nhật thông tin thành công",
+                            type: "success",
+                            styling: "bootstrap3",
+                            delay: 2000,
+                            mouse_reset: false,
+                        });
+                        redirectAjaxUrl(window.location.href);
+                    },
+                    error: function (e) {
+                        progress_loading.hide();
+                        show_notify_error(e.responseText);
+                    },
+                });
+            });
+        });
+
         $("body").on("click", ".quick-action-not-confirm", function () {
             // Setup
             var url = $(this).attr("action");
