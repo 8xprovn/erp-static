@@ -255,6 +255,7 @@ const AutoloadDataService = (function () {
                 "is_completed",
                 "review_classification",
                 "test_classification",
+                "consultation_classification"
             ],
             id: "schedule_number",
             version: 2,
