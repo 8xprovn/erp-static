@@ -2687,7 +2687,7 @@ var Datatable = function() {
                         
                     }); 
                     $(window).on('resize', function () {
-                        var newLeftColumns = window.innerWidth > 768 ? dataPosition : dataRepoPosition;
+                        var newLeftColumns = window.innerWidth > 768 ? dataPosition : dataZisePosition;
                         if (newLeftColumns !== fixedColumns.leftColumns) {
                             fixedColumns.leftColumns = newLeftColumns;
             
