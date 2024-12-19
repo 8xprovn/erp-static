@@ -203,7 +203,7 @@ var Datatable = function() {
                     var $table = $(this);
                     var dataPosition = $(this).attr("data-position") || 1;
                     var dataRightPosition = $(this).attr("data-right-position") || 0;
-                    var dataZisePosition = $(this).attr("data-size-position") || 0;
+                    var dataZisePosition = $(this).attr("data-responsive-position") || 0;
                     var leftColumns = window.innerWidth > 768 ? dataPosition : dataZisePosition; // Điều kiện kiểm tra
                     var fixedColumns = {
                         leftColumns: leftColumns,
@@ -260,7 +260,7 @@ var Datatable = function() {
                     var $table = $(this);
                     var dataPosition = $(this).attr("data-position") || 1;
                     var dataRightPosition = $(this).attr("data-right-position") || 0;
-                    var dataZisePosition = $(this).attr("data-size-position") || 0;
+                    var dataZisePosition = $(this).attr("data-responsive-position") || 0;
                     var leftColumns = window.innerWidth > 768 ? dataPosition : dataZisePosition; // Điều kiện kiểm tra
                     var fixedColumns = {
                         leftColumns: leftColumns,
