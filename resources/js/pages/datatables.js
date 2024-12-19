@@ -257,10 +257,13 @@ var Datatable = function() {
             //var  setTimeout(function(){
                 //fixedTable.columns.adjust();
                 $('.datatable-fixed-left-search').each(function(){
+                    var $table = $(this);
                     var dataPosition = $(this).attr("data-position") || 1;
                     var dataRightPosition = $(this).attr("data-right-position") || 0;
-                    var fixedColumns =  {
-                        leftColumns: dataPosition,
+                    var dataZisePosition = $(this).attr("data-size-position") || 0;
+                    var leftColumns = window.innerWidth > 768 ? dataPosition : dataZisePosition; // Điều kiện kiểm tra
+                    var fixedColumns = {
+                        leftColumns: leftColumns,
                     };
                     if (dataRightPosition > 0) {
                         fixedColumns.rightColumns = dataRightPosition;
@@ -279,6 +282,25 @@ var Datatable = function() {
                         buttons: [],
                         
                     }); 
+                    $(window).on('resize', function () {
+                        var newLeftColumns = window.innerWidth > 768 ? dataPosition : dataZisePosition;
+                        if (newLeftColumns !== fixedColumns.leftColumns) {
+                            fixedColumns.leftColumns = newLeftColumns;
+            
+                            // Xóa bảng hiện tại và khởi tạo lại
+                            fixedTable.destroy(); 
+                            fixedTable = $table.DataTable({ // Sử dụng $table thay vì $(this)
+                                scrollX: true,
+                                paging: false,
+                                searching: true,
+                                bInfo: false,
+                                ordering: false,
+                                scrollY: '60vh',
+                                scrollCollapse: true,
+                                fixedColumns: fixedColumns,
+                            });
+                        }
+                    });
                     arrTimeout.push(setInterval(function(){
                          fixedTable.columns.adjust();
                     }, 2000));
