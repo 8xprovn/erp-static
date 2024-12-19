@@ -87,10 +87,7 @@ var FileUpload = function() {
                         },
                         withCredentials: false,
                         onload: (res) => {
-                            if(_function_callback && typeof window[_function_callback] === "function"){ 
-                                // Gọi hàm callback
-                                return window[_function_callback](res); 
-                            }
+                            
                             res = JSON.parse(res)
                             if (res.error) {
                                 alert(res.message)
@@ -115,6 +112,10 @@ var FileUpload = function() {
                                 domUpload.append('<input type="hidden" name="' + fieldName + '" value="' + res.path +'">');
                                 //$("body").html('<input type="hidden" name="' + fieldName + '" value="' + res.path +'">');
                                 return res.path;
+                            }
+                            if(_function_callback && typeof window[_function_callback] === "function"){ 
+                                // Gọi hàm callback
+                                return window[_function_callback](res); 
                             }
                         },
                         onerror: (response) => {
