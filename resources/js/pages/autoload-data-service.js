@@ -66,6 +66,13 @@ const AutoloadDataService = (function () {
             query: [],
             version: 2,
         },
+        setting_document: {
+            url: window.API_SERVICE_URL_V2 + "/support/setting_document",
+            formated: "$(name)",
+            id: "name",
+            query: [],
+            version: 2,
+        },
         ///////////// HR /////////////
         employee: {
             url: window.API_SERVICE_URL_V2 + "/hr/employees/custom/search",
@@ -999,6 +1006,14 @@ const AutoloadDataService = (function () {
         // 	'version': 2,
         // },
         //////// END EDU /////
+        {
+            url: window.API_SERVICE_URL_V2 + "/support/setting_document",
+            dom: ".em-setting-document",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["name"],
+            fk: "_id",
+        },
         {
             url: window.API_SERVICE_URL_V2 + "/org/branch",
             dom: ".em-branch",
