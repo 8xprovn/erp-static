@@ -1013,6 +1013,7 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             query: ["name"],
             fk: "_id",
+            version: 2,
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/branch",
