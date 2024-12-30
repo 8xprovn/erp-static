@@ -70,7 +70,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/support/setting_document",
             formated: "$(name)",
             id: "_id",
-            query: [],
+            query: ['type_file', 'service'],
             version: 2,
         },
         ///////////// HR /////////////
