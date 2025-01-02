@@ -1301,7 +1301,7 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
-            url: window.API_SERVICE_URL + "/finance/vouchers-category",
+            url: window.API_SERVICE_URL_V2 + "/finance/vouchers-category",
             dom: ".finance_vouchers_category",
             attr: "data-id",
             formated: "$(name)",
@@ -1310,7 +1310,7 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
-            url: window.API_SERVICE_URL + "/finance/vouchers",
+            url: window.API_SERVICE_URL_V2 + "/finance/vouchers",
             dom: ".finance_vouchers",
             attr: "data-id",
             formated: "$(name)",
