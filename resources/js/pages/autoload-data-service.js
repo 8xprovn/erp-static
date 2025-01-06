@@ -1643,8 +1643,20 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             fk: "_id",
             version: 2,
-        }
+        },
         ///// end asset /////
+
+        // course v2
+        {
+            url: window.API_SERVICE_URL_V2 + "/course/course",
+            dom: ".em-course_course",
+            attr: "data-id",
+            formated: "$(title)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        // end course v2
     ];
 
     //
