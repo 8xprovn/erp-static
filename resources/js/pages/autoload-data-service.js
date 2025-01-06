@@ -733,7 +733,7 @@ const AutoloadDataService = (function () {
         course_v2: {
             url: window.API_SERVICE_URL_V2 + "/course/course",
             //'search_param': 'name',
-            formated: "$(name)",
+            formated: "$(title)",
             id: "_id",
             query: ["brand_id", "status"],
             version: 2,
