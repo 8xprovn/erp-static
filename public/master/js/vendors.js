@@ -3645,7 +3645,7 @@ const AutoloadDataService = (function () {
             //'search_param': 'name',
             formated: "$(name)",
             id: "_id",
-            query: ["brand_id", "status", "type", "version_id"],
+            query: ["brand_id", "status"],
             version: 2,
         }
     };
