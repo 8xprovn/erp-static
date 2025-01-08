@@ -377,7 +377,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/finance/transaction-type",
             formated: "$(name)",
             id: "_id",
-            query: ["type", "status"],
+            query: ["type", "status", "is_show_form"],
             version: 2,
         },
         finance_vouchers_category: {
@@ -726,18 +726,8 @@ const AutoloadDataService = (function () {
             id: "_id",
             query: ["_id", "asset_id", "attribute_id", 'status', 'status_detail', 'allocation_status'],
             version: 2,
-        },
-        ///// end asset /////
-
-        //Course V2//
-        course_v2: {
-            url: window.API_SERVICE_URL_V2 + "/course/course",
-            //'search_param': 'name',
-            formated: "$(title)",
-            id: "_id",
-            query: ["brand_id", "status"],
-            version: 2,
         }
+        ///// end asset /////
     };
     var arrDomAutoFill = [
         {
@@ -1643,20 +1633,8 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             fk: "_id",
             version: 2,
-        },
+        }
         ///// end asset /////
-
-        // course v2
-        {
-            url: window.API_SERVICE_URL_V2 + "/course/course",
-            dom: ".em-course_course",
-            attr: "data-id",
-            formated: "$(title)",
-            query: ["_id"],
-            fk: "_id",
-            version: 2,
-        },
-        // end course v2
     ];
 
     //
