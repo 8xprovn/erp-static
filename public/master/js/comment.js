@@ -1,4 +1,36 @@
 
+
+function customAjax(options) {
+    // Kiểm tra xem cookie_name có tồn tại và có giá trị hợp lệ không
+    if (typeof cookie_name === 'undefined' || cookie_name === null || cookie_name === "") {
+        console.warn("cookie_name is not defined or is empty. Aborting request.");
+        return; // Dừng lại nếu cookie_name không hợp lệ
+    }
+
+    // Default configurations for this file
+    let defaultOptions = {
+        headers: {
+            Authorization: "Bearer " + getCookie(cookie_name),
+            "Content-Type": "application/json",
+            "contact-id": $('meta[name="contact-id"]').attr("content") || "",
+            token: $('meta[name="contact-token"]').attr("content") || "",
+        },
+        beforeSend: function (xhr) {
+            // Kiểm tra cookie_name ở đây một lần nữa nếu cần
+            if (typeof cookie_name === 'undefined' || cookie_name === null || cookie_name === "") {
+                console.warn("cookie_name is not defined or is empty. Aborting request.");
+                return false; // Dừng lại nếu cookie_name không hợp lệ
+            }
+        },
+    };
+
+    // Merge default options with specific request options
+    let finalOptions = $.extend(true, {}, defaultOptions, options);
+
+    // Execute AJAX call
+    return $.ajax(finalOptions);
+}
+
 (function (global, factory) {
     typeof exports === "object" && typeof module !== "undefined"
         ? (module.exports = factory())
@@ -2808,29 +2840,36 @@
             document.execCommand("insertText", false, text);
         });
 
-        $.ajaxSetup({
-            beforeSend: function (xhr) {
-                if (typeof cookie_name === 'undefined' || cookie_name === null) {
-                    return false;
-                }
-                xhr.setRequestHeader(
-                    "Authorization",
-                    "Bearer " + getCookie(cookie_name)
-                );
-                xhr.setRequestHeader("Content-Type", "application/json");
-                if ($('meta[name="contact-id"]').length > 0)
-                    xhr.setRequestHeader(
-                        "contact-id",
-                        $('meta[name="contact-id"]').attr("content")
-                    );
-                if ($('meta[name="contact-token"]').length > 0)
-                    xhr.setRequestHeader(
-                        "token",
-                        $('meta[name="contact-token"]').attr("content")
-                    );
-                // Thêm bất kỳ tiêu đề nào khác bạn cần gửi với mỗi yêu cầu
-            },
-        });
+        // $.ajaxSetup({
+            
+            
+        //     beforeSend: function (xhr) {
+        //         console.log(111);
+        //         if (typeof cookie_name === 'undefined' || cookie_name === null) {
+        //             console.log(111);
+                    
+        //             return false;
+        //         }
+        //         console.log(cookie_name);
+                
+        //         xhr.setRequestHeader(
+        //             "Authorization",
+        //             "Bearer " + getCookie(cookie_name)
+        //         );
+        //         xhr.setRequestHeader("Content-Type", "application/json");
+        //         if ($('meta[name="contact-id"]').length > 0)
+        //             xhr.setRequestHeader(
+        //                 "contact-id",
+        //                 $('meta[name="contact-id"]').attr("content")
+        //             );
+        //         if ($('meta[name="contact-token"]').length > 0)
+        //             xhr.setRequestHeader(
+        //                 "token",
+        //                 $('meta[name="contact-token"]').attr("content")
+        //             );
+        //         // Thêm bất kỳ tiêu đề nào khác bạn cần gửi với mỗi yêu cầu
+        //     },
+        // });
 
         Handle.init();
     });
@@ -2895,7 +2934,7 @@
                 let relate_type = $(this).attr("data-relate-type");
                 let type = $(this).attr("data-type");
                 let relate_id = $(this).attr("data-relate-id");
-                $.ajax({
+                customAjax({
                     url: url_like,
                     type: "POST",
                     data: JSON.stringify({ relate_id, relate_type, type }),
@@ -2959,7 +2998,7 @@
 
                 // On confirm
                 notice.get().on("pnotify.confirm", function () {
-                    $.ajax({
+                    customAjax({
                         type: method,
                         url: url,
                         //data: dataSerialize, // serializes the form's elements.
@@ -3004,7 +3043,7 @@
                 return; // Dừng xử lý nếu cần
             }
             if (formJSON) {
-                $.ajax({
+                customAjax({
                     type: "POST",
                     data: JSON.stringify(formJSON),
 
@@ -3238,7 +3277,7 @@ $(document).ready(function () {
             return false;
         }
 
-        $.ajax({
+        customAjax({
             headers: {
                 Authorization: "Bearer " + getCookie(cookie_name),
                 "Content-Type": "application/json",
