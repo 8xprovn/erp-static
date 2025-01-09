@@ -377,7 +377,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/finance/transaction-type",
             formated: "$(name)",
             id: "_id",
-            query: ["type", "status"],
+            query: ["type", "status", "is_show_form"],
             version: 2,
         },
         finance_vouchers_category: {
