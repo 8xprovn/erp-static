@@ -1287,6 +1287,7 @@ const AutoloadDataService = (function () {
             dom: ".finance_wallets",
             attr: "data-id",
             formated: "$(name)",
+            link: "/finance/$(type)/wallets/$(_id)",
             query: ["_id"],
             fk: "_id",
             version: 2,
