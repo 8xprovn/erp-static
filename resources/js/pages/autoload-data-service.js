@@ -70,7 +70,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/support/setting_document",
             formated: "$(name)",
             id: "_id",
-            query: ['type_file', 'service'],
+            query: ['type_file', 'service', '_id'],
             version: 2,
         },
         ///////////// HR /////////////
@@ -377,7 +377,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/finance/transaction-type",
             formated: "$(name)",
             id: "_id",
-            query: ["type", "status"],
+            query: ["type", "status", "is_show_form"],
             version: 2,
         },
         finance_vouchers_category: {
@@ -1287,6 +1287,7 @@ const AutoloadDataService = (function () {
             dom: ".finance_wallets",
             attr: "data-id",
             formated: "$(name)",
+            link: "/finance/$(type)/wallets/$(_id)",
             query: ["_id"],
             fk: "_id",
             version: 2,
