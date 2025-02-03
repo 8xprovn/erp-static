@@ -201,6 +201,10 @@ var Datatable = function() {
                 //fixedTable.columns.adjust();
                 $('.datatable-fixed-left').each(function(){
                     var $table = $(this);
+                    if ($table.find('tbody tr').length === 0) {
+                        // console.warn("Bảng trống, không khởi tạo DataTable.");
+                        return; // Dừng việc khởi tạo DataTable
+                    }
                     var dataPosition = $(this).attr("data-position") || 1;
                     var dataRightPosition = $(this).attr("data-right-position") || 0;
                     var dataZisePosition = $(this).attr("data-responsive-position") || 0;
@@ -258,6 +262,10 @@ var Datatable = function() {
                 //fixedTable.columns.adjust();
                 $('.datatable-fixed-left-search').each(function(){
                     var $table = $(this);
+                    if ($table.find('tbody tr').length === 0) {
+                        // console.warn("Bảng trống, không khởi tạo DataTable.");
+                        return; // Dừng việc khởi tạo DataTable
+                    }
                     var dataPosition = $(this).attr("data-position") || 1;
                     var dataRightPosition = $(this).attr("data-right-position") || 0;
                     var dataZisePosition = $(this).attr("data-responsive-position") || 0;
