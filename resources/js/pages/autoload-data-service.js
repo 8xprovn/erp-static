@@ -730,21 +730,21 @@ const AutoloadDataService = (function () {
         ///// end asset /////
         "recruitment-job": {
             url: window.API_SERVICE_URL_V2 + "/recruitment/job",
-            formated: "$(name)",
+            formated: "$(title)",
             id: "_id",
             query: ["_id","type", "status","employee_type", "category_id", "brand_id", "branch_id"],
             version: 2,
         },
         "recruitment-candidate": {
             url: window.API_SERVICE_URL_V2 + "/recruitment/candidate",
-            formated: "$(name)",
+            formated: "$(fullname)",
             id: "_id",
             query: ["_id"],
             version: 2,
         },
         "recruitment-profile": {
             url: window.API_SERVICE_URL_V2 + "/recruitment/profile",
-            formated: "$(name)",
+            formated: "$(fullname)",
             id: "_id",
             query: ["_id"],
             version: 2,
@@ -998,7 +998,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/recruitment/job_category",
             dom: ".recruitment-job-category",
             attr: "data-id",
-            formated: "$(title)",
+            formated: "$(name)",
             query: ["_id"],
             fk: "_id",
             version: 2,
