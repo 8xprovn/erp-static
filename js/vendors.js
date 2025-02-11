@@ -19460,10 +19460,8 @@ function Initialize(params = {}) {
         initTinymce();
     }
     if (parentDom.find('.tinymce').length > 0) {
-      console.log(2);
       tinymce.baseURL = "https://master-ebomb-cdn.ebomb.edu.vn/theme/backend/js/tinymce";
       parentDom.find('.tinymce').each(function() {
-        console.log(1);
           var randomString = Math.random().toString(36).slice(-10);
           $(this).addClass(randomString);
           loadTinyMce(randomString);
