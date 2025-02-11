@@ -19459,6 +19459,14 @@ function Initialize(params = {}) {
     if (parentDom.find('.wysiwyg').length) {
         initTinymce();
     }
+    if ($('.tinymce').length > 0) {
+      tinymce.baseURL = "https://master-ebomb-cdn.ebomb.edu.vn/theme/backend/js/tinymce";
+      $('.tinymce').each(function() {
+          var randomString = Math.random().toString(36).slice(-10);
+          $(this).addClass(randomString);
+          loadTinyMce(randomString);
+      });
+    }
 }
 var __cache = [];
 
