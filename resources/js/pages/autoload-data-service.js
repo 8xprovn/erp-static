@@ -993,6 +993,7 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             fk: "_id",
             version: 2,
+            link: "/recruitment/jobs/$(_id)",
         },
         {
             url: window.API_SERVICE_URL_V2 + "/recruitment/job_category",
