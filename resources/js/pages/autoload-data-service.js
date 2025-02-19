@@ -527,7 +527,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/notification/template",
             formated: "$(name)",
             id: "_id",
-            query: ["name", "brand_id", "noti-type", "status"],
+            query: ["name", "brand_id", "noti-type", "status", "code"],
             version: 2,
         },
         ///////////CALL CENTER/////////////////////
