@@ -102,6 +102,12 @@ $(document).ready(function () {
                         <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Notification</div>\
                     </a>\
                 </div>',
+        'asset': '<div class="col-4">\
+                    <a href="https://erp.ebomb.edu.vn/asset" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
+                        <i class="icon-coins text-success icon-2x"></i>\
+                        <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Tài sản</div>\
+                    </a>\
+                </div>',
     }
     
     $.each(objMenu,function(k,v){
