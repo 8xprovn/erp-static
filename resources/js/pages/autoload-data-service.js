@@ -194,6 +194,13 @@ const AutoloadDataService = (function () {
             id: "_id",
             version: 2,
         },
+        'sys-district': {
+            url: window.API_SERVICE_URL_V2 + "/org/districts",
+            formated: "$(name)",
+            query: ["city_id", "code", "name"], // query bat buoc
+            id: "_id",
+            version: 2,
+        },
         city: {
             url: window.API_SERVICE_URL + "/org/location-cities",
             formated: "$(name)",
@@ -1103,6 +1110,14 @@ const AutoloadDataService = (function () {
             version: 2,
             indexedDB:'yes',
             indexdFormat :['name','status'],
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/org/districts",
+            dom: ".em-sys-district",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
         },
         {
             url: window.API_SERVICE_URL + "/org/location-cities",
