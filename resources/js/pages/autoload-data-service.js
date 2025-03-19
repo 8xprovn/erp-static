@@ -1117,8 +1117,6 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','city_id'],
         },
         {
             url: window.API_SERVICE_URL + "/org/location-cities",
