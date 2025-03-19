@@ -199,6 +199,7 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             query: ["city_id", "code", "name"], // query bat buoc
             id: "_id",
+            version: 2,
         },
         city: {
             url: window.API_SERVICE_URL + "/org/location-cities",
