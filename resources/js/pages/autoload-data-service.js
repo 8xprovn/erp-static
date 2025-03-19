@@ -1112,7 +1112,7 @@ const AutoloadDataService = (function () {
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/districts",
-            dom: ".em-sys-districts",
+            dom: ".em-sys-district",
             attr: "data-id",
             formated: "$(name)",
             fk: "_id",
