@@ -1118,6 +1118,8 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','status'],
         },
         {
             url: window.API_SERVICE_URL + "/org/location-cities",
@@ -1219,6 +1221,8 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['name','type', 'brand_id', 'status', 'start_time', 'assigned_employee_id', 'branch_id', 'course_id'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/crm/contact-document-type",
@@ -1237,6 +1241,8 @@ const AutoloadDataService = (function () {
             fk: "_id",
             pquery: "_id",
             version: 2,
+            indexedDB:'yes',
+            indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'branch_id', 'brand_id', 'birthdate', 'is_accout', 'is_student', 'is_children', 'is_locked'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/crm/accounts",
@@ -1898,9 +1904,10 @@ const AutoloadDataService = (function () {
     };
     
     const VERSION = 1;  // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV4";  // Tên cơ sở dữ liệu
-    //luc them ojectstorename cần tăng version lên
-    const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course", "em-sys-city", "em-position", 'em-job-title'];  // Danh sách các tên ObjectStore
+    const dbName = "ERPDBV5";  // Tên cơ sở dữ liệu
+    //luc them ojectstorename cần đổi tên dbName lên
+    const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course", "em-sys-city",
+         "em-position", 'em-job-title', "em-crm-campaigns", "crm-contact", "em-sys-district"];  // Danh sách các tên ObjectStore
     const CLEAR_DELAY = 3 * 24 * 60 * 60 * 1000; ; //Thời gian trì hoãn xóa dữ liệu
 
     let db = null;  // Đối tượng để lưu trữ kết nối đến cơ sở dữ liệu
