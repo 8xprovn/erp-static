@@ -2904,7 +2904,7 @@ function customAjax(options) {
                 }
             });
         });
-    };
+    }
     let _url_list = "";
     document.addEventListener("DOMContentLoaded", function () {
         if ($(document).find("#comment_employee_html").length > 0) {
