@@ -2893,7 +2893,7 @@ function customAjax(options) {
             tribute.hideMenu();
         }
     });
-    if (typeof tinymce !== "undefined")
+    if (typeof tinymce !== "undefined") {
         tinymce.on("addEditor", function (event) {
             let editor = event.editor;
         
