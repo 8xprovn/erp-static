@@ -2893,16 +2893,18 @@ function customAjax(options) {
             tribute.hideMenu();
         }
     });
-    tinymce.on("addEditor", function (event) {
-        let editor = event.editor;
-    
-        editor.on("click", function () {
-            let tributeMenu = document.querySelector(".tribute-container");
-            if (tributeMenu) {
-                tribute.hideMenu();
-            }
+    if (typeof tinymce !== "undefined")
+        tinymce.on("addEditor", function (event) {
+            let editor = event.editor;
+        
+            editor.on("click", function () {
+                let tributeMenu = document.querySelector(".tribute-container");
+                if (tributeMenu) {
+                    tribute.hideMenu();
+                }
+            });
         });
-    });
+    }
     let _url_list = "";
     document.addEventListener("DOMContentLoaded", function () {
         if ($(document).find("#comment_employee_html").length > 0) {
