@@ -673,6 +673,20 @@ const Layout = (function () {
                     $(this).remove();
                 });
                 body.trigger("MainContentReloaded", []);
+                body.find("script").each(function () {
+                    let newScript = document.createElement("script");
+                
+                    if (this.src) {
+                        // Nếu script có src => Tạo lại thẻ script mới để tải file từ src
+                        newScript.src = this.src;
+                        newScript.async = false; // Đảm bảo script tải theo thứ tự
+                    } else {
+                        // Nếu script inline => Chạy trực tiếp
+                        newScript.text = this.text;
+                    }
+                
+                    document.body.appendChild(newScript);
+                });
                 return true;
             },
             error: function (xhr, ajaxOptions, thrownError) {
