@@ -1066,35 +1066,8 @@ function customAjax(options) {
                         return this.tribute.collection.iframe.contentWindow.getSelection();
                     }
 
-                    // Nếu dùng TinyMCE, lấy selection từ editor
-                    if (typeof tinymce !== "undefined" && tinymce.activeEditor) {
-                        let editor = tinymce.activeEditor;
-                        let selection = editor.selection.getSel(); // Lấy selection từ TinyMCE
-                        
-                        return selection;
-                    }
-                    return document.getSelection();
-                }
-            },
-            {
-                key: "getEditorOffset",
-                value: function getEditorOffset() {
-                    // Nếu dùng TinyMCE, lấy vị trí của iframe
-                    if (typeof tinymce !== "undefined" && tinymce.activeEditor) {
-                        let editorIframe = tinymce.activeEditor.iframeElement;
-                        if (!editorIframe) return { top: 0, left: 0 };
-                        
-                        let rect = editorIframe.getBoundingClientRect();
-                        return { top: rect.top + window.scrollY, left: rect.left + window.scrollX };
-                    }
-            
-                    // Nếu không dùng TinyMCE, lấy vị trí của thẻ contenteditable
-                    let editorElement = document.querySelector("[contenteditable='true']");
-                    if (!editorElement) return { top: 0, left: 0 };
-            
-                    let rect = editorElement.getBoundingClientRect();
-                    return { top: rect.top + window.scrollY, left: rect.left + window.scrollX };
-                }
+                    return window.getSelection();
+                },
             },
             {
                 key: "getNodePositionInParent",
@@ -1155,40 +1128,40 @@ function customAjax(options) {
                     var context = this.tribute.current,
                         text = "";
 
-                    // 🏗 Nếu là input hoặc textarea thông thường
                     if (!this.isContentEditable(context.element)) {
                         var textComponent = this.tribute.current.element;
+
                         if (textComponent) {
                             var startPos = textComponent.selectionStart;
+
                             if (textComponent.value && startPos >= 0) {
-                                text = textComponent.value.substring(0, startPos);
+                                text = textComponent.value.substring(
+                                    0,
+                                    startPos
+                                );
                             }
                         }
                     } else {
-                        let selection;
-                        let node;
-                        let offset;
+                        var selectedElem = this.getWindowSelection().anchorNode;
 
-                        // 🏗 Nếu đang dùng TinyMCE, lấy selection từ TinyMCE
-                        if (typeof tinymce !== "undefined" && tinymce.activeEditor) {
-                            selection = tinymce.activeEditor.selection.getRng();
-                            node = selection.startContainer;
-                            offset = selection.startOffset;
-                        } else {
-                            // 🏗 Nếu không dùng TinyMCE, lấy selection từ document
-                            selection = this.getWindowSelection();
-                            node = selection.anchorNode;
-                            offset = selection.getRangeAt(0).startOffset;
-                        }
+                        if (selectedElem != null) {
+                            var workingNodeContent = selectedElem.textContent;
+                            var selectStartOffset =
+                                this.getWindowSelection().getRangeAt(
+                                    0
+                                ).startOffset;
 
-                        if (node && node.textContent) {
-                            text = node.textContent.substring(0, offset);
+                            if (workingNodeContent && selectStartOffset >= 0) {
+                                text = workingNodeContent.substring(
+                                    0,
+                                    selectStartOffset
+                                );
+                            }
                         }
                     }
 
                     return text;
-                }
-                
+                },
             },
             {
                 key: "getLastWordInText",
@@ -1219,6 +1192,7 @@ function customAjax(options) {
                     isAutocomplete
                 ) {
                     var _this = this;
+
                     var ctx = this.tribute.current;
                     var selected, path, offset;
 
@@ -1533,91 +1507,19 @@ function customAjax(options) {
             },
             {
                 key: "getContentEditableCaretPosition",
-                value: function getContentEditableCaretPosition(selectedNodePosition) {
+                value: function getContentEditableCaretPosition(
+                    selectedNodePosition
+                ) {
                     var range;
                     var sel = this.getWindowSelection();
-            
-                    if (!sel || !sel.anchorNode) {
-                        console.warn("Không tìm thấy selection hợp lệ");
-                        return { top: 0, left: 0 };
-                    }
-            
                     range = this.getDocument().createRange();
                     range.setStart(sel.anchorNode, selectedNodePosition);
                     range.setEnd(sel.anchorNode, selectedNodePosition);
                     range.collapse(false);
-            
                     var rect = range.getBoundingClientRect();
-                    if (typeof tinymce !== "undefined" && tinymce.activeEditor) {
-                        var editorOffset = this.getEditorOffset(); // Lấy vị trí editor nếu có
-                        var lineHeight = parseInt(window.getComputedStyle(sel.anchorNode.parentElement).lineHeight, 10) || 20; // Lấy line-height hoặc mặc định 20px
-
-                        var spaceBelow = window.innerHeight - (rect.top + editorOffset.top + lineHeight);
-                        var spaceAbove = rect.top + editorOffset.top;
-
-                        var dropdown = document.querySelector(".tribute-container");
-                        dropdown.style.visibility = "hidden";
-                        dropdown.style.display = "block";
-                        var dropdownHeight = dropdown.offsetHeight;
-                        dropdown.style.visibility = "";
-                        dropdown.style.display = "";
-
-                        var position = {
-                            top: rect.top + editorOffset.top + lineHeight, // Mặc định hiển thị dưới con trỏ
-                            left: rect.left + editorOffset.left
-                        };
-
-                        // 🔄 Điều chỉnh top/bottom dựa trên khoảng trống
-                        if (spaceBelow < dropdownHeight && spaceAbove > dropdownHeight) {
-                            position.top = rect.top + editorOffset.top - dropdownHeight - 5; // Hiển thị lên trên
-                        }
-
-                        return position;
-                    }
                     return this.getFixedCoordinatesRelativeToRect(rect);
                 },
-            },         
-            
-            {
-                key: "getWindowSelection",
-                value: function getWindowSelection() {
-                    // Nếu có iframe (ví dụ TributeJS hoặc TinyMCE)
-                    if (this.tribute && this.tribute.collection.iframe) {
-                        return this.tribute.collection.iframe.contentWindow.getSelection();
-                    }
-            
-                    // Nếu đang dùng TinyMCE, lấy selection từ editor
-                    if (typeof tinymce !== "undefined" && tinymce.activeEditor) {
-                        let editor = tinymce.activeEditor;
-                        return editor.selection.getSel(); // Lấy selection từ TinyMCE
-                    }
-            
-                    // Nếu không có TinyMCE, dùng document.getSelection()
-                    return document.getSelection();
-                }
             },
-            
-            {
-                key: "getEditorOffset",
-                value: function getEditorOffset() {
-                    // Nếu dùng TinyMCE, lấy vị trí của iframe
-                    if (typeof tinymce !== "undefined" && tinymce.activeEditor) {
-                        let editorIframe = tinymce.activeEditor.iframeElement;
-                        if (!editorIframe) return { top: 0, left: 0 };
-                        
-                        let rect = editorIframe.getBoundingClientRect();
-                        return { top: rect.top + window.scrollY, left: rect.left + window.scrollX };
-                    }
-            
-                    // Nếu không dùng TinyMCE, lấy vị trí của thẻ contenteditable
-                    let editorElement = document.querySelector("[contenteditable='true']");
-                    if (!editorElement) return { top: 0, left: 0 };
-            
-                    let rect = editorElement.getBoundingClientRect();
-                    return { top: rect.top + window.scrollY, left: rect.left + window.scrollX };
-                }
-            },
-            
             {
                 key: "getFixedCoordinatesRelativeToRect",
                 value: function getFixedCoordinatesRelativeToRect(rect) {
@@ -2486,8 +2388,7 @@ function customAjax(options) {
                                 element,
                                 this.current.collection.trigger
                             );
-  
-                        this.showMenuFor(element, true);
+                        this.showMenuFor(element);
                     }, // TODO: make sure this works for inputs/textareas
                 },
                 {
@@ -2518,52 +2419,17 @@ function customAjax(options) {
                 {
                     key: "insertTextAtCursor",
                     value: function insertTextAtCursor(text) {
-                        let editor = (typeof tinymce !== "undefined" && tinymce.activeEditor) ? tinymce.activeEditor : null;
-
-                        if (editor && editor.hasFocus()) {
-                            // 🏗 Nếu dùng TinyMCE, chèn vào trình soạn thảo
-                            let selection = editor.selection;
-                            let range = selection.getRng();
-
-                            if (!range) {
-                                console.error("Lỗi: Không có vùng chọn hợp lệ trong TinyMCE.");
-                                return;
-                            }
-
-                            let textBeforeCursor = range.startContainer.textContent.substring(0, range.startOffset);
-                            if (textBeforeCursor.includes("@")) {
-                                return;
-                            }
-
-                            let textNode = document.createTextNode(text);
-                            range.deleteContents();
-                            range.insertNode(textNode);
-
-                            // Di chuyển con trỏ sau văn bản đã chèn
-                            range.setStartAfter(textNode);
-                            range.setEndAfter(textNode);
-                            selection.setRng(range);
-                        } else {
-                            // 🏗 Nếu không dùng TinyMCE, chèn vào document bình thường
-                            var sel = window.getSelection();
-                            if (!sel.rangeCount) {
-                                console.warn("Không có vùng chọn hợp lệ trong document.");
-                                return;
-                            }
-
-                            var range = sel.getRangeAt(0);
-                            range.deleteContents();
-                            var textNode = document.createTextNode(text);
-                            range.insertNode(textNode);
-
-                            // Di chuyển con trỏ sau văn bản đã chèn
-                            range.setStartAfter(textNode);
-                            range.setEndAfter(textNode);
-                            sel.removeAllRanges();
-                            sel.addRange(range);
-                        }
-                    }
-                    // for regular inputs
+                        var sel, range;
+                        sel = window.getSelection();
+                        range = sel.getRangeAt(0);
+                        range.deleteContents();
+                        var textNode = document.createTextNode(text);
+                        range.insertNode(textNode);
+                        range.selectNodeContents(textNode);
+                        range.collapse(false);
+                        sel.removeAllRanges();
+                        sel.addRange(range);
+                    }, // for regular inputs
                 },
                 {
                     key: "insertAtCaret",
@@ -2796,117 +2662,61 @@ function customAjax(options) {
 // code
 (function ($) {
     var tribute = new Tribute({
-        trigger: "@",
-        allowSpaces: true, // Cho phép nhập dấu cách sau @
-        requireLeadingSpace: false,
-        fillAttr: "fullname", // Chèn fullname vào nội dung
-    
-        // ✅ Xử lý lấy danh sách từ API, tự động nhận biết TinyMCE hay không
+        // menuContainer: document.getElementById('content'),
         values: function (text, cb) {
-            let keyword;
-            let editor = (typeof tinymce !== "undefined" && tinymce.activeEditor) ? tinymce.activeEditor : null;
-    
-            if (editor && editor.hasFocus()) {
-                // 🏗 Nếu dùng TinyMCE, lấy từ khóa từ vùng chọn của TinyMCE
-                let selection = editor.selection.getRng();
-                let node = selection.startContainer;
-                let offset = selection.startOffset;
-    
-                if (!node || !node.textContent) {
-                    console.warn("Không có nội dung hợp lệ để lấy từ khóa.");
-                    return;
-                }
-    
-                let textBeforeCursor = node.textContent.substring(0, offset);
-                let lastAtIndex = textBeforeCursor.lastIndexOf("@");
-    
-                if (lastAtIndex === -1) {
-                    console.warn("Không tìm thấy `@`, không gửi request API.");
-                    return;
-                }
-    
-                keyword = textBeforeCursor.substring(lastAtIndex + 1).trim();
-            } else {
-                // 🏗 Nếu không dùng TinyMCE, lấy từ khóa từ input bình thường
-                keyword = text.trim();
-            }
-    
-            if (!keyword) return;
-    
-            // ✅ Gọi API lấy danh sách gợi ý
-            if (typeof cookie_name === "undefined" || cookie_name === null) {
+            if (typeof cookie_name === 'undefined' || cookie_name === null) {
                 return false;
             }
-    
             $.ajax({
                 headers: {
                     Authorization: "Bearer " + getCookie(cookie_name),
                     "Content-Type": "application/json",
                 },
-                url: _url_search.replace("{keyword}", keyword),
-                method: "GET",
-                dataType: "json",
+                url: _url_search.replace("{keyword}", text),
+                method: "GET", // The HTTP method to use for the request
+                dataType: "json", // The type of data expected back from the server
                 success: function (data) {
                     cb(data);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    console.error("Lỗi khi gọi API:", textStatus, errorThrown);
+                    // A function to be called if the request fails
+                    console.error(
+                        "Error fetching users:",
+                        textStatus,
+                        errorThrown
+                    );
                 },
             });
         },
-    
-        // ✅ Cách tìm kiếm và hiển thị danh sách gợi ý
         lookup: function (item) {
-            return item.fullname + " " + item._id;
-        },
-    
+            // Tìm kiếm dựa trên fullname và _id
+            return item.fullname + ' ' + item._id;
+        },  // Specifies which key will be included in the tribute
+        fillAttr: "fullname", // Specifies which attribute to fill the textarea with upon selection
+        allowSpaces: true,
         menuItemTemplate: function (item) {
+            // Hiển thị cả fullname và (_id)
             return `${item.original.fullname} (${item.original._id})`;
         },
-    
-        // ✅ Chọn user & chèn vào nội dung, hoạt động cả TinyMCE & input thường
         selectTemplate: function (item) {
             if (typeof item === "undefined") return null;
-            let htmlmen = `<span data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
-    
-            if (typeof cookie_name !== "undefined" && cookie_name && cookie_name == "imap_authen_access_token") {
-                htmlmen = `<span data-original-id="${item.original._id}">
-                                <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax user-name" data-user-id="${item.original._id}" target="_blank">
+            if (this.range.isContentEditable(this.current.element)) {
+                var htmlmen = `<span data-original-id="${item.original._id}" title="${item.original.email}" style="color:#0090bb">${item.original.fullname}</span>`;
+                if (typeof cookie_name !== 'undefined' && cookie_name && cookie_name == 'imap_authen_access_token') {
+                    htmlmen = `<span data-original-id="${item.original._id}" >
+                                    <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${item.original._id}" class="load_not_ajax user-name" data-user-id=${item.original._id} target="_blank">
                                     ${item.original.fullname}
-                                </a>
-                            </span>`;
-            }
-            return htmlmen;
-        },
-    });
-    
-    Tribute.prototype.allowInputEvent = true;
-
-    document.addEventListener("click", function (event) {
-        let editor = tinymce?.activeEditor;
-        
-        // 🛑 Chỉ chạy nếu có editor đang hoạt động
-        if (!editor) return;
-
-        let tributeMenu = document.querySelector(".tribute-container");
-        if (tributeMenu) {
-            tribute.hideMenu();
-        }
-    });
-    if (typeof tinymce !== "undefined") {
-        tinymce.on("addEditor", function (event) {
-            let editor = event.editor;
-        
-            editor.on("click", function () {
-                let tributeMenu = document.querySelector(".tribute-container");
-                if (tributeMenu) {
-                    tribute.hideMenu();
+                                    </a></span>`;
                 }
-            });
-        });
-    }
+                return htmlmen;
+            }
+
+            return `@${item.original.fullname} (${item.original._id})`;
+        },
+        requireLeadingSpace: false,
+    });
     let _url_list = "";
-    $(document).ready( function () {
+    document.addEventListener("DOMContentLoaded", function () {
         if ($(document).find("#comment_employee_html").length > 0) {
             _url_list = $("#comment_employee_html").attr("data-url");
             $.ajax({
@@ -2998,90 +2808,23 @@ function customAjax(options) {
                 }
 
                 if ($(".input_comment_data").length > 0) {
-                    if (input_type == "textarea") {
-                        tinymce.baseURL = "https://master-ebomb-cdn.ebomb.edu.vn/theme/backend/js/tinymce";
-                        tinymce.init({
-                            selector: ".input_comment_data",
-                            setup: function (editor) {
-                                editor.on("init", function () {
-                                    let editorBody = editor.getBody();
-                                    if (editorBody) {
-                                        tribute.attach(editorBody);
-                                        tribute.positionMenu = true;
-                                        tribute.menuContainer = document.querySelector(".tox-tinymce");
-                                    }
-                                });
-                        
-                                // 🛑 Ngăn Tribute menu bị ẩn khi nhập "@"
-                                editor.on("keydown", function (event) {
-                                    if (event.key === "@") {
-                                        event.preventDefault();
-                                
-                                        tribute.current.element = editor.getBody();
-                                        tribute.current.mentionText = "@"; // 🔥 Gán giá trị mentionText ngay khi nhấn @
-                                        tribute.current.collection = tribute.current.collection ? tribute.current.collection : tribute.collection[0];
-                                
-                                        tribute.showMenuForCollection(editor.getBody(), 0);
-                                    }
-                                });
-                                
-                        
-                                // 🔥 Hiển thị menu ngay khi có ký tự sau "@"
-                                editor.on("keyup", function (event) {
-                                    let selection = editor.selection.getRng();
-                                    let node = selection.startContainer;
-                                    let offset = selection.startOffset;
-                                
-                                    if (!node || !node.textContent) return;
-                                
-                                    let textBeforeCursor = node.textContent.substring(0, offset);
-                                    let lastAtIndex = textBeforeCursor.lastIndexOf("@");
-                                
-                                    if (lastAtIndex !== -1) {
-                                        
-                                        let keyword = textBeforeCursor.substring(lastAtIndex + 1).trim(); // Chỉ lấy phần sau @
-                                        tribute.current.mentionText = keyword; // 🔥 Bỏ dấu `@`
-                                        
-                                        tribute.current.element = editor.getBody();
-                                        tribute.showMenuForCollection(editor.getBody(), 0);
-                                    }
-                                    let content = editor.getContent();
-                                    $(editor.getElement())
-                                        .closest("form")
-                                        .find('input[name="content"]')
-                                        .val(content);
-                                });
-                                editor.on('keyup change', function () {
-                                    let content = editor.getContent();
-                                    $(editor.getElement())
-                                        .closest("form")
-                                        .find('input[name="content"]')
-                                        .val(content);
-                                });
-                                
-                            },
+                    $(".input_comment_data").each(function (index, item) {
+                        let _id = $(item).attr("id");
+                        tribute.attach(document.getElementById(_id));
+
+                        $(item).on("keyup", function () {
+                            $(item)
+                                .closest("form")
+                                .find('input[name="content"]')
+                                .val($(this).html());
                         });
-                        
-                    } else {
-                        
-                        $(".input_comment_data").each(function (index, item) {
-                            let _id = $(item).attr("id");
-                            tribute.attach(document.getElementById(_id));
-    
-                            $(item).on("keyup", function () {
-                                $(item)
-                                    .closest("form")
-                                    .find('input[name="content"]')
-                                    .val($(this).html());
-                            });
-                            $(item).on("tribute-replaced", function () {
-                                $(item)
-                                    .closest("form")
-                                    .find('input[name="content"]')
-                                    .val($(this).html());
-                            });
+                        $(item).on("tribute-replaced", function () {
+                            $(item)
+                                .closest("form")
+                                .find('input[name="content"]')
+                                .val($(this).html());
                         });
-                    }
+                    });
                 }
             }
         );
@@ -3096,6 +2839,37 @@ function customAjax(options) {
             // Đưa nội dung đã làm sạch vào trường contenteditable
             document.execCommand("insertText", false, text);
         });
+
+        // $.ajaxSetup({
+            
+            
+        //     beforeSend: function (xhr) {
+        //         console.log(111);
+        //         if (typeof cookie_name === 'undefined' || cookie_name === null) {
+        //             console.log(111);
+                    
+        //             return false;
+        //         }
+        //         console.log(cookie_name);
+                
+        //         xhr.setRequestHeader(
+        //             "Authorization",
+        //             "Bearer " + getCookie(cookie_name)
+        //         );
+        //         xhr.setRequestHeader("Content-Type", "application/json");
+        //         if ($('meta[name="contact-id"]').length > 0)
+        //             xhr.setRequestHeader(
+        //                 "contact-id",
+        //                 $('meta[name="contact-id"]').attr("content")
+        //             );
+        //         if ($('meta[name="contact-token"]').length > 0)
+        //             xhr.setRequestHeader(
+        //                 "token",
+        //                 $('meta[name="contact-token"]').attr("content")
+        //             );
+        //         // Thêm bất kỳ tiêu đề nào khác bạn cần gửi với mỗi yêu cầu
+        //     },
+        // });
 
         Handle.init();
     });
@@ -3257,81 +3031,55 @@ function customAjax(options) {
         };
 
         const call_ajax_form = (_dom_reload, _form) => {
-            if (_form.data("submitting")) {
-                return; // Ngăn chặn submit nhiều lần
-            }
-            _form.data("submitting", true); // Đánh dấu form đang xử lý
-        
             var formArray = $(_form).serializeArray();
             var formJSON = {};
-            let editor = tinymce?.activeEditor;
-            if (editor) {
-                let content = editor.getContent();
-                let contentInput = $(_form).find('input[name="content"]');
-                if (contentInput.length) {
-                    contentInput.val(content);
-                }
-            }
+
             $.each(formArray, function () {
                 formJSON[this.name] = this.value || "";
             });
             formJSON["data_type"] = "html";
-        
             if (!formJSON["content"] || formJSON["content"].trim() === "") {
-                alert("Comment không được để trống!");
-                _form.data("submitting", false); // Gỡ bỏ trạng thái xử lý
-                return;
+                alert("Comment không được để trống!"); // Bắn thông báo
+                return; // Dừng xử lý nếu cần
             }
-        
-            let submitButton = $(_form).find("button[type=submit]");
-            submitButton.prop("disabled", true);
-        
-            customAjax({
-                type: "POST",
-                data: JSON.stringify(formJSON),
-                dataType: "HTML",
-                cache: false,
-                async: true,
-                url: url_post_comment,
-                success: function (response) {
-                    $(_dom_reload).append(response);
-                    $(_form).find("[name='content']").val("");
-                    
-                    if (input_type == "textarea") {
-                        let editorId = $(_form).find(".input_comment_data").attr("id");
-                        tinymce.get(editorId).setContent(""); 
-                    } else {
+            if (formJSON) {
+                customAjax({
+                    type: "POST",
+                    data: JSON.stringify(formJSON),
+
+                    // contentType: "text/html;charset=utf-8",
+                    dataType: "HTML",
+                    cache: false,
+                    crossDomain: true,
+                    async: true,
+                    url: url_post_comment,
+                    success: function (response) {
+                        $(_dom_reload).append(response);
+                        $(_form).find("[name='content']").val("");
                         $(_form).find(".input_comment_data").html("");
-                    }
-        
-                    let _dom_reply = $(_form).closest(".box-parent-comment").find(".count_reply");
-                    if (_dom_reply.length) {
-                        let count = parseInt(_dom_reply.html()) || 0;
-                        _dom_reply.html(count + 1);
-                    }
-        
-                    if ($(_dom_reload).is('#list_comment')) {
-                        $("#list_comment").scrollTop($("#list_comment")[0].scrollHeight);
-                    }
-        
-                    let number_comment = $('#number_comment');
-                    if (number_comment.length) {
-                        let count = parseInt(number_comment.html()) || 0;
-                        number_comment.html(count + 1);
-                    }
-        
-                    // Xóa trạng thái xử lý
-                    _form.data("submitting", false);
-                    submitButton.prop("disabled", false);
-                },
-                error: function () {
-                    alert("Có lỗi xảy ra, vui lòng thử lại!");
-                    _form.data("submitting", false);
-                    submitButton.prop("disabled", false);
-                }
-            });
+                        let _dom_reply = $(_form)
+                            .closest(".box-parent-comment")
+                            .find(".count_reply");
+                        if (_dom_reply) {
+                            let count = $(_dom_reply).html();
+                            if (!count || parseInt(count) < 1)
+                                $(_dom_reply).html(1);
+                            else $(_dom_reply).html(parseInt(count) + 1);
+                        }
+                        if ($(_dom_reload).is('#list_comment')) {
+                            $("#list_comment").scrollTop($("#list_comment")[0].scrollHeight);
+                        }
+                        let number_comment = $('#number_comment');
+                        if (number_comment) {
+                            let count = $(number_comment).html();
+                            if (!count || parseInt(count) < 1)
+                                $(number_comment).html(1);
+                            else $(number_comment).html(parseInt(count) + 1);
+                        }
+                    },
+                });
+            }
         };
-        
 
         const create_form_add = (attr) => {
             var htmlmen = ` <span data-original-id="${attr.created_by}">
@@ -3371,6 +3119,95 @@ function customAjax(options) {
         };
     })();
 })(jQuery);
+
+// $(document).ready(function () {
+//     let hoverTimer;
+//     let isHoveringTooltip = false; // Biến để theo dõi việc hover vào tooltip
+
+//     // Gắn sự kiện hover cho user-name và AJAX khi hover vào
+//     $('body').on('mouseenter', '.user-name', function () {
+//         const userId = $(this).data('user-id');
+//         const element = $(this);
+
+//         // Hủy bỏ timer nếu hover vào nhanh hơn
+//         clearTimeout(hoverTimer);
+//         if (typeof userId === 'undefined' || userId === null) {
+//             return false;
+//         }
+
+//         // Trì hoãn việc hiển thị tooltip
+//         hoverTimer = setTimeout(function () {
+//             if (typeof cookie_name === 'undefined' || cookie_name === null) {
+//                 return false;
+//             }
+//             $.ajax({
+//                 headers: {
+//                     Authorization: "Bearer " + getCookie(cookie_name),
+//                     "Content-Type": "application/json",
+//                 },
+//                 url: _url_search_full.replace("{keyword}", userId),
+//                 method: "GET",
+//                 dataType: "json",
+//                 success: function (data) {
+//                     if (!data || data.length === 0) {
+//                         return false;
+//                     }
+//                     const firstElement = data;
+//                     if (!data._id) {
+//                         return false;
+//                     }
+
+//                     const imageUrl = 'https://erp-staging.ebomb.edu.vn/support/images/user-profile.png';
+//                     let htmlV = `<div class="our-team">
+//                         <div class="picture">
+//                             <img class="img-fluid" src="${imageUrl}">
+//                         </div>
+//                         <div class="team-content">
+//                             <h3 class="name">${firstElement.fullname}</h3>`;
+//                     if (firstElement.job_title_name && firstElement.job_title_name !== "") {
+//                         htmlV += `<h4 class="title">${firstElement.job_title_name}</h4>`;
+//                     }
+//                     if (firstElement.position_name && firstElement.position_name !== "") {
+//                         htmlV += `<h4 class="title">${firstElement.position_name}</h4>`;
+//                     }
+//                     htmlV += `</div>
+//                     </div>`;
+
+//                     // Khởi tạo Tooltip với nội dung mới
+//                     element.tooltip({
+//                         template: '<div class="tooltip" role="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner custom-tooltip"></div></div>',
+//                         title: htmlV,
+//                         html: true, // Cho phép HTML trong tooltip
+//                         placement: 'left',
+//                         trigger: 'manual'
+//                     }).tooltip('show');
+
+//                     // Thêm sự kiện hover vào chính tooltip
+//                     $('.tooltip').on('mouseenter', function () {
+//                         isHoveringTooltip = true;
+//                     }).on('mouseleave', function () {
+//                         isHoveringTooltip = false;
+//                         element.tooltip('hide'); // Ẩn tooltip khi rời khỏi
+//                     });
+//                 },
+//                 error: function (jqXHR, textStatus, errorThrown) {
+//                     console.error("Error fetching users:", textStatus, errorThrown);
+//                 },
+//             });
+
+//         }, 2000); // Chạy sự kiện sau 0.5 giây
+//     });
+
+//     // Ẩn tooltip khi chuột rời khỏi .user-name
+//     $('body').on('mouseleave', '.user-name', function () {
+//         const element = $(this);
+//         setTimeout(function () {
+//             if (!isHoveringTooltip) {
+//                 element.tooltip('hide');
+//             }
+//         }, 100);
+//     });
+// });
 
 $(document).ready(function () {
     let hoverTimer;
