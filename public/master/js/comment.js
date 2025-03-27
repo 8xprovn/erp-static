@@ -3257,13 +3257,16 @@ function customAjax(options) {
         };
 
         const call_ajax_form = (_dom_reload, _form) => {
+            if (_form.data("submitting")) {
+                return; // Ngăn chặn submit nhiều lần
+            }
+            _form.data("submitting", true); // Đánh dấu form đang xử lý
+        
             var formArray = $(_form).serializeArray();
             var formJSON = {};
             let editor = tinymce?.activeEditor;
             if (editor) {
                 let content = editor.getContent();
-        
-                // Cập nhật input `content` trong form
                 let contentInput = $(_form).find('input[name="content"]');
                 if (contentInput.length) {
                     contentInput.val(content);
@@ -3273,53 +3276,62 @@ function customAjax(options) {
                 formJSON[this.name] = this.value || "";
             });
             formJSON["data_type"] = "html";
+        
             if (!formJSON["content"] || formJSON["content"].trim() === "") {
-                alert("Comment không được để trống!"); // Bắn thông báo
-                return; // Dừng xử lý nếu cần
+                alert("Comment không được để trống!");
+                _form.data("submitting", false); // Gỡ bỏ trạng thái xử lý
+                return;
             }
-            if (formJSON) {
-                customAjax({
-                    type: "POST",
-                    data: JSON.stringify(formJSON),
-
-                    // contentType: "text/html;charset=utf-8",
-                    dataType: "HTML",
-                    cache: false,
-                    crossDomain: true,
-                    async: true,
-                    url: url_post_comment,
-                    success: function (response) {
-                        $(_dom_reload).append(response);
-                        $(_form).find("[name='content']").val("");
-                        if (input_type == "textarea") {
-                            let editorId = $(_form).find(".input_comment_data").attr("id");
-                            tinymce.get(editorId).setContent(""); 
-                        } else {
-                            $(_form).find(".input_comment_data").html("");
-                        }
-                        let _dom_reply = $(_form)
-                            .closest(".box-parent-comment")
-                            .find(".count_reply");
-                        if (_dom_reply) {
-                            let count = $(_dom_reply).html();
-                            if (!count || parseInt(count) < 1)
-                                $(_dom_reply).html(1);
-                            else $(_dom_reply).html(parseInt(count) + 1);
-                        }
-                        if ($(_dom_reload).is('#list_comment')) {
-                            $("#list_comment").scrollTop($("#list_comment")[0].scrollHeight);
-                        }
-                        let number_comment = $('#number_comment');
-                        if (number_comment) {
-                            let count = $(number_comment).html();
-                            if (!count || parseInt(count) < 1)
-                                $(number_comment).html(1);
-                            else $(number_comment).html(parseInt(count) + 1);
-                        }
-                    },
-                });
-            }
+        
+            let submitButton = $(_form).find("button[type=submit]");
+            submitButton.prop("disabled", true);
+        
+            customAjax({
+                type: "POST",
+                data: JSON.stringify(formJSON),
+                dataType: "HTML",
+                cache: false,
+                async: true,
+                url: url_post_comment,
+                success: function (response) {
+                    $(_dom_reload).append(response);
+                    $(_form).find("[name='content']").val("");
+                    
+                    if (input_type == "textarea") {
+                        let editorId = $(_form).find(".input_comment_data").attr("id");
+                        tinymce.get(editorId).setContent(""); 
+                    } else {
+                        $(_form).find(".input_comment_data").html("");
+                    }
+        
+                    let _dom_reply = $(_form).closest(".box-parent-comment").find(".count_reply");
+                    if (_dom_reply.length) {
+                        let count = parseInt(_dom_reply.html()) || 0;
+                        _dom_reply.html(count + 1);
+                    }
+        
+                    if ($(_dom_reload).is('#list_comment')) {
+                        $("#list_comment").scrollTop($("#list_comment")[0].scrollHeight);
+                    }
+        
+                    let number_comment = $('#number_comment');
+                    if (number_comment.length) {
+                        let count = parseInt(number_comment.html()) || 0;
+                        number_comment.html(count + 1);
+                    }
+        
+                    // Xóa trạng thái xử lý
+                    _form.data("submitting", false);
+                    submitButton.prop("disabled", false);
+                },
+                error: function () {
+                    alert("Có lỗi xảy ra, vui lòng thử lại!");
+                    _form.data("submitting", false);
+                    submitButton.prop("disabled", false);
+                }
+            });
         };
+        
 
         const create_form_add = (attr) => {
             var htmlmen = ` <span data-original-id="${attr.created_by}">
