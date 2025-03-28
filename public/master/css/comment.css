@@ -228,3 +228,9 @@
 .user-name a{
   color: #333 !important;
 }
+
+.img-attachment-comment {
+  max-width: 200px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
