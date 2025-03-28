@@ -3153,6 +3153,23 @@ function customAjax(options) {
                 call_ajax_form(_parent_dom, _this);
             });
 
+            $(document).on("click", "button.upload-image", function (e) {
+                e.stopPropagation();
+                let _this = $(this);
+                let _parent_dom = $(this).closest(".comment-box");
+                if (window.showOpenFilePicker) {
+                    window.showOpenFilePicker({
+                        types: [{ description: "Images", accept: { "image/*": [".png", ".jpg", ".jpeg", ".gif"] } }],
+                        startIn: "downloads", // Đề xuất thư mục Downloads (Chrome)
+                    }).then(async (handles) => {
+                        if (handles.length > 0) {
+                            let file = await handles[0].getFile();
+                            upload_image( _parent_dom,_this, file);
+                        }
+                    }).catch(console.error);
+                }
+            });
+
             // edit_comment
             $(document).on("click", ".like-comment", function (e) {
                 e.preventDefault();
@@ -3254,6 +3271,75 @@ function customAjax(options) {
                     });
                 });
             });
+            $(document).on("click", ".remove-uploaded-image", function (e) {
+                e.preventDefault();
+                
+                let parent = $(this).closest(".uploaded-image-container");
+                let removedImage = parent.find("img").attr("data-file");
+                let _parent_dom = $(this).closest(".comment-box");
+                let hiddenInput = _parent_dom.find("input[name='attachment']");
+                
+
+                // Xóa ảnh khỏi giao diện
+                parent.remove();
+
+                // Cập nhật danh sách ảnh trong input ẩn
+                let updatedImages = hiddenInput.val().split(",").filter(url => url !== removedImage);
+                hiddenInput.val(updatedImages.join(","));
+            });
+        };
+        const upload_image = (_dom_reload, _form, file) => {
+            
+            if (!file) return;
+
+            let formData = new FormData();
+            formData.append("files", file);
+
+            // Gửi AJAX upload file lên server
+            $.ajax({
+                url: window.SERVICE_UPLOAD_URL, // Đổi URL API của bạn
+                type: "POST",
+                data: formData,
+                contentType: false,
+                processData: false,
+                headers: {
+                    "Authorization": "Bearer " + getCookie("imap_authen_access_token"),
+                    "channel": 'erp',
+                    "type": "image",
+                },
+                success: function (res) {
+                    if (res.path) {
+                        let imageUrl = window.SERVICE_MEDIA_URL + res.path;
+
+                        // Tìm đúng upload-image-flame trong form hiện tại
+                        _dom_reload.find(".upload-image-flame").append(`
+                            <div class="uploaded-image-container" style="position: relative; display: inline-block;">
+                                <img src="${imageUrl}" data-file="${res.path}" alt="Uploaded Image" style="max-width: 100px; border-radius: 8px; margin-top: 10px;">
+                                <button type="button" class="remove-uploaded-image btn btn-light btn-icon btn-outline-dark border-transparent rounded-pill btn-sm" 
+                                style="position: absolute; top: -1px; right: -10px;width: 24px; height: 24px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                                   <i class="icon-cross2"></i>
+                                </button>
+                            </div>
+                        `);
+                        let hiddenInput = _dom_reload.find("input[name='attachment']");
+                        if (hiddenInput.length === 0) {
+                            hiddenInput = $('<input type="hidden" name="attachment">');
+                            _dom_reload.append(hiddenInput);
+                        }
+
+                        let currentImages = hiddenInput.val() ? hiddenInput.val().split(",") : [];
+                        currentImages.push(res.path);
+                        hiddenInput.val(currentImages.join(",")); // Lưu danh sách URL ảnh vào input
+
+                        
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Upload failed: " + xhr.responseText);
+                }
+            });
+        
+            
         };
 
         const call_ajax_form = (_dom_reload, _form) => {
@@ -3296,6 +3382,7 @@ function customAjax(options) {
                 success: function (response) {
                     $(_dom_reload).append(response);
                     $(_form).find("[name='content']").val("");
+                    $(_form).find("[name='attachment']").val("");
                     
                     if (input_type == "textarea") {
                         let editorId = $(_form).find(".input_comment_data").attr("id");
@@ -3303,6 +3390,7 @@ function customAjax(options) {
                     } else {
                         $(_form).find(".input_comment_data").html("");
                     }
+                    $(_form).find(".upload-image-flame").html("");
         
                     let _dom_reply = $(_form).closest(".box-parent-comment").find(".count_reply");
                     if (_dom_reply.length) {
@@ -3334,6 +3422,12 @@ function customAjax(options) {
         
 
         const create_form_add = (attr) => {
+            var attachment_button = "";
+            if (_attachment == true) {
+                attachment_button = ` <button type="button" class="btn btn-light btn-icon border-transparent btn-outline-dark rounded-pill btn-sm mr-1 upload-image">
+                            <i class="icon-file-picture"></i>
+                        </button>`
+            }
             var htmlmen = ` <span data-original-id="${attr.created_by}">
                             <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax user-name" data-user-id=${attr.created_by} target="_blank">
                             ${attr.fullname}
@@ -3355,11 +3449,13 @@ function customAjax(options) {
                         placeholder="Add a comment...">${htmlmen}</p>
                     </div>
                     <input type="hidden" name="content" value='${htmlmen}'>
-                    <div class="text-right">
+                    <div class="d-flex align-items-center justify-content-end">
+                        ${attachment_button}
                         <button type="submit" class="btn btn-primary btn-add-comment">
-                            Send
+                            <i class="icon-paperplane"></i>
                         </button>
                     </div>
+                    <div class="upload-image-flame"></div>
                 </div>
           </form>`;
         };

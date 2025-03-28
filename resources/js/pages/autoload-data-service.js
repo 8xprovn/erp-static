@@ -763,6 +763,16 @@ const AutoloadDataService = (function () {
             query: ["_id", "status", "code","rel_parent"],
             version: 2,
         },
+
+        ///// openai /////
+        "member-role": {
+            url: window.API_SERVICE_URL_V2 + "/openai/member-role",
+            formated: "$(label)",
+            id: "_id",
+            query: ["_id", "code"],
+            version: 2,
+        }
+        ///// end openai /////
     };
     var arrDomAutoFill = [
         {
@@ -1721,6 +1731,18 @@ const AutoloadDataService = (function () {
             attr: "data-id",
             formated: "$(_id)",
             query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        ///// end asset /////
+
+        ///// asset /////
+        {
+            url: window.API_SERVICE_URL_V2 + "/openai/member-role",
+            dom: ".em-member-role",
+            attr: "data-id",
+            formated: "$(label)",
+            query: ["_id", "code"],
             fk: "_id",
             version: 2,
         }
