@@ -1252,7 +1252,7 @@ const AutoloadDataService = (function () {
             pquery: "_id",
             version: 2,
             indexedDB:'yes',
-            indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'branch_id', 'brand_id', 'birthdate', 'is_accout', 'is_student', 'is_children', 'is_locked'],
+            indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'branch_id', 'brand_id', 'birthdate', 'is_accout', 'is_student', 'is_children', 'is_locked', 'parents_info', 'parent_id', 'relation', 'relation_name', 'is_account'],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/crm/accounts",
@@ -1926,7 +1926,7 @@ const AutoloadDataService = (function () {
     };
     
     const VERSION = 1;  // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV5";  // Tên cơ sở dữ liệu
+    const dbName = "ERPDBV6";  // Tên cơ sở dữ liệu
     //luc them ojectstorename cần đổi tên dbName lên
     const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course", "em-sys-city",
          "em-position", 'em-job-title', "em-crm-campaigns", "crm-contact", "em-sys-district"];  // Danh sách các tên ObjectStore
