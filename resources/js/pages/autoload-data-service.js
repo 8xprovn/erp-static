@@ -755,14 +755,14 @@ const AutoloadDataService = (function () {
         },
         internal_topic: {
             url: window.API_SERVICE_URL_V2 + "/internal/topic",
-            formated: "$(code)",
+            formated: "$(name)",
             id: "_id",
             query: ["_id"],
             version: 2,
         },
         internal_category: {
             url: window.API_SERVICE_URL_V2 + "/internal/category",
-            formated: "$(code)",
+            formated: "$(name)",
             id: "_id",
             query: ["_id", "topic_id"],
             version: 2,
