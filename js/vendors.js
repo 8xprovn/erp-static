@@ -20109,6 +20109,9 @@ function initTinymce () {
         filery_api_token: '123',
         filery_dialog_height: '400px',
         filery_show_images: true,
+        convert_urls: false, // Ngăn chặn tự động đổi URL
+        relative_urls: false, // Bắt buộc dùng URL tuyệt đối
+        remove_script_host: false,
         // images_upload_url: 'https://staging.api.f6.com.vn/uploads/process',
         automatic_uploads: false,
         images_upload_handler: function (blobInfo, success, failure) {

@@ -90,6 +90,9 @@ function loadTinyMce(domId) {
         plugins: 'print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap emoticons filery textcolor colorpicker',
         toolbar: 'undo redo | formatselect | styleselect | bold italic | alignleft aligncenter alignright alignjustify | checklist numlist | link image  | forecolor backcolor',
         filery_api_url: '/test.json',
+        convert_urls: false, // Ngăn chặn tự động đổi URL
+        relative_urls: false, // Bắt buộc dùng URL tuyệt đối
+        remove_script_host: false,
         color_cols: 5,
         //filery_api_token: '123',
         //filery_dialog_height: '400px',
