@@ -790,7 +790,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/openai/member-role",
             formated: "$(label)",
             id: "_id",
-            query: ["_id", "code"],
+            query: ["_id", "code", "is_publish"],
             version: 2,
         }
         ///// end openai /////
