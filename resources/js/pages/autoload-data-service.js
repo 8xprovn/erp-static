@@ -731,7 +731,28 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/asset/sub-asset",
             formated: "$(code)",
             id: "_id",
-            query: ["_id", "asset_id", "attribute_id", 'status', 'status_detail', 'allocation_status'],
+            query: [
+                "_id",
+                "asset_id",
+                "attribute_id",
+                "status",
+                "status_detail",
+                "allocation_status",
+            ],
+            version: 2,
+        },
+        internal_topic: {
+            url: window.API_SERVICE_URL_V2 + "/internal/topic",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
+        internal_category: {
+            url: window.API_SERVICE_URL_V2 + "/internal/category",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "topic_id", 'parent_id'],
             version: 2,
         },
         ///// end asset /////
@@ -769,7 +790,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/openai/member-role",
             formated: "$(label)",
             id: "_id",
-            query: ["_id", "code"],
+            query: ["_id", "code", "is_publish"],
             version: 2,
         }
         ///// end openai /////
@@ -1745,7 +1766,25 @@ const AutoloadDataService = (function () {
             query: ["_id", "code"],
             fk: "_id",
             version: 2,
-        }
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/internal/topic",
+            dom: ".em-internal-topic",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/internal/category",
+            dom: ".em-internal-category",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
         ///// end asset /////
     ];
 
