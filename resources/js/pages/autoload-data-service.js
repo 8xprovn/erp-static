@@ -2392,7 +2392,7 @@ const AutoloadDataService = (function () {
         current_dom.select2({
             minimumInputLength: minimumInputLength,
             allowClear: true,
-            closeOnSelect: false,
+            closeOnSelect: current_dom.data('close-on-select') === true,
             cache: true,
             placeholder: current_dom.attr("placeholder") || "Select an option",
             ajax: {
