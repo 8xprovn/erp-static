@@ -2906,6 +2906,54 @@ function customAjax(options) {
         });
     }
     let _url_list = "";
+    const upload_image = (_dom_reload, _form, file) => {
+        console.log(_dom_reload, _form, file);
+        
+        if (!file) return;
+        let formData = new FormData();
+        formData.append("files", file);
+        // Gửi AJAX upload file lên server
+        $.ajax({
+            url: window.SERVICE_UPLOAD_URL, // Đổi URL API của bạn
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                "Authorization": "Bearer " + getCookie("imap_authen_access_token"),
+                "channel": 'erp',
+                "type": "image",
+            },
+            success: function (res) {
+                if (res.path) {
+                    let imageUrl = window.SERVICE_MEDIA_URL + res.path;
+
+                    // Tìm đúng upload-image-flame trong form hiện tại
+                    _dom_reload.find(".upload-image-flame").append(`
+                        <div class="uploaded-image-container" style="position: relative; display: inline-block;">
+                            <img src="${imageUrl}" data-file="${res.path}" alt="Uploaded Image" style="max-width: 100px; border-radius: 8px; margin-top: 10px;">
+                            <button type="button" class="remove-uploaded-image btn btn-light btn-icon btn-outline-dark border-transparent rounded-pill btn-sm" 
+                            style="position: absolute; top: -1px; right: -10px;width: 24px; height: 24px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                               <i class="icon-cross2"></i>
+                            </button>
+                        </div>
+                    `);
+                    let hiddenInput = _dom_reload.find("input[name='attachment']");
+                    if (hiddenInput.length === 0) {
+                        hiddenInput = $('<input type="hidden" name="attachment">');
+                        _dom_reload.append(hiddenInput);
+                    }
+
+                    let currentImages = hiddenInput.val() ? hiddenInput.val().split(",") : [];
+                    currentImages.push(res.path);
+                    hiddenInput.val(currentImages.join(",")); // Lưu danh sách URL ảnh vào input
+                }
+            },
+            error: function (xhr) {
+                console.error("Upload failed: " + xhr.responseText);
+            }
+        });
+    };
     $(document).ready( function () {
         if ($(document).find("#comment_employee_html").length > 0) {
             _url_list = $("#comment_employee_html").attr("data-url");
@@ -3009,6 +3057,29 @@ function customAjax(options) {
                                         tribute.attach(editorBody);
                                         tribute.positionMenu = true;
                                         tribute.menuContainer = document.querySelector(".tox-tinymce");
+                                    }
+                                });
+                                editor.on('paste', function(e) {
+                                    const clipboardData = (e.clipboardData || window.clipboardData);
+                                    if (!clipboardData) return;
+                        
+                                    const items = clipboardData.items;
+                                    if (!items) return;
+                        
+                                    for (let i = 0; i < items.length; i++) {
+                                        const item = items[i];
+                                        if (item.type.indexOf('image') !== -1) {
+                                            e.preventDefault();  // Chặn việc paste ảnh vào tinymce
+                        
+                                            const file = item.getAsFile();
+                                            if (file) {
+                                                let _parent_dom = $("#" + editor.id).closest(".comment-box"); 
+                                                let _this = _parent_dom.find("button.upload-image");
+                                                
+                                                upload_image(_parent_dom, _this, file); // Gọi hàm upload_image để xử lý ảnh dán vào
+                                            }
+                                            break; // Dừng lại sau khi xử lý ảnh đầu tiên
+                                        }
                                     }
                                 });
                         
@@ -3287,59 +3358,33 @@ function customAjax(options) {
                 let updatedImages = hiddenInput.val().split(",").filter(url => url !== removedImage);
                 hiddenInput.val(updatedImages.join(","));
             });
-        };
-        const upload_image = (_dom_reload, _form, file) => {
-            
-            if (!file) return;
-
-            let formData = new FormData();
-            formData.append("files", file);
-
-            // Gửi AJAX upload file lên server
-            $.ajax({
-                url: window.SERVICE_UPLOAD_URL, // Đổi URL API của bạn
-                type: "POST",
-                data: formData,
-                contentType: false,
-                processData: false,
-                headers: {
-                    "Authorization": "Bearer " + getCookie("imap_authen_access_token"),
-                    "channel": 'erp',
-                    "type": "image",
-                },
-                success: function (res) {
-                    if (res.path) {
-                        let imageUrl = window.SERVICE_MEDIA_URL + res.path;
-
-                        // Tìm đúng upload-image-flame trong form hiện tại
-                        _dom_reload.find(".upload-image-flame").append(`
-                            <div class="uploaded-image-container" style="position: relative; display: inline-block;">
-                                <img src="${imageUrl}" data-file="${res.path}" alt="Uploaded Image" style="max-width: 100px; border-radius: 8px; margin-top: 10px;">
-                                <button type="button" class="remove-uploaded-image btn btn-light btn-icon btn-outline-dark border-transparent rounded-pill btn-sm" 
-                                style="position: absolute; top: -1px; right: -10px;width: 24px; height: 24px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
-                                   <i class="icon-cross2"></i>
-                                </button>
-                            </div>
-                        `);
-                        let hiddenInput = _dom_reload.find("input[name='attachment']");
-                        if (hiddenInput.length === 0) {
-                            hiddenInput = $('<input type="hidden" name="attachment">');
-                            _dom_reload.append(hiddenInput);
-                        }
-
-                        let currentImages = hiddenInput.val() ? hiddenInput.val().split(",") : [];
-                        currentImages.push(res.path);
-                        hiddenInput.val(currentImages.join(",")); // Lưu danh sách URL ảnh vào input
-
-                        
-                    }
-                },
-                error: function (xhr) {
-                    console.error("Upload failed: " + xhr.responseText);
-                }
+            $(document).on('click', '.img-attachment-comment', function () {
+                let imgSrc = $(this).attr('src');
+                
+                // Xóa popup cũ nếu có
+                $('#popup-image-preview').remove();
+                
+                // Tạo popup mới
+                $('body').append(`
+                    <div id="popup-image-preview" style="
+                        position: fixed;
+                        top: 0; left: 0;
+                        width: 100%; height: 100%;
+                        background: rgba(0,0,0,0.7);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 9999;
+                    ">
+                        <img src="${imgSrc}" style="max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 20px #000;">
+                    </div>
+                `);
             });
-        
             
+            // Đóng popup khi click vào nền đen
+            $(document).on('click', '#popup-image-preview', function () {
+                $(this).remove();
+            });
         };
 
         const call_ajax_form = (_dom_reload, _form) => {
@@ -3432,6 +3477,7 @@ function customAjax(options) {
                             <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax user-name" data-user-id=${attr.created_by} target="_blank">
                             ${attr.fullname}
                             </a></span> `;
+            const randomId = "form_comment_id_" + Math.floor(Math.random() * 1000);
             return `<form action="" class="create_comment mt-2">
               <input type="hidden" name="parent_id" value="${
                   attr.parent_id || 0
@@ -3445,7 +3491,7 @@ function customAjax(options) {
               <input type="hidden" name="type" value="${attr.type || 0}">
                 <div class="comment-box">
                     <div class="mb-2">
-                        <p class="input_comment_data" id="form_commet_id_{{ rand(1, 1000) }}" contenteditable="true"
+                        <p class="input_comment_data" id="${randomId}" contenteditable="true"
                         placeholder="Add a comment...">${htmlmen}</p>
                     </div>
                     <input type="hidden" name="content" value='${htmlmen}'>
