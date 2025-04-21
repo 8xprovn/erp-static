@@ -3358,6 +3358,33 @@ function customAjax(options) {
                 let updatedImages = hiddenInput.val().split(",").filter(url => url !== removedImage);
                 hiddenInput.val(updatedImages.join(","));
             });
+            $(document).on('click', '.img-attachment-comment', function () {
+                let imgSrc = $(this).attr('src');
+                
+                // Xóa popup cũ nếu có
+                $('#popup-image-preview').remove();
+                
+                // Tạo popup mới
+                $('body').append(`
+                    <div id="popup-image-preview" style="
+                        position: fixed;
+                        top: 0; left: 0;
+                        width: 100%; height: 100%;
+                        background: rgba(0,0,0,0.7);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        z-index: 9999;
+                    ">
+                        <img src="${imgSrc}" style="max-width: 90%; max-height: 90%; border-radius: 8px; box-shadow: 0 0 20px #000;">
+                    </div>
+                `);
+            });
+            
+            // Đóng popup khi click vào nền đen
+            $(document).on('click', '#popup-image-preview', function () {
+                $(this).remove();
+            });
         };
 
         const call_ajax_form = (_dom_reload, _form) => {
