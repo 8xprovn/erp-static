@@ -752,7 +752,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/internal/category",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "topic_id"],
+            query: ["_id", "topic_id", 'parent_id'],
             version: 2,
         },
         ///// end asset /////
@@ -790,7 +790,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/openai/member-role",
             formated: "$(label)",
             id: "_id",
-            query: ["_id", "code"],
+            query: ["_id", "code", "is_publish"],
             version: 2,
         }
         ///// end openai /////
@@ -1771,7 +1771,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/internal/topic",
             dom: ".em-internal-topic",
             attr: "data-id",
-            formated: "$(_id)",
+            formated: "$(name)",
             query: ["_id"],
             fk: "_id",
             version: 2,
@@ -1780,7 +1780,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/internal/category",
             dom: ".em-internal-category",
             attr: "data-id",
-            formated: "$(_id)",
+            formated: "$(name)",
             query: ["_id"],
             fk: "_id",
             version: 2,
@@ -2392,7 +2392,7 @@ const AutoloadDataService = (function () {
         current_dom.select2({
             minimumInputLength: minimumInputLength,
             allowClear: true,
-            closeOnSelect: false,
+            closeOnSelect: current_dom.data('close-on-select') === true,
             cache: true,
             placeholder: current_dom.attr("placeholder") || "Select an option",
             ajax: {
