@@ -603,6 +603,20 @@ const AutoloadDataService = (function () {
             query: ["status"],
             version: 2,
         },
+        "target": {
+            url: window.API_SERVICE_URL_V2 + "/task/targets",
+            formated: "$(name)",
+            id: "_id",
+            query: ["status"],
+            version: 2,
+        },
+        "target-unit": {
+            url: window.API_SERVICE_URL_V2 + "/task/units",
+            formated: "$(name)",
+            id: "_id",
+            query: ["status"],
+            version: 2,
+        },
         /////////End task backend v2//////
 
         //////// Payroll v2 ///////////
@@ -1589,6 +1603,22 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/task/category",
             dom: ".em-task-category",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/task/targets",
+            dom: ".em-target",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/task/units",
+            dom: ".em-target-units",
             attr: "data-id",
             formated: "$(name)",
             fk: "_id",
