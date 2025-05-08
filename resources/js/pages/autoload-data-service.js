@@ -172,6 +172,14 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         /////////////// ORG ////////////////
+        legal_entities: {
+            url: window.API_SERVICE_URL_V2 + "/org/legal_entities",
+            //'search_param': 'name',
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
         branch: {
             url: window.API_SERVICE_URL_V2 + "/org/branch",
             //'search_param': 'name',
@@ -1132,6 +1140,14 @@ const AutoloadDataService = (function () {
             attr: "data-id",
             formated: "$(name)",
             query: ["name"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/org/legal_entities",
+            dom: ".em-legal_entities",
+            attr: "data-id",
+            formated: "$(name)",
             fk: "_id",
             version: 2,
         },
