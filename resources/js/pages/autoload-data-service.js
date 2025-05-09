@@ -618,6 +618,13 @@ const AutoloadDataService = (function () {
             query: ["status"],
             version: 2,
         },
+        "criteria": {
+            url: window.API_SERVICE_URL_V2 + "/task/criteria",
+            formated: "$(name)",
+            id: "_id",
+            query: ["status", "target_id"],
+            version: 2,
+        },
         "target-unit": {
             url: window.API_SERVICE_URL_V2 + "/task/units",
             formated: "$(name)",
@@ -1627,6 +1634,14 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/task/targets",
             dom: ".em-target",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/task/criteria",
+            dom: ".em-criteria",
             attr: "data-id",
             formated: "$(name)",
             fk: "_id",
