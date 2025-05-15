@@ -611,28 +611,31 @@ const AutoloadDataService = (function () {
             query: ["status"],
             version: 2,
         },
+        /////////End task backend v2//////
+
+        //////////Target//////////
         "target": {
-            url: window.API_SERVICE_URL_V2 + "/task/targets",
+            url: window.API_SERVICE_URL_V2 + "/target/targets",
             formated: "$(name)",
             id: "_id",
             query: ["status"],
             version: 2,
         },
         "criteria": {
-            url: window.API_SERVICE_URL_V2 + "/task/criteria",
+            url: window.API_SERVICE_URL_V2 + "/target/criteria",
             formated: "$(name)",
             id: "_id",
             query: ["status", "target_id"],
             version: 2,
         },
         "target-unit": {
-            url: window.API_SERVICE_URL_V2 + "/task/units",
+            url: window.API_SERVICE_URL_V2 + "/target/units",
             formated: "$(name)",
             id: "_id",
             query: ["status"],
             version: 2,
         },
-        /////////End task backend v2//////
+        /////////End target//////
 
         //////// Payroll v2 ///////////
         payroll_variable: {
@@ -1631,8 +1634,11 @@ const AutoloadDataService = (function () {
             fk: "_id",
             version: 2,
         },
+        /////////End task backend v2//////
+
+        //////////Target//////////
         {
-            url: window.API_SERVICE_URL_V2 + "/task/targets",
+            url: window.API_SERVICE_URL_V2 + "/target/targets",
             dom: ".em-target",
             attr: "data-id",
             formated: "$(name)",
@@ -1640,7 +1646,7 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
-            url: window.API_SERVICE_URL_V2 + "/task/criteria",
+            url: window.API_SERVICE_URL_V2 + "/target/criteria",
             dom: ".em-criteria",
             attr: "data-id",
             formated: "$(name)",
@@ -1648,14 +1654,14 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
-            url: window.API_SERVICE_URL_V2 + "/task/units",
+            url: window.API_SERVICE_URL_V2 + "/target/units",
             dom: ".em-target-units",
             attr: "data-id",
             formated: "$(name)",
             fk: "_id",
             version: 2,
         },
-        /////////End task backend v2//////
+        /////////End target//////
 
         //////// Payroll v2 ///////////
         {
