@@ -172,6 +172,14 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         /////////////// ORG ////////////////
+        legal_entities: {
+            url: window.API_SERVICE_URL_V2 + "/org/legal_entities",
+            //'search_param': 'name',
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id"],
+            version: 2,
+        },
         branch: {
             url: window.API_SERVICE_URL_V2 + "/org/branch",
             //'search_param': 'name',
@@ -604,6 +612,30 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         /////////End task backend v2//////
+
+        //////////Target//////////
+        "target": {
+            url: window.API_SERVICE_URL_V2 + "/target/targets",
+            formated: "$(name)",
+            id: "_id",
+            query: ["status"],
+            version: 2,
+        },
+        "criteria": {
+            url: window.API_SERVICE_URL_V2 + "/target/criteria",
+            formated: "$(name)",
+            id: "_id",
+            query: ["status", "target_id"],
+            version: 2,
+        },
+        "target-unit": {
+            url: window.API_SERVICE_URL_V2 + "/target/units",
+            formated: "$(name)",
+            id: "_id",
+            query: ["status"],
+            version: 2,
+        },
+        /////////End target//////
 
         //////// Payroll v2 ///////////
         payroll_variable: {
@@ -1122,6 +1154,14 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
+            url: window.API_SERVICE_URL_V2 + "/org/legal_entities",
+            dom: ".em-legal_entities",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
             url: window.API_SERVICE_URL_V2 + "/org/branch",
             dom: ".em-branch",
             attr: "data-id",
@@ -1595,6 +1635,33 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         /////////End task backend v2//////
+
+        //////////Target//////////
+        {
+            url: window.API_SERVICE_URL_V2 + "/target/targets",
+            dom: ".em-target",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/target/criteria",
+            dom: ".em-criteria",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/target/units",
+            dom: ".em-target-units",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        /////////End target//////
 
         //////// Payroll v2 ///////////
         {
