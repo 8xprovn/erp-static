@@ -824,8 +824,19 @@ const AutoloadDataService = (function () {
             id: "_id",
             query: ["_id", "code", "is_publish"],
             version: 2,
-        }
+        },
         ///// end openai /////
+
+
+        //// course video ////
+        "course-video": {
+            url: window.API_SERVICE_URL_V2 + "/course/course",
+            formated: "$(title)",
+            id: "_id",
+            query: ["_id", "title", "status"],
+            version: 2,
+        }
+        /// end course video ////
     };
     var arrDomAutoFill = [
         {
@@ -1853,6 +1864,17 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         ///// end asset /////
+        //// course video ////
+        {
+            url: window.API_SERVICE_URL_V2 + "/course/course",
+            dom: ".em-course-video",
+            attr: "data-id",
+            formated: "$(title)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        }
+        /// end course video ////
     ];
 
     //
