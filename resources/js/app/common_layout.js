@@ -114,6 +114,12 @@ $(document).ready(function () {
                         <div class="font-size-sm font-weight-semibold text-uppercase mt-2">OpenAI</div>\
                     </a>\
                 </div>',
+        'task': '<div class="col-4">\
+                    <a href="https://erp.ebomb.edu.vn/task" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
+                        <i class="icon-task text-success icon-2x"></i>\
+                        <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Công việc</div>\
+                    </a>\
+                </div>',
     }
     
     $.each(objMenu,function(k,v){
