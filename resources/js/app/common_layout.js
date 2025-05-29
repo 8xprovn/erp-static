@@ -43,7 +43,7 @@ $(document).ready(function () {
                     </a>\
                 </div>',
         'pm': '<div class="col-4">\
-                    <a href="https://erp.ebomb.edu.vn/pm" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
+                    <a href="https://erp.ebomb.edu.vn/call-center" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
                         <i class="icon-task text-pink icon-2x"></i>\
                         <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Project manager</div>\
                     </a>\
