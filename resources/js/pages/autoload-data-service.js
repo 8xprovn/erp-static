@@ -824,8 +824,42 @@ const AutoloadDataService = (function () {
             id: "_id",
             query: ["_id", "code", "is_publish"],
             version: 2,
-        }
+        },
         ///// end openai /////
+
+         ///// risk /////
+        "risk-category": {
+            url: window.API_SERVICE_URL_V2 + "/target/risk-category",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "code","status"],
+            version: 2,
+        },
+        "risk-setting": {
+            url: window.API_SERVICE_URL_V2 + "/target/risk-setting",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id","status"],
+            version: 2,
+        },
+        "risk-validate": {
+            url: window.API_SERVICE_URL_V2 + "/target/risk-validate",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id","status"],
+            version: 2,
+        },
+        ///// end risk /////
+
+        //// course video ////
+        "course-video": {
+            url: window.API_SERVICE_URL_V2 + "/course/course",
+            formated: "$(title)",
+            id: "_id",
+            query: ["_id", "title", "status"],
+            version: 2,
+        }
+        /// end course video ////
     };
     var arrDomAutoFill = [
         {
@@ -1853,6 +1887,47 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         ///// end asset /////
+        ///// risk /////
+        {
+            url: window.API_SERVICE_URL_V2 + "/target/risk-category",
+            dom: ".em-risk-category",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "code","status"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/target/risk-setting",
+            dom: ".em-risk-setting",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id","status"],
+            fk: "_id",
+            version: 2,
+            link: "/target/risk_setting/$(_id)",
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/target/risk-validate",
+            dom: ".em-risk-validate",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id", "status"],
+            fk: "_id",
+            version: 2,
+        },
+        ///// end risk /////
+        //// course video ////
+        {
+            url: window.API_SERVICE_URL_V2 + "/course/course",
+            dom: ".em-course-video",
+            attr: "data-id",
+            formated: "$(title)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        }
+        /// end course video ////
     ];
 
     //
