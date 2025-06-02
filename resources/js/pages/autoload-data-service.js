@@ -1885,6 +1885,14 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             fk: "_id",
             version: 2,
+        },{
+            url: window.API_SERVICE_URL_V2 + "/internal/violation_errors",
+            dom: ".em-internal-violation-errors",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
         },
         ///// end asset /////
         ///// risk /////
