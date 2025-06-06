@@ -8,7 +8,7 @@ module.exports = (function(){
         getUnitDetail: function(params, callback) {
             var unit_id = params.unit_id;
             delete(params.unit_id);
-            helpers.curlgetapi(API_SERVICE_URL_V2 + '/task/units/' + unit_id, params, callback);
+            helpers.curlgetapi(API_SERVICE_URL_V2 + '/target/units/' + unit_id, params, callback);
         }
     }
 })();
