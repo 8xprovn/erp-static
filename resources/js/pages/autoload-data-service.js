@@ -393,7 +393,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/finance/wallets",
             formated: "$(name) - $(code)",
             id: "_id",
-            query: ["relate_type", "relate_id", "type"],
+            query: ["relate_type", "relate_id", "type", "is_company"],
             version: 2,
         },
         finance_transaction_type: {
