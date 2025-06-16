@@ -132,6 +132,17 @@ var FileUpload = (function () {
                     load: window.SERVICE_MEDIA_URL + "/",
                     fetch: null,
                 },
+                onaddfile: (err, item) => {
+                    const acceptedFileTypes = self.attr("data-accept")
+                        ? self.attr("data-accept").split(",")
+                        : []
+                    const fileType = item.file.type;
+                    if (acceptedFileTypes.length > 0 && !acceptedFileTypes.includes(fileType)) {
+                        alert("Tệp không hợp lệ: " + item.file.name);
+                        self.filepond('removeFile', item.id);
+                        return false;
+                    }
+                },
                 onremovefile: (error, file) => {
                     files = self.filepond("getFiles");
                     //if (isMultiUpload) {

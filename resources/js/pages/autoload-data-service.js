@@ -52,6 +52,14 @@ const AutoloadDataService = (function () {
             query: ["brand_id"],
             version: 2,
         },
+        company: {
+            url: window.API_SERVICE_URL_V2 + "/crm/company/search",
+            search_param: "keyword",
+            formated: "$(name)",
+            id: "_id",
+            query: [],
+            version: 2,
+        },
         campaigns: {
             url: window.API_SERVICE_URL_V2 + "/crm/campaigns/search",
             search_param: "keyword",
@@ -385,7 +393,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/finance/wallets",
             formated: "$(name) - $(code)",
             id: "_id",
-            query: ["relate_type", "relate_id", "type"],
+            query: ["relate_type", "relate_id", "type", "is_company"],
             version: 2,
         },
         finance_transaction_type: {
@@ -1360,6 +1368,15 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
+            url: window.API_SERVICE_URL_V2 + "/crm/company",
+            dom: ".crm-company",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            pquery: "_id",
+            version: 2,
+        },
+        {
             url: window.API_SERVICE_URL_V2 + "/crm/sources",
             dom: ".crm-source",
             attr: "data-id",
@@ -1880,6 +1897,14 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/internal/category",
             dom: ".em-internal-category",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },{
+            url: window.API_SERVICE_URL_V2 + "/internal/violation_errors",
+            dom: ".em-internal-violation-errors",
             attr: "data-id",
             formated: "$(name)",
             query: ["_id"],
