@@ -19995,6 +19995,7 @@ function initUpload(dom) {
         var _channel = self.attr('data-channel');
         var _type = self.attr('data-type') || 'image';
         var isMultiUpload = (self.attr('multiple')) ? 1 : 0;
+        var acceptTypes = self.attr("data-accept");
         if (!_channel) {
             return false;
         }
@@ -20020,6 +20021,7 @@ function initUpload(dom) {
             files: files,
             //allowMultiple: true,
             //name: 'files',
+            acceptedFileTypes: acceptTypes ? acceptTypes.split(",") : undefined,
             server: {
                 url: '',
                 timeout: 7000,
