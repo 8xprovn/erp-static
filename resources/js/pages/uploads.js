@@ -83,17 +83,6 @@ var FileUpload = (function () {
                             type: _type,
                         },
                         withCredentials: false,
-                        onaddfile: (err, item) => {
-                            const acceptedFileTypes = self.attr("data-accept")
-                                ? self.attr("data-accept").split(",")
-                                : [];
-
-                            const fileType = item.file.type;
-                            if (acceptedFileTypes.length > 0 && !acceptedFileTypes.includes(fileType)) {
-                                alert("Tệp không hợp lệ: " + item.file.name);
-                                item.remove();
-                            }
-                        },
                         onload: (res) => {
                             let responsive = res;
                             res = JSON.parse(res);
@@ -142,6 +131,16 @@ var FileUpload = (function () {
                     restore: null,
                     load: window.SERVICE_MEDIA_URL + "/",
                     fetch: null,
+                },
+                onaddfile: (err, item) => {
+                    const acceptedFileTypes = self.attr("data-accept")
+                        ? self.attr("data-accept").split(",")
+                        : []
+                    const fileType = item.file.type;
+                    if (acceptedFileTypes.length > 0 && !acceptedFileTypes.includes(fileType)) {
+                        alert("Tệp không hợp lệ: " + item.file.name);
+                        item.remove();
+                    }
                 },
                 onremovefile: (error, file) => {
                     files = self.filepond("getFiles");
