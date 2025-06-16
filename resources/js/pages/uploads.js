@@ -139,7 +139,8 @@ var FileUpload = (function () {
                     const fileType = item.file.type;
                     if (acceptedFileTypes.length > 0 && !acceptedFileTypes.includes(fileType)) {
                         alert("Tệp không hợp lệ: " + item.file.name);
-                        item.remove();
+                        self.filepond('removeFile', item.id);
+                        return false;
                     }
                 },
                 onremovefile: (error, file) => {
