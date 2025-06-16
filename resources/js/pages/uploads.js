@@ -83,20 +83,16 @@ var FileUpload = (function () {
                             type: _type,
                         },
                         withCredentials: false,
-                        ondata: (formData, file) => {
-                            let acceptedFileTypes = self.attr("data-accept")
+                        onaddfile: (err, item) => {
+                            const acceptedFileTypes = self.attr("data-accept")
                                 ? self.attr("data-accept").split(",")
                                 : [];
 
-                            if (acceptedFileTypes.length > 0) {
-                                let fileType = file.type;
-                                if (!acceptedFileTypes.includes(fileType)) {
-                                    alert("Tệp không hợp lệ: " + file.name);
-                                    return false;
-                                }
+                            const fileType = item.file.type;
+                            if (acceptedFileTypes.length > 0 && !acceptedFileTypes.includes(fileType)) {
+                                alert("Tệp không hợp lệ: " + item.file.name);
+                                item.remove();
                             }
-
-                            return formData;
                         },
                         onload: (res) => {
                             let responsive = res;
