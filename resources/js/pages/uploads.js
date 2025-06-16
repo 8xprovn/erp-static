@@ -33,6 +33,7 @@ var FileUpload = (function () {
             var files = [];
             var _type = self.attr("data-type") || "image";
             var isMultiUpload = self.attr("multiple") ? 1 : 0;
+            var acceptTypes = self.attr("data-accept");
             var domUpload = self.parent();
             var hiddenField = domUpload.find('input[name="' + fieldName + '"');
             var _function_callback = self.attr("data-callback");
@@ -66,6 +67,7 @@ var FileUpload = (function () {
                 files: files,
                 //allowMultiple: true,
                 //name: 'files',
+                acceptedFileTypes: acceptTypes ? acceptTypes.split(",") : undefined,
                 maxParallelUploads: 10,
                 checkValidity: true,
                 forceRevert: true,
