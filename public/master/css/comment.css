@@ -234,3 +234,7 @@
   border-radius: 8px;
   margin-top: 10px;
 }
+.dropdown-content-body.p-2 {
+    max-height: 340px;
+    overflow-y: auto;
+}

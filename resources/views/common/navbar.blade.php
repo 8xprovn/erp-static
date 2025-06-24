@@ -40,7 +40,7 @@
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right dropdown-content wmin-lg-350">
-                    <div class="dropdown-content-body p-2">
+                    <div class="dropdown-content-body dropdown-scrollable p-2">
                         <div class="row no-gutters">
                             
                         </div>
