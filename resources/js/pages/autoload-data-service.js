@@ -918,7 +918,7 @@ const AutoloadDataService = (function () {
             dom: ".em-course",
             attr: "data-id",
             formated: "$(name)",
-            query: ["brand_id", "contact_id", "status", "course_level_id", "type"], // query ko bat buoc
+            query: ["brand_id", "contact_id", "status", "course_level_id", "type", "mode"], // query ko bat buoc
             fk: "_id",
             version: 2,
             indexedDB:'yes',
