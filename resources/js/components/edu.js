@@ -80,5 +80,10 @@ module.exports = (function(){
     getClasses:function(params,callback) {
       helpers.curlgetapi(API_SERVICE_URL_V2 + '/lms/classes',params,callback);
     },
+    getCourseDetail: function(params,callback) {
+      var course_id = params.course_id;
+      delete(params.course_id);
+      helpers.curlgetapi(API_SERVICE_URL_V2 + '/lms/courses/' + course_id ,params,callback);
+    },
   }
 })();
