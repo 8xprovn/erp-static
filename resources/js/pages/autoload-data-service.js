@@ -78,7 +78,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/support/setting_document",
             formated: "$(name)",
             id: "_id",
-            query: ['type_file', 'service', '_id'],
+            query: ['type_file', 'service', '_id', "type"],
             version: 2,
         },
         ///////////// HR /////////////
@@ -1191,7 +1191,7 @@ const AutoloadDataService = (function () {
             dom: ".em-setting-document",
             attr: "data-id",
             formated: "$(name)",
-            query: ["name"],
+            query: ["name", "type"],
             fk: "_id",
             version: 2,
         },
