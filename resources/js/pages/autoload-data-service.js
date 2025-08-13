@@ -21,6 +21,14 @@ const AutoloadDataService = (function () {
             query: ["type"],
             version: 2,
         },
+        partners: {
+            url: window.API_SERVICE_URL_V2 + "/crm/partners/search",
+            search_param: "keyword",
+            formated: "$(name)",
+            id: "_id",
+            query: [],
+            version: 2,
+        },
         account: {
             url: window.API_SERVICE_URL_V2 + "/crm/accounts",
             search_param: "name",
@@ -1356,6 +1364,16 @@ const AutoloadDataService = (function () {
             version: 2,
             indexedDB:'yes',
             indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'branch_id', 'brand_id', 'birthdate', 'is_accout', 'is_student', 'is_children', 'is_locked', 'parents_info', 'parent_id', 'relation', 'relation_name', 'is_account'],
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/crm/partners",
+            dom: ".crm-partners",
+            attr: "data-id",
+            formated: "$(name)",
+            link: "/crm/partners/$(_id)",
+            fk: "_id",
+            pquery: "_id",
+            version: 2,
         },
         {
             url: window.API_SERVICE_URL_V2 + "/crm/accounts",
