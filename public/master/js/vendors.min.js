@@ -5492,6 +5492,11 @@ const AutoloadDataService = (function () {
                 : 0;
         var limit = search_param ? 50 : 500;
         var __cache = [];
+        if (window.API_MICROSERVICE_GUEST == null) {
+            var _token = getCookie("imap_authen_access_token");
+        }else{
+            var _token = window.API_MICROSERVICE_GUEST;
+        }
         current_dom.select2({
             minimumInputLength: minimumInputLength,
             allowClear: true,
@@ -5547,8 +5552,7 @@ const AutoloadDataService = (function () {
                     return result;
                 },
                 headers: {
-                    Authorization:
-                        "Bearer " + window.API_MICROSERVICE_GUEST,
+                    Authorization: "Bearer " + _token,
                 },
                 processResults: function (data, params) {
                     if (data.error) {
