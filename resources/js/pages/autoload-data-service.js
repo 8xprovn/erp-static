@@ -2630,7 +2630,7 @@ const AutoloadDataService = (function () {
                 },
                 headers: {
                     Authorization:
-                        "Bearer " + getCookie("imap_authen_access_token"),
+                        "Bearer " + window.API_MICROSERVICE_GUEST,
                 },
                 processResults: function (data, params) {
                     if (data.error) {
