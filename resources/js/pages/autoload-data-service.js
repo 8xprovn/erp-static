@@ -21,6 +21,14 @@ const AutoloadDataService = (function () {
             query: ["type"],
             version: 2,
         },
+        partners: {
+            url: window.API_SERVICE_URL_V2 + "/crm/partners/search",
+            search_param: "keyword",
+            formated: "$(name)",
+            id: "_id",
+            query: [],
+            version: 2,
+        },
         account: {
             url: window.API_SERVICE_URL_V2 + "/crm/accounts",
             search_param: "name",
@@ -78,7 +86,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/support/setting_document",
             formated: "$(name)",
             id: "_id",
-            query: ['type_file', 'service', '_id'],
+            query: ['type_file', 'service', '_id', "type", 'brand_id'],
             version: 2,
         },
         ///////////// HR /////////////
@@ -393,7 +401,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/finance/wallets",
             formated: "$(name) - $(code)",
             id: "_id",
-            query: ["relate_type", "relate_id", "type", "is_company", "is_minvoice"],
+            query: ["relate_type", "relate_id", "type", "is_company", "is_minvoice", "type_available"],
             version: 2,
         },
         finance_transaction_type: {
@@ -918,7 +926,7 @@ const AutoloadDataService = (function () {
             dom: ".em-course",
             attr: "data-id",
             formated: "$(name)",
-            query: ["brand_id", "contact_id", "status", "course_level_id", "type"], // query ko bat buoc
+            query: ["brand_id", "contact_id", "status", "course_level_id", "type", "mode"], // query ko bat buoc
             fk: "_id",
             version: 2,
             indexedDB:'yes',
@@ -1191,7 +1199,7 @@ const AutoloadDataService = (function () {
             dom: ".em-setting-document",
             attr: "data-id",
             formated: "$(name)",
-            query: ["name"],
+            query: ["name", "type"],
             fk: "_id",
             version: 2,
         },
@@ -1356,6 +1364,16 @@ const AutoloadDataService = (function () {
             version: 2,
             indexedDB:'yes',
             indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'branch_id', 'brand_id', 'birthdate', 'is_accout', 'is_student', 'is_children', 'is_locked', 'parents_info', 'parent_id', 'relation', 'relation_name', 'is_account'],
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/crm/partners",
+            dom: ".crm-partners",
+            attr: "data-id",
+            formated: "$(name)",
+            link: "/crm/partners/$(_id)",
+            fk: "_id",
+            pquery: "_id",
+            version: 2,
         },
         {
             url: window.API_SERVICE_URL_V2 + "/crm/accounts",
@@ -2556,6 +2574,11 @@ const AutoloadDataService = (function () {
                 : 0;
         var limit = search_param ? 50 : 500;
         var __cache = [];
+        if (window.API_MICROSERVICE_GUEST == null) {
+            var _token = getCookie("imap_authen_access_token");
+        }else{
+            var _token = window.API_MICROSERVICE_GUEST;
+        }
         current_dom.select2({
             minimumInputLength: minimumInputLength,
             allowClear: true,
@@ -2611,8 +2634,7 @@ const AutoloadDataService = (function () {
                     return result;
                 },
                 headers: {
-                    Authorization:
-                        "Bearer " + getCookie("imap_authen_access_token"),
+                    Authorization: "Bearer " + _token,
                 },
                 processResults: function (data, params) {
                     if (data.error) {
