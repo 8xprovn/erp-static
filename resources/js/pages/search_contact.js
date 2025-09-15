@@ -130,22 +130,6 @@ const searchContactService = (function () {
             
             var $activeTab = $modal.find('.tab-pane.active');
             var isMultiple = $select.prop('multiple');
-            if (isMultiple) {
-                var selectedVal = $select.val() || []; // mảng value
-                var selectedText = $select.find('option:selected').map(function() {
-                    return { value: this.value, text: $(this).text() };
-                }).get(); // mảng object {value, text}
-
-                // Xóa toàn bộ option
-                $select.empty();
-
-                // Thêm lại các option đã chọn
-                selectedText.forEach(function(opt) {
-                    $select.append(`<option value="${opt.value}" selected>${opt.text}</option>`);
-                });
-            } else {
-                $select.empty();
-            }
             var data = { limit: 50 };
             var isValid = true;
 
@@ -166,7 +150,24 @@ const searchContactService = (function () {
                     error_description: 'Bạn cần nhập đủ thông tin trước',
                     error: 'Cần nhập đủ thông tin'
                 });
+                $modal.modal('show');
                 return;
+            }
+            if (isMultiple) {
+                var selectedVal = $select.val() || []; // mảng value
+                var selectedText = $select.find('option:selected').map(function() {
+                    return { value: this.value, text: $(this).text() };
+                }).get(); // mảng object {value, text}
+
+                // Xóa toàn bộ option
+                $select.empty();
+
+                // Thêm lại các option đã chọn
+                selectedText.forEach(function(opt) {
+                    $select.append(`<option value="${opt.value}" selected>${opt.text}</option>`);
+                });
+            } else {
+                $select.empty();
             }
 
             // Nếu hợp lệ thì gọi Ajax
