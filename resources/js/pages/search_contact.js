@@ -117,7 +117,7 @@ const searchContactService = (function () {
         });
     };
     function bindModalSearch() {
-        $(document).off('click.searchContact', '.btnModalSearch').on('click', '.btnModalSearch', function () {
+        $(document).off('click.searchContact', '.btnModalSearch').on('click.searchContact', '.btnModalSearch', function () {
             var modalId = $(this).data('modal-id');     // lấy id modal hiện tại
             var $modal = $('#' + modalId);   
             var $select = $('.select-' + modalId);           // modal cụ thể
