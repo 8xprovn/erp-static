@@ -115,7 +115,11 @@ const searchContactService = (function () {
                 </div>
             </div>`;
             $('body').append(htmlModal);
-            $('#'+ajax_search_id).trigger( "MainContentReloaded", [] );
+            $('#tab2-'+ajax_search_id).trigger( "MainContentReloaded", [] );
+            $(document).off('hidden.bs.modal', '#' + ajax_search_id).on('hidden.bs.modal', '#' + ajax_search_id, function () {
+                document.activeElement.blur();   // clear focus
+                $('body').focus();               // trả focus về body
+            });
         });
     };
     function bindModalSearch() {
