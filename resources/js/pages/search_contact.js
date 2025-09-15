@@ -1,5 +1,24 @@
 const searchContactService = (function () {
     // --- PRIVATE: render select sau khi có dữ liệu ---
+    function forceOpenModal() {
+        $(document)
+            .off('click.forceModal', '.call_ajax_search') // clear event cũ
+            .on('click.forceModal', '.call_ajax_search', function (e) {
+                var modalId = $(this).attr('data-target'); // luôn lấy attr
+                if (modalId) {
+                    var $modal = $(modalId);
+
+                    // chỉ mở nếu chưa mở
+                    if (!$modal.hasClass('show')) {
+                        // Xoá aria-hidden nếu có
+                        $modal.removeAttr('aria-hidden');
+
+                        // Ép mở modal
+                        $modal.modal('show');
+                    }
+                }
+            });
+    }
     function renderSelect($select, optionsHtml) {
         $select.empty().append(optionsHtml);
 
@@ -116,10 +135,6 @@ const searchContactService = (function () {
             </div>`;
             $('body').append(htmlModal);
             $('#tab2-'+ajax_search_id).trigger( "MainContentReloaded", [] );
-            $(document).off('hidden.bs.modal', '#' + ajax_search_id).on('hidden.bs.modal', '#' + ajax_search_id, function () {
-                document.activeElement.blur();   // clear focus
-                $('body').focus();               // trả focus về body
-            });
         });
     };
     function bindModalSearch() {
@@ -216,7 +231,8 @@ const searchContactService = (function () {
         },
         bind: function () {
             bindModalSearch();
-        }
+            forceOpenModal();
+        },
     };
 
 })();
