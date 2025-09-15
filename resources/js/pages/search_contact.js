@@ -50,8 +50,10 @@ const searchContactService = (function () {
                         console.error(xhr.responseText);
                     }
                 });
+            } else {
+                var selectOption = '<option value="">Select an option</option>';
+                self.append(html);
             }
-
             // hàm render select + modal
             var html = '<button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">Search <i class="icon-search4"></i></button>';
                 self.after(html);
@@ -121,10 +123,10 @@ const searchContactService = (function () {
             var modalId = $(this).data('modal-id');     // lấy id modal hiện tại
             var $modal = $('#' + modalId);   
             var $select = $('.select-' + modalId);           // modal cụ thể
-            console.log($select);
             
             var $activeTab = $modal.find('.tab-pane.active');
             var isMultiple = $select.prop('multiple');
+            var selectOption = $select.attr('data-select');
             if (isMultiple) {
                 var selectedVal = $select.val() || []; // mảng value
                 var selectedText = $select.find('option:selected').map(function() {
@@ -185,7 +187,7 @@ const searchContactService = (function () {
                     res.forEach(function(item) {
                         if ($select.find('option[value="' + item._id + '"]').length === 0) {
                             var selected = '';
-                            if (countRes == 1) {
+                            if (countRes == 1 && selectOption == 1) {
                                 selected = 'selected';
                             } 
                             html += `<option value="${item._id}" ${selected}>
