@@ -154,7 +154,6 @@ const searchContactService = (function () {
                 return;
             }
             if (isMultiple) {
-                var selectedVal = $select.val() || []; // mảng value
                 var selectedText = $select.find('option:selected').map(function() {
                     return { value: this.value, text: $(this).text() };
                 }).get(); // mảng object {value, text}
