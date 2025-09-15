@@ -40,7 +40,7 @@ const searchContactService = (function () {
                             htmlOption = '';
                             res.forEach(function(item) {
                                 htmlOption += `<option value="${item._id}" selected>
-                                    ${item._id} - ${item.fullname ?? ''} - ${item.phone ?? ''}
+                                    ${item._id} - ${item.fullname ?? ''} - ${item.phone ?? ''} - ${item.email ?? ''}
                                 </option>`;
                             });
                         }
