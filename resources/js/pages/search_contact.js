@@ -64,10 +64,6 @@ const searchContactService = (function () {
                     
                         <div class="modal-header">
                             <h5 class="modal-title">Lọc dữ liệu</h5>
-                            <div>
-                                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-                                <button type="button" class="btn btn-success btnModalSearch" data-modal-id="${ajax_search_id}"><i class="icon-search4"></i> Search</button>
-                            </div>
                         </div>
 
                         <div class="row">
@@ -96,7 +92,8 @@ const searchContactService = (function () {
                                                 <div class="col-sm-12 col-xs-12">
                                                     <div class="x_panel row">
                                                         <div class="form-group col-lg-6">
-                                                            <input type="text" name="filter[fullname][like]" placeholder="Nhập họ tên" class="form-control tab2-input" value="">
+                                                            <input type="text" name="filter[fullname][like]" placeholder="Nhập tên" class="form-control tab2-input" value="">
+                                                            <small style="color:red">Ví dụ : minh</small>
                                                         </div>
                                                         <div class="form-group col-lg-6">
                                                             <input type="text" name="filter[birthdate]" placeholder="Ngày sinh" class="form-control datepicker tab2-input" value="">
@@ -108,6 +105,10 @@ const searchContactService = (function () {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-success btnModalSearch" data-modal-id="${ajax_search_id}"><i class="icon-search4"></i> Search</button>
                         </div>
                     
                     </div>
@@ -145,18 +146,18 @@ const searchContactService = (function () {
                 $select.empty();
             }
             var data = { limit: 50 };
-            var isValid = false;
+            var isValid = true;
 
             $activeTab.find('input').each(function () {
                 var name = $(this).attr('name');
                 var value = $(this).val().trim();
-
-                if (value) {
-                    isValid = true; // chỉ cần 1 input có giá trị là hợp lệ
-                    if (name) {
-                        data[name] = value;
-                    }
+                if (!value) {
+                    isValid = false;
                 }
+                if (name) {
+                    data[name] = value;
+                }
+                
             });
 
             if (!isValid) {
@@ -197,7 +198,9 @@ const searchContactService = (function () {
                         }
                     });
                     $select.append(html);
-                    $select.select2('open');
+                    if (countRes >= 1) {
+                        $select.select2('open');
+                    }
                     $modal.modal('hide');
                 },
                 error: function (xhr) {
