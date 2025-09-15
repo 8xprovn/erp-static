@@ -199,7 +199,7 @@ const searchContactService = (function () {
                         }
                     });
                     $select.append(html);
-                    if (countRes >= 1) {
+                    if (countRes > 1) {
                         $select.select2('open');
                     }
                     $modal.modal('hide');
