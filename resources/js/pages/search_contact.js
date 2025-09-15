@@ -51,8 +51,8 @@ const searchContactService = (function () {
                     }
                 });
             } else {
-                var selectOption = '<option value="">Select an option</option>';
-                self.append(html);
+                var selectOptionHtml = '<option value="">Select an option</option>';
+                self.append(selectOptionHtml);
             }
             // hàm render select + modal
             var html = '<button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">Search <i class="icon-search4"></i></button>';
