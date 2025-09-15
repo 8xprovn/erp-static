@@ -128,7 +128,6 @@ const searchContactService = (function () {
             
             var $activeTab = $modal.find('.tab-pane.active');
             var isMultiple = $select.prop('multiple');
-            var selectOption = $select.attr('data-select');
             if (isMultiple) {
                 var selectedVal = $select.val() || []; // mảng value
                 var selectedText = $select.find('option:selected').map(function() {
@@ -189,7 +188,7 @@ const searchContactService = (function () {
                     res.forEach(function(item) {
                         if ($select.find('option[value="' + item._id + '"]').length === 0) {
                             var selected = '';
-                            if (countRes == 1 && selectOption == 1) {
+                            if (countRes == 1) {
                                 selected = 'selected';
                             } 
                             html += `<option value="${item._id}" ${selected}>
