@@ -56,51 +56,50 @@ const searchContactService = (function () {
             }
             // hàm render select + modal
             var html = '<button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">Search <i class="icon-search4"></i></button>';
-                self.after(html);
+            self.parent().append(html);
 
-                var htmlModal = `<div id="${ajax_search_id}" class="modal fade" tabindex="-1" style="display: none;" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                        
-                            <div class="modal-header">
-                                <h5 class="modal-title">Lọc dữ liệu</h5>
-                                <div>
-                                    <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
-                                    <button type="button" class="btn btn-success btnModalSearch" data-modal-id="${ajax_search_id}"><i class="icon-search4"></i> Search</button>
-                                </div>
+            var htmlModal = `<div id="${ajax_search_id}" class="modal fade" tabindex="-1" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    
+                        <div class="modal-header">
+                            <h5 class="modal-title">Lọc dữ liệu</h5>
+                            <div>
+                                <button type="button" class="btn btn-link" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-success btnModalSearch" data-modal-id="${ajax_search_id}"><i class="icon-search4"></i> Search</button>
                             </div>
+                        </div>
 
-                            <div class="row">
-                                <div class="col-lg-12">
-                                    <div class="card-body">
-                                        <ul class="nav nav-tabs row">
-                                            <li style="padding: 0px" class="nav-item"><a href="#tab1-${ajax_search_id}" class="nav-link active" data-toggle="tab">Theo email/số điện thoại <span style="color: red">*</span></a></li>
-                                            <li style="padding: 0px" class="nav-item"><a href="#tab2-${ajax_search_id}" class="nav-link" data-toggle="tab">Theo tên và ngày sinh <span style="color: red">*</span></a></li>
-                                        </ul>
-                                        <div class="tab-content">
-                                            <div id="tab1-${ajax_search_id}" class="tab-pane fade show active">
-                                                <div class="row">
-                                                    <div class="col-sm-12 col-xs-12">
-                                                        <div class="x_panel">
-                                                            <div class="form-group">
-                                                                <div style="padding: 0px">
-                                                                    <input type="text" name="filter[emailphone]" placeholder="Nhập email hoặc số điện thoại" class="form-control tab1-input" value="">
-                                                                </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="card-body">
+                                    <ul class="nav nav-tabs row">
+                                        <li style="padding: 0px" class="nav-item"><a href="#tab1-${ajax_search_id}" class="nav-link active" data-toggle="tab">Theo email/số điện thoại <span style="color: red">*</span></a></li>
+                                        <li style="padding: 0px" class="nav-item"><a href="#tab2-${ajax_search_id}" class="nav-link" data-toggle="tab">Theo tên và ngày sinh <span style="color: red">*</span></a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div id="tab1-${ajax_search_id}" class="tab-pane fade show active">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-xs-12">
+                                                    <div class="x_panel">
+                                                        <div class="form-group">
+                                                            <div style="padding: 0px">
+                                                                <input type="text" name="filter[emailphone]" placeholder="Nhập email hoặc số điện thoại" class="form-control tab1-input" value="">
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div id="tab2-${ajax_search_id}" class="tab-pane fade show">
-                                                <div class="row">
-                                                    <div class="col-sm-12 col-xs-12">
-                                                        <div class="x_panel row">
-                                                            <div class="form-group col-lg-6">
-                                                                <input type="text" name="filter[fullname][like]" placeholder="Nhập họ tên" class="form-control tab2-input" value="">
-                                                            </div>
-                                                            <div class="form-group col-lg-6">
-                                                                <input type="text" name="filter[birthdate]" placeholder="Ngày sinh" class="form-control datepicker tab2-input" value="">
-                                                            </div>
+                                        </div>
+                                        <div id="tab2-${ajax_search_id}" class="tab-pane fade show">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-xs-12">
+                                                    <div class="x_panel row">
+                                                        <div class="form-group col-lg-6">
+                                                            <input type="text" name="filter[fullname][like]" placeholder="Nhập họ tên" class="form-control tab2-input" value="">
+                                                        </div>
+                                                        <div class="form-group col-lg-6">
+                                                            <input type="text" name="filter[birthdate]" placeholder="Ngày sinh" class="form-control datepicker tab2-input" value="">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -109,11 +108,12 @@ const searchContactService = (function () {
                                     </div>
                                 </div>
                             </div>
-                        
                         </div>
+                    
                     </div>
-                </div>`;
-                $('body').append(htmlModal);
+                </div>
+            </div>`;
+            $('body').append(htmlModal);
         });
     };
     function bindModalSearch() {
