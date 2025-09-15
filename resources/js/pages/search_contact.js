@@ -120,6 +120,8 @@ const searchContactService = (function () {
     };
     function bindModalSearch() {
         $(document).off('click.searchContact', '.btnModalSearch').on('click.searchContact', '.btnModalSearch', function () {
+            console.log('Clicked button for modal: ', $(this).data('target'));
+            console.log('Modal exists? ', $($(this).data('target')).length);
             var modalId = $(this).data('modal-id');     // lấy id modal hiện tại
             var $modal = $('#' + modalId);   
             var $select = $('.select-' + modalId);           // modal cụ thể
