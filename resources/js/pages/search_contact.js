@@ -114,6 +114,10 @@ const searchContactService = (function () {
                 </div>
             </div>`;
             $('body').append(htmlModal);
+            $(document).off('hidden.bs.modal', '#' + ajax_search_id).on('hidden.bs.modal', '#' + ajax_search_id, function () {
+                document.activeElement.blur();   // clear focus
+                $('body').focus();               // trả focus về body
+            });
         });
     };
     function bindModalSearch() {
