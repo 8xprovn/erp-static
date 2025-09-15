@@ -150,23 +150,7 @@ const searchContactService = (function () {
                     error_description: 'Bạn cần nhập đủ thông tin trước',
                     error: 'Cần nhập đủ thông tin'
                 });
-                $modal.modal('show');
                 return;
-            }
-            if (isMultiple) {
-                var selectedText = $select.find('option:selected').map(function() {
-                    return { value: this.value, text: $(this).text() };
-                }).get(); // mảng object {value, text}
-
-                // Xóa toàn bộ option
-                $select.empty();
-
-                // Thêm lại các option đã chọn
-                selectedText.forEach(function(opt) {
-                    $select.append(`<option value="${opt.value}" selected>${opt.text}</option>`);
-                });
-            } else {
-                $select.empty();
             }
 
             // Nếu hợp lệ thì gọi Ajax
@@ -186,6 +170,22 @@ const searchContactService = (function () {
                             error_description: 'Không tìm thấy thông tin',
                             error: 'Không tìm thấy thông tin'
                         });
+                        return;
+                    }
+                    if (isMultiple) {
+                        var selectedText = $select.find('option:selected').map(function() {
+                            return { value: this.value, text: $(this).text() };
+                        }).get(); // mảng object {value, text}
+
+                        // Xóa toàn bộ option
+                        $select.empty();
+
+                        // Thêm lại các option đã chọn
+                        selectedText.forEach(function(opt) {
+                            $select.append(`<option value="${opt.value}" selected>${opt.text}</option>`);
+                        });
+                    } else {
+                        $select.empty();
                     }
                     res.forEach(function(item) {
                         if ($select.find('option[value="' + item._id + '"]').length === 0) {
