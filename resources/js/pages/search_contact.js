@@ -116,7 +116,7 @@ const searchContactService = (function () {
                                                 <div class="col-sm-12 col-xs-12">
                                                     <div class="x_panel row">
                                                         <div class="form-group col-lg-6">
-                                                            <input type="text" name="filter[first_name][like]" placeholder="Nhập tên" class="form-control tab2-input" value="">
+                                                            <input type="text" name="filter[first_name]" placeholder="Nhập tên" class="form-control tab2-input" value="">
                                                             <small style="color:red">Ví dụ : minh</small>
                                                         </div>
                                                         <div class="form-group col-lg-6">
