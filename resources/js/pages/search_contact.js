@@ -27,7 +27,7 @@ const searchContactService = (function () {
             $select.select2('destroy');
         }
         $select.select2({
-            placeholder: "Nhấn vào 🔍 để tìm kiếm",
+            placeholder: "Nhấn vào 🔍 bên cạnh để tìm kiếm",
             closeOnSelect: false   // ⛔ luôn giữ dropdown mở sau khi chọn
         });
     }
@@ -54,7 +54,7 @@ const searchContactService = (function () {
                     type: 'GET',
                     data: { 'filter[_id]': valuesOption },
                     success: function (res) {
-                        var htmlOption = '<option value="">Nhấn vào 🔍 để tìm kiếm</option>';
+                        var htmlOption = '<option value="">Nhấn vào 🔍 bên cạnh để tìm kiếm</option>';
                         if (res.length > 0) {
                             htmlOption = '';
                             res.forEach(function(item) {
@@ -70,13 +70,12 @@ const searchContactService = (function () {
                     }
                 });
             } else {
-                var selectOptionHtml = '<option value="">Nhấn vào 🔍 để tìm kiếm</option>';
+                var selectOptionHtml = '<option value="">Nhấn vào 🔍 bên cạnh để tìm kiếm</option>';
                 self.append(selectOptionHtml);
             }
             var htmlContent = self.prop("outerHTML");
             // hàm render select + modal
-            // var html = '<button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">Search <i class="icon-search4"></i></button>';
-            // self.parent().append(html);
+            
             var html = '<div class="d-flex">\
                 '+htmlContent+'\
                 <button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">\
