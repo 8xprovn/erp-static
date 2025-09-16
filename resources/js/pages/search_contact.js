@@ -27,7 +27,7 @@ const searchContactService = (function () {
             $select.select2('destroy');
         }
         $select.select2({
-            placeholder: "Select an option",
+            placeholder: "Nhấn vào 🔍 để tìm kiếm",
             closeOnSelect: false   // ⛔ luôn giữ dropdown mở sau khi chọn
         });
     }
@@ -54,7 +54,7 @@ const searchContactService = (function () {
                     type: 'GET',
                     data: { 'filter[_id]': valuesOption },
                     success: function (res) {
-                        var htmlOption = '<option value="">Select an option</option>';
+                        var htmlOption = '<option value="">Nhấn vào 🔍 để tìm kiếm</option>';
                         if (res.length > 0) {
                             htmlOption = '';
                             res.forEach(function(item) {
@@ -70,12 +70,18 @@ const searchContactService = (function () {
                     }
                 });
             } else {
-                var selectOptionHtml = '<option value="">Select an option</option>';
+                var selectOptionHtml = '<option value="">Nhấn vào 🔍 để tìm kiếm</option>';
                 self.append(selectOptionHtml);
             }
+            var htmlContent = self.prop("outerHTML");
             // hàm render select + modal
-            var html = '<button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">Search <i class="icon-search4"></i></button>';
-            self.parent().append(html);
+            // var html = '<button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">Search <i class="icon-search4"></i></button>';
+            // self.parent().append(html);
+            var html = '<div class="d-flex">\
+                '+htmlContent+'\
+                <button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">\
+                <i class="icon-search4"></i></button></div>';
+            self.replaceWith(html);
 
             var htmlModal = `<div id="${ajax_search_id}" class="modal fade" tabindex="-1" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog">
