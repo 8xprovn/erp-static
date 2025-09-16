@@ -96,6 +96,7 @@ const searchContactService = (function () {
                                     <ul class="nav nav-tabs row">
                                         <li style="padding: 0px" class="nav-item"><a href="#tab1-${ajax_search_id}" class="nav-link active" data-toggle="tab">Theo email/số điện thoại <span style="color: red">*</span></a></li>
                                         <li style="padding: 0px" class="nav-item"><a href="#tab2-${ajax_search_id}" class="nav-link" data-toggle="tab">Theo tên và ngày sinh <span style="color: red">*</span></a></li>
+                                        <li style="padding: 0px" class="nav-item"><a href="#tab3-${ajax_search_id}" class="nav-link" data-toggle="tab">Theo mã contact <span style="color: red">*</span></a></li>
                                     </ul>
                                     <div class="tab-content">
                                         <div id="tab1-${ajax_search_id}" class="tab-pane fade show active">
@@ -121,6 +122,19 @@ const searchContactService = (function () {
                                                         </div>
                                                         <div class="form-group col-lg-6">
                                                             <input type="text" name="filter[birthdate]" placeholder="Ngày sinh" class="form-control datepicker tab2-input" value="">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="tab3-${ajax_search_id}" class="tab-pane fade show">
+                                            <div class="row">
+                                                <div class="col-sm-12 col-xs-12">
+                                                    <div class="x_panel">
+                                                        <div class="form-group">
+                                                            <div style="padding: 0px">
+                                                                <input type="text" name="filter[_id]" placeholder="Nhập mã contact" class="form-control tab3-input" value="">
+                                                            </div>
                                                         </div>
                                                     </div>
                                                 </div>
