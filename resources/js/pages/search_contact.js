@@ -242,10 +242,15 @@ const searchContactService = (function () {
                     if (countRes > 1) {
                         $select.select2('open');
                     }
+                    $select.trigger('change');
                     $modal.modal('hide');
                 },
                 error: function (xhr) {
-                    console.error(xhr.responseText);
+                    show_notify_error({
+                        error_description: xhr.responseText,
+                        error: 'Lỗi hệ thống'
+                    });
+                    return;
                 }
             });
         });
