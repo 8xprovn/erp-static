@@ -73,14 +73,20 @@ const searchContactService = (function () {
                 var selectOptionHtml = '<option value="">Nhấn vào biểu tượng 🔍 ở phía bên phải để tìm kiếm</option>';
                 self.append(selectOptionHtml);
             }
-            var htmlContent = self.prop("outerHTML");
-            // hàm render select + modal
-            
-            var html = '<div class="d-flex">\
-                '+htmlContent+'\
-                <button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">\
-                <i class="icon-search4"></i></button></div>';
-            self.replaceWith(html);
+            // 
+            var $container = self.next('.select2-container');
+            var $wrapper = $('<div class="input-group"></div>');
+
+            self.add($container).wrapAll($wrapper);
+
+            $container.after(`
+            <div class="input-group-append">
+                <button type="button" class="btn btn-teal call_ajax_search"
+                        data-toggle="modal" data-target="#${ajax_search_id}">
+                    <i class="icon-search4"></i>
+                </button>
+            </div>
+            `);
             // var wrapper = $('<div class="input-group"></div>');
 
             // // di chuyển select gốc vào wrapper
