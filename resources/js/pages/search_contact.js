@@ -280,7 +280,7 @@ const searchContactService = (function () {
 })();
 
 // Khi load trang lần đầu
-$(document).on("PageReady", function (e) {
+$(document).on("DOMContentLoaded", function (e) {
     searchContactService.bind();              // bind event 1 lần
     searchContactService.init($(e.target));   // init cho toàn bộ DOM
 });
