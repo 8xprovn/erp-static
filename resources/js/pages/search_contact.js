@@ -81,17 +81,19 @@ const searchContactService = (function () {
             //     <button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">\
             //     <i class="icon-search4"></i></button></div>';
             // self.replaceWith(html);
-            var wrapper = $('<div class="d-flex"></div>');
+            var wrapper = $('<div class="input-group"></div>');
 
             // di chuyển select gốc vào wrapper
             self.wrap(wrapper);
 
             // thêm button ngay sau select bên trong wrapper
             self.after(`
-                <button type="button" class="btn btn-teal call_ajax_search"
-                        data-toggle="modal" data-target="#${ajax_search_id}">
-                    <i class="icon-search4"></i>
-                </button>
+                <div class="input-group-append">
+                    <button type="button" class="btn btn-teal call_ajax_search"
+                            data-toggle="modal" data-target="#${ajax_search_id}">
+                        <i class="icon-search4"></i>
+                    </button>
+                </div>
             `);
 
             var htmlModal = `<div id="${ajax_search_id}" class="modal fade" tabindex="-1" style="display: none;" aria-hidden="true">
