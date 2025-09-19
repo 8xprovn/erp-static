@@ -269,7 +269,9 @@ const searchContactService = (function () {
     };
     return {
         init: function (parentDom) {
-            addForm(parentDom);
+            parentDom.find('.search_contact').each(function () {
+                addForm($(this));
+            });
         },
         bind: function () {
             bindModalSearch();
