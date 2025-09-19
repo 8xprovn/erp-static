@@ -73,14 +73,26 @@ const searchContactService = (function () {
                 var selectOptionHtml = '<option value="">Nhấn vào biểu tượng 🔍 ở phía bên phải để tìm kiếm</option>';
                 self.append(selectOptionHtml);
             }
-            var htmlContent = self.prop("outerHTML");
-            // hàm render select + modal
+            // var htmlContent = self.prop("outerHTML");
+            // // hàm render select + modal
             
-            var html = '<div class="d-flex">\
-                '+htmlContent+'\
-                <button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">\
-                <i class="icon-search4"></i></button></div>';
-            self.replaceWith(html);
+            // var html = '<div class="d-flex">\
+            //     '+htmlContent+'\
+            //     <button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">\
+            //     <i class="icon-search4"></i></button></div>';
+            // self.replaceWith(html);
+            var wrapper = $('<div class="d-flex"></div>');
+
+            // di chuyển select gốc vào wrapper
+            self.wrap(wrapper);
+
+            // thêm button ngay sau select bên trong wrapper
+            self.after(`
+                <button type="button" class="btn btn-teal call_ajax_search"
+                        data-toggle="modal" data-target="#${ajax_search_id}">
+                    <i class="icon-search4"></i>
+                </button>
+            `);
 
             var htmlModal = `<div id="${ajax_search_id}" class="modal fade" tabindex="-1" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog">
