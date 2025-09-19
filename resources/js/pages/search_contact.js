@@ -268,12 +268,12 @@ const searchContactService = (function () {
 })();
 
 // Khi load trang lần đầu
-$(document).on("DOMContentLoaded", function () {
+$(document).on("DOMContentLoaded", function (e) {
     searchContactService.bind();              // bind event 1 lần
-    searchContactService.init($(document));   // init cho toàn bộ DOM
+    searchContactService.init($(e.target));   // init cho toàn bộ DOM
 });
 
-// Khi reload content động (AJAX load)
+// // Khi reload content động (AJAX load)
 $(document).on("MainContentReloaded", function (e) {
     searchContactService.init($(e.target));   // chỉ init phần DOM mới
 });
