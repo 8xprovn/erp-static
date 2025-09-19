@@ -452,5 +452,4 @@ var Datatable = function() {
 // ------------------------------
 $(document).on('DOMContentLoaded MainContentReloaded',function(e){
     Datatable.init($(e.target));
-
 });

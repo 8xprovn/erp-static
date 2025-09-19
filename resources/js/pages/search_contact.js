@@ -81,20 +81,6 @@ const searchContactService = (function () {
                 <button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">\
                 <i class="icon-search4"></i></button></div>';
             self.replaceWith(html);
-            // var wrapper = $('<div class="input-group"></div>');
-
-            // // di chuyển select gốc vào wrapper
-            // self.wrap(wrapper);
-
-            // // thêm button ngay sau select bên trong wrapper
-            // self.after(`
-            //     <div class="input-group-append">
-            //         <button type="button" class="btn btn-teal call_ajax_search"
-            //                 data-toggle="modal" data-target="#${ajax_search_id}">
-            //             <i class="icon-search4"></i>
-            //         </button>
-            //     </div>
-            // `);
 
             var htmlModal = `<div id="${ajax_search_id}" class="modal fade" tabindex="-1" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog">
@@ -287,7 +273,7 @@ $(document).on("DOMContentLoaded", function (e) {
     searchContactService.init($(e.target));   // init cho toàn bộ DOM
 });
 
-// // Khi reload content động (AJAX load)
+// Khi reload content động (AJAX load)
 $(document).on("MainContentReloaded", function (e) {
     searchContactService.init($(e.target));   // chỉ init phần DOM mới
 });
