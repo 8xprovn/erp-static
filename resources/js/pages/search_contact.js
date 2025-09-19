@@ -73,18 +73,14 @@ const searchContactService = (function () {
                 var selectOptionHtml = '<option value="">Nhấn vào biểu tượng 🔍 ở phía bên phải để tìm kiếm</option>';
                 self.append(selectOptionHtml);
             }
-            // 
-            var $container = self.next('.select2-container');
-            var $wrapper = $('<div class="d-lex"></div>');
-
-            self.add($container).wrapAll($wrapper);
-
-            $container.after(`
-                <button type="button" class="btn btn-teal call_ajax_search"
-                        data-toggle="modal" data-target="#${ajax_search_id}">
-                    <i class="icon-search4"></i>
-                </button>
-            `);
+            var htmlContent = self.prop("outerHTML");
+            // hàm render select + modal
+            
+            var html = '<div class="d-flex">\
+                '+htmlContent+'\
+                <button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">\
+                <i class="icon-search4"></i></button></div>';
+            self.replaceWith(html);
             // var wrapper = $('<div class="input-group"></div>');
 
             // // di chuyển select gốc vào wrapper
@@ -171,7 +167,7 @@ const searchContactService = (function () {
                 </div>
             </div>`;
             $('body').append(htmlModal);
-            $('#tab2-'+ajax_search_id).trigger( "InitDateTimePickers", [] );
+            $('#tab2-'+ajax_search_id).trigger( "InitSearch", [] );
         });
     };
     function bindModalSearch() {

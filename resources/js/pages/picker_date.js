@@ -228,6 +228,6 @@ $(document).on('DOMContentLoaded MainContentReloaded',function(e){
     DateTimePickers.init();
 });
 
-$(document).on('InitDateTimePickers',function(e){
+$(document).on('InitSearch',function(e){
     DateTimePickers.init();
 });
