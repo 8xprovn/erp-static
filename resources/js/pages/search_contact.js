@@ -269,9 +269,7 @@ const searchContactService = (function () {
     };
     return {
         init: function (parentDom) {
-            parentDom.find('.search_contact').each(function () {
-                addForm($(this));
-            });
+            addForm(parentDom);
         },
         bind: function () {
             bindModalSearch();
@@ -283,8 +281,10 @@ const searchContactService = (function () {
 
 // Khi load trang lần đầu
 $(document).on("DOMContentLoaded", function (e) {
-    searchContactService.bind();              // bind event 1 lần
-    searchContactService.init($(e.target));   // init cho toàn bộ DOM
+    setTimeout(function () {
+        searchContactService.bind();              // bind event 1 lần
+        searchContactService.init($(e.target));   // init cho toàn bộ DOM
+    }, 0);
 });
 
 // // Khi reload content động (AJAX load)
