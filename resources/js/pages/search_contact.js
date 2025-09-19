@@ -75,17 +75,15 @@ const searchContactService = (function () {
             }
             // 
             var $container = self.next('.select2-container');
-            var $wrapper = $('<div class="input-group"></div>');
+            var $wrapper = $('<div class="d-lex"></div>');
 
             self.add($container).wrapAll($wrapper);
 
             $container.after(`
-            <div class="input-group-append">
                 <button type="button" class="btn btn-teal call_ajax_search"
                         data-toggle="modal" data-target="#${ajax_search_id}">
                     <i class="icon-search4"></i>
                 </button>
-            </div>
             `);
             // var wrapper = $('<div class="input-group"></div>');
 
