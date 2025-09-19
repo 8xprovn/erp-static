@@ -162,3 +162,6 @@ var Select2Selects = function() {
 $(document).on('DOMContentLoaded MainContentReloaded', function() {
     Select2Selects.init();
 });
+$(document).on('InitSearch',function(e){
+    Select2Selects.init(); 
+});

@@ -56,3 +56,6 @@ var BootstrapMultiselect = function() {
 $(document).on('DOMContentLoaded MainContentReloaded',function(e){
     BootstrapMultiselect.init($(e.target)); 
 });
+$(document).on('InitSearch',function(e){
+    BootstrapMultiselect.init($(e.target)); 
+});

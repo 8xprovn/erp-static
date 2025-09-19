@@ -153,7 +153,7 @@ const searchContactService = (function () {
                 </div>
             </div>`;
             $('body').append(htmlModal);
-            $('#tab2-'+ajax_search_id).trigger( "MainContentReloaded", [] );
+            $('#tab2-'+ajax_search_id).trigger( "InitSearch", [] );
         });
     };
     function bindModalSearch() {
@@ -268,9 +268,9 @@ const searchContactService = (function () {
 })();
 
 // Khi load trang lần đầu
-$(document).on("DOMContentLoaded", function () {
+$(document).on("DOMContentLoaded", function (e) {
     searchContactService.bind();              // bind event 1 lần
-    searchContactService.init($(document));   // init cho toàn bộ DOM
+    searchContactService.init($(e.target));   // init cho toàn bộ DOM
 });
 
 // Khi reload content động (AJAX load)

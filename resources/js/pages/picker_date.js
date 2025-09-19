@@ -227,3 +227,7 @@ var DateTimePickers = function() {
 $(document).on('DOMContentLoaded MainContentReloaded',function(e){
     DateTimePickers.init();
 });
+
+$(document).on('InitSearch',function(e){
+    DateTimePickers.init();
+});
