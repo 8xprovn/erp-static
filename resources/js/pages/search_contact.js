@@ -165,7 +165,7 @@ const searchContactService = (function () {
                 </div>
             </div>`;
             $('body').append(htmlModal);
-            $('#tab2-'+ajax_search_id).trigger( "MainContentReloaded", [] );
+            $('#tab2-'+ajax_search_id).find('.datepicker').datepicker();
         });
     };
     function bindModalSearch() {
@@ -280,9 +280,9 @@ const searchContactService = (function () {
 })();
 
 // Khi load trang lần đầu
-$(document).on("DOMContentLoaded", function (e) {
-    searchContactService.bind();              // bind event 1 lần
-    searchContactService.init($(e.target));   // init cho toàn bộ DOM
+$(document).on("PageReady", function (e, $parent) {
+    searchContactService.bind();        // chỉ bind 1 lần
+    searchContactService.init($parent); // init đúng vùng được truyền từ trigger
 });
 
 // // Khi reload content động (AJAX load)
