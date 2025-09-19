@@ -165,7 +165,7 @@ const searchContactService = (function () {
                 </div>
             </div>`;
             $('body').append(htmlModal);
-            $('#tab2-'+ajax_search_id).find('.datepicker').datepicker();
+            $('#tab2-'+ajax_search_id).trigger( "InitDateTimePickers", [] );
         });
     };
     function bindModalSearch() {
