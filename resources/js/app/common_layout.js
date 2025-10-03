@@ -138,6 +138,12 @@ $(document).ready(function () {
                 <div class="font-size-sm font-weight-semibold text-uppercase mt-2">KPIs</div>\
             </a>\
         </div>',
+        'support': '<div class="col-4">\
+            <a href="https://erp.ebomb.edu.vn/support" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
+                <i class="icon-folder text-success icon-2x"></i>\
+                <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Support</div>\
+            </a>\
+        </div>',
     }
     
     $.each(objMenu,function(k,v){
