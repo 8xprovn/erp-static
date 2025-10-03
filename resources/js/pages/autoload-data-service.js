@@ -2227,7 +2227,11 @@ const AutoloadDataService = (function () {
             if (!db) {
                 return reject('Database is not initialized');
             }
-
+            if (!db.objectStoreNames.contains(objectStoreName)) {
+                console.warn("Store chưa tồn tại:", objectStoreName);
+                resolve(null); // bỏ qua, không lỗi
+                return;
+            }
             const transaction = db.transaction([objectStoreName], 'readonly');
             const objectStore = transaction.objectStore(objectStoreName);
             var id = Number(selectedId);
@@ -2253,7 +2257,11 @@ const AutoloadDataService = (function () {
             if (!db) {
                 return reject('Database is not initialized');
             }
-
+            if (!db.objectStoreNames.contains(objectStoreName)) {
+                console.warn("Store chưa tồn tại:", objectStoreName);
+                resolve(null); // bỏ qua, không lỗi
+                return;
+            }
             const transaction = db.transaction([objectStoreName], 'readwrite');
             const objectStore = transaction.objectStore(objectStoreName);
             const request = objectStore.put({ _id: id, ...data });
