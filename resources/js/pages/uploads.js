@@ -86,7 +86,7 @@ var FileUpload = (function () {
                                 getCookie("imap_authen_access_token"),
                             channel: _channel,
                             type: _type,
-                            _folder: _folder
+                            folder: _folder
                         },
                         withCredentials: false,
                         onload: (res) => {
