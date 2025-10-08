@@ -67,6 +67,28 @@ var FileUpload = (function () {
                     }
                 }
             }
+            var valueData = self.attr("data-value");
+            if (valueData) {
+                // console.log(valueData);
+                if (isMultiUpload == 0) { /// upload 1 file
+                    files.push(
+                    {
+                        source: valueData,
+                        options: {type: 'local'}
+                    });
+                }
+                else {
+                    valueData = JSON.parse(valueData);
+                    $.each(valueData,function(K,item){
+                        files.push(
+                        {
+                            source: item,
+                            options: {type: 'local'}
+                        });
+                    });
+                }
+                console.log(files);
+            }
             self.filepond({
                 files: files,
                 //allowMultiple: true,
