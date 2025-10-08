@@ -29,7 +29,7 @@ var FileUpload = (function () {
             var _channel = self.attr("data-channel");
             var _version = self.attr("data-version") || 1;
             var pond = null;
-            var _service_upload_url = (_version == 2) ? window.SERVICE_MEDIA_URL_V2 : window.SERVICE_MEDIA_URL;
+            var _service_upload_url = (_version == 2) ? window.SERVICE_UPLOAD_URL_V2 : window.SERVICE_UPLOAD_URL;
 
             if (!_channel) {
                 return false;
