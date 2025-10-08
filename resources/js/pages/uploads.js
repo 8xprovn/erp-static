@@ -27,6 +27,10 @@ var FileUpload = (function () {
             var self = $(this);
             var fieldName = self.attr("data-field");
             var _channel = self.attr("data-channel");
+            var _version = self.attr("data-version") || 1;
+            var pond = null;
+            var _service_upload_url = (_version == 2) ? window.SERVICE_MEDIA_URL_V2 : window.SERVICE_MEDIA_URL;
+
             if (!_channel) {
                 return false;
             }
@@ -73,7 +77,7 @@ var FileUpload = (function () {
                     url: "",
                     timeout: 7000,
                     process: {
-                        url: window.SERVICE_UPLOAD_URL + "/",
+                        url: _service_upload_url + "/",
                         method: "POST",
                         headers: {
                             Authorization:
