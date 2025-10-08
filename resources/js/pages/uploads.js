@@ -27,6 +27,7 @@ var FileUpload = (function () {
             var self = $(this);
             var fieldName = self.attr("data-field");
             var _channel = self.attr("data-channel");
+            var _folder = self.attr("data-folder") || "";
             var _version = self.attr("data-version") || 1;
             var pond = null;
             var _service_upload_url = (_version == 2) ? window.SERVICE_UPLOAD_URL_V2 : window.SERVICE_UPLOAD_URL;
@@ -85,6 +86,7 @@ var FileUpload = (function () {
                                 getCookie("imap_authen_access_token"),
                             channel: _channel,
                             type: _type,
+                            _folder: _folder
                         },
                         withCredentials: false,
                         onload: (res) => {
@@ -125,6 +127,17 @@ var FileUpload = (function () {
                         },
                         onerror: (response) => {
                             alert("Lỗi Upload: " + response);
+                            try {
+                                const data = typeof response === 'string' ? JSON.parse(response) : response;
+                                const msg = data?.message || data?.error_description;
+                                if (msg) {
+                                    alert("Lỗi Upload: " + data.message);
+                                } else {
+                                    alert("Lỗi Upload: " + response);
+                                }
+                            } catch (e) {
+                                alert("Lỗi Upload: " + response);
+                            }
                         }, //,
                         //ondata: (formData) => {
                         //formData.append('channel', _channel);
