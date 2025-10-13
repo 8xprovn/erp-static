@@ -427,7 +427,7 @@ const AutoloadDataService = (function () {
         },
         sale_point: {
             url: window.API_SERVICE_URL_V2 + "/finance/sale-point",
-            formated: "$(name) - $(code)",
+            formated: "$(name)",
             id: "_id",
             query: ["_id", "relate_id", "type", "branch_id", "status"],
             version: 2,
