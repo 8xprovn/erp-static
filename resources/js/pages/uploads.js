@@ -148,7 +148,6 @@ var FileUpload = (function () {
                             }
                         },
                         onerror: (response) => {
-                            alert("Lỗi Upload: " + response);
                             try {
                                 const data = typeof response === 'string' ? JSON.parse(response) : response;
                                 const msg = data?.message || data?.error_description;
