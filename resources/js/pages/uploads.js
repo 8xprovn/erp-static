@@ -100,7 +100,7 @@ var FileUpload = (function () {
                     url: "",
                     timeout: 7000,
                     process: {
-                        url: _service_upload_url + "/",
+                        url: _service_upload_url,
                         method: "POST",
                         headers: {
                             Authorization:
