@@ -425,6 +425,13 @@ const AutoloadDataService = (function () {
             query: ["category_id", "name"],
             version: 2,
         },
+        sale_point: {
+            url: window.API_SERVICE_URL_V2 + "/finance/sale-point",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "relate_id", "type", "branch_id", "status"],
+            version: 2,
+        },
         ticket_topic: {
             url: window.API_SERVICE_URL + "/pm/ticket-topics",
             formated: "$(name)",
@@ -1542,6 +1549,15 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/finance/vouchers",
             dom: ".finance_vouchers",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/finance/sale-point",
+            dom: ".sale_point",
             attr: "data-id",
             formated: "$(name)",
             query: ["_id"],
