@@ -74,7 +74,7 @@ var FileUpload = (function () {
                     files.push(
                     {
                         source: valueData,
-                        options: {type: 'local'}
+                        options: {type: 'remote'}
                     });
                 }
                 else {
@@ -83,7 +83,7 @@ var FileUpload = (function () {
                         files.push(
                         {
                             source: item,
-                            options: {type: 'local'}
+                            options: {type: 'remote'}
                         });
                     });
                 }
@@ -159,7 +159,7 @@ var FileUpload = (function () {
                     revert: null,
                     restore: null,
                     load: window.SERVICE_MEDIA_URL + "/",
-                    fetch: null,
+                    fetch: _service_upload_url,
                 },
                 onaddfile: (err, item) => {
                     const acceptedFileTypes = self.attr("data-accept")
