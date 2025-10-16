@@ -119,22 +119,13 @@ var FileUpload = (function () {
                                 pond.removeFile()
                             } else {
                                 files = self.filepond('getFiles');
-                                console.log(fieldName,domUpload, files); 
                                 if (!isMultiUpload) {
                                     hiddenField.remove();
-                                    // $.each(files, function(idx,item){
-                                    //     console.log(item,item.serverId,item.file)
-
-                                    //currentVal.push();
-                                    //});
-                                    // var currentVal = hiddenField.val();
-                                    // currentVal = (!currentVal) ? [] : JSON.parse(currentVal);
-
-                                    // currentVal.push(res.path);
-                                    // hiddenField.val(JSON.stringify(currentVal));
-                                    // console.log(currentVal);
                                 }
-                                domUpload.append('<input type="hidden" name="' + fieldName + '" value="' + res.path +'">');
+                                if (fieldName) {
+                                    domUpload.append('<input type="hidden" name="' + fieldName + '" value="' + res.path +'">');
+                                }
+                                
                                 //$("body").html('<input type="hidden" name="' + fieldName + '" value="' + res.path +'">');
                                 if (
                                     _function_callback &&
@@ -185,30 +176,20 @@ var FileUpload = (function () {
                     files = self.filepond("getFiles");
                     //if (isMultiUpload) {
                     // xoa input file cu
-                    domUpload.find('input[name="' + fieldName + '"').remove();
-                    $.each(files, function (idx, item) {
-                        domUpload.append(
-                            '<input type="hidden" name="' +
-                                fieldName +
-                                '" value="' +
-                                item.serverId +
-                                '">'
-                        );
-                        //currentVal.push();
-                    });
-                    // console.log(files);
-                    // if (isMultiUpload) {
-                    //     var files = self.filepond('getFiles');
-                    //     var currentVal = [];
-                    //     $.each(files, function(idx,item){
-                    //         currentVal.push(item.serverId);
-                    //     })
-                    //     hiddenField.val(JSON.stringify(currentVal));
-
-                    // }
-                    // else {
-                    //     hiddenField.val("");
-                    // }
+                    if (fieldName) {
+                        domUpload.find('input[name="' + fieldName + '"').remove();
+                        $.each(files, function (idx, item) {
+                            domUpload.append(
+                                '<input type="hidden" name="' +
+                                    fieldName +
+                                    '" value="' +
+                                    item.serverId +
+                                    '">'
+                            );
+                            //currentVal.push();
+                        });
+                    }
+                    
                 },
             });
         });
