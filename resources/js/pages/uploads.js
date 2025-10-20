@@ -154,7 +154,7 @@ var FileUpload = (function () {
                         url = url + source;
 
                         const xhr = new XMLHttpRequest();
-                        xhr.open('GET', url);
+                        xhr.open('GET', url, true);
                         xhr.responseType = 'blob';
 
                         xhr.onload = function() {
