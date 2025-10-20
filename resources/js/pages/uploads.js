@@ -147,7 +147,7 @@ var FileUpload = (function () {
                     load: (source, load, error, progress, abort, headers) => {
                         let url;
                         if (_version == 2) {
-                            url = SERVICE_UPLOAD_URL_V2 + '/api/files?path=';
+                            url = SERVICE_UPLOAD_URL_V2 + '/api/files/show?path=';
                         } else {
                             url = SERVICE_MEDIA_URL + '/';
                         }
