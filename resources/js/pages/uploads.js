@@ -30,7 +30,7 @@ var FileUpload = (function () {
             var _folder = self.attr("data-folder") || "";
             var _version = self.attr("data-version") || 1;
             var pond = null;
-            var _service_upload_url = (_version == 2) ? window.SERVICE_UPLOAD_URL_V2 : window.SERVICE_UPLOAD_URL;
+            var _service_upload_url = (_version == 2) ? window.SERVICE_UPLOAD_URL_V2 + '/api/files/store' : window.SERVICE_UPLOAD_URL;
 
             if (!_channel) {
                 return false;
@@ -46,49 +46,35 @@ var FileUpload = (function () {
                     /// upload 1 file
                     var val_files = hiddenField.val();
                     if (val_files) {
-                        files.push({
-                            source: val_files,
-                            options: { type: "local" },
-                        });
+                        val_files = [val_files];
                     }
                 } else {
-                    var val_files = hiddenField
-                        .map(function () {
+                    var val_files = hiddenField.map(function () {
                             return $(this).val();
                         })
                         .get();
-                    if (val_files.length > 0) {
-                        $.each(val_files, function (K, item) {
-                            files.push({
-                                source: item,
-                                options: { type: "local" },
-                            });
-                        });
-                    }
                 }
             }
             var valueData = self.attr("data-value");
             if (valueData) {
                 // console.log(valueData);
                 if (isMultiUpload == 0) { /// upload 1 file
-                    files.push(
-                    {
-                        source: valueData,
-                        options: {type: 'remote'}
-                    });
+                    valueData = [valueData];
                 }
                 else {
                     valueData = JSON.parse(valueData);
-                    $.each(valueData,function(K,item){
-                        files.push(
-                        {
-                            source: item,
-                            options: {type: 'remote'}
-                        });
-                    });
                 }
-                console.log(files);
             }
+            if (valueData && Array.isArray(valueData)) {
+                $.each(valueData,function(K,item){
+                    files.push(
+                    {
+                        source: item,
+                        options: {type: 'local'}
+                    });
+                });
+            }
+            
             self.filepond({
                 files: files,
                 //allowMultiple: true,
@@ -158,8 +144,46 @@ var FileUpload = (function () {
                     },
                     revert: null,
                     restore: null,
-                    load: window.SERVICE_MEDIA_URL + "/",
-                    fetch: _service_upload_url,
+                    load: (source, load, error, progress, abort, headers) => {
+                        let url;
+                        if (_version == 2) {
+                            url = SERVICE_UPLOAD_URL_V2 + '/api/files?path=';
+                        } else {
+                            url = SERVICE_MEDIA_URL + '/';
+                        }
+                        url = url + source;
+
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('GET', url);
+                        xhr.responseType = 'blob';
+
+                        xhr.onload = function() {
+                            if (xhr.status >= 200 && xhr.status < 300) {
+                                load(xhr.response); // Trả blob về cho FilePond
+                            } else {
+                                error('Không tải được ảnh');
+                            }
+                        };
+
+                        xhr.onerror = function() {
+                            error('Lỗi tải ảnh');
+                        };
+
+                        xhr.onprogress = function(e) {
+                            progress(e.lengthComputable, e.loaded, e.total);
+                        };
+
+                        xhr.send();
+
+                        // Cho phép người dùng hủy
+                        return {
+                            abort: () => {
+                                xhr.abort();
+                                abort();
+                            },
+                        };
+                    },
+                    fetch: null,
                 },
                 onaddfile: (err, item) => {
                     const acceptedFileTypes = self.attr("data-accept")
