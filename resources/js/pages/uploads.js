@@ -142,12 +142,32 @@ var FileUpload = (function () {
                         //return formData;
                         //},
                     },
-                    revert: null,
+                    revert: (source, load, error) => {
+                        if (_version != 2) {
+                            load();
+                            return true;
+                        }
+                        fetch('/api/files/revert', {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            body: source // tùy bạn muốn gửi gì
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                load(); // ✅ báo FilePond là đã xóa xong
+                            } else {
+                                error('Xóa thất bại');
+                            }
+                        })
+                        .catch(() => error('Lỗi kết nối khi xóa file'));
+                    },
                     restore: null,
                     load: (source, load, error, progress, abort, headers) => {
                         let url;
                         if (_version == 2) {
-                            url = SERVICE_UPLOAD_URL_V2 + '/api/files/show?path=';
+                            url = SERVICE_UPLOAD_URL_V2 + '/api/files/view?path=';
                         } else {
                             url = SERVICE_MEDIA_URL + '/';
                         }
