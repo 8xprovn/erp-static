@@ -39,9 +39,10 @@ var FileUpload = (function () {
             var _type = self.attr("data-type") || "image";
             var isMultiUpload = self.attr("multiple") ? 1 : 0;
             var domUpload = self.parent();
-            var hiddenField = domUpload.find('input[name="' + fieldName + '"');
+            
             var _function_callback = self.attr("data-callback");
-            if (hiddenField) {
+            if (_version == 1) {
+                var hiddenField = domUpload.find('input[name="' + fieldName + '"');
                 if (isMultiUpload == 0) {
                     /// upload 1 file
                     var val_files = hiddenField.val();
@@ -105,10 +106,11 @@ var FileUpload = (function () {
                                 pond.removeFile()
                             } else {
                                 files = self.filepond('getFiles');
-                                if (!isMultiUpload) {
-                                    hiddenField.remove();
-                                }
-                                if (fieldName) {
+                                
+                                if (_version == 1) {
+                                    if (!isMultiUpload) {
+                                        hiddenField.remove();
+                                    }
                                     domUpload.append('<input type="hidden" name="' + fieldName + '" value="' + res.path +'">');
                                 }
                                 
@@ -143,7 +145,7 @@ var FileUpload = (function () {
                         //},
                     },
                     revert: (source, load, error) => {
-                        if (_version != 2) {
+                        if (_version == 1) {
                             load();
                             return true;
                         }
@@ -220,7 +222,7 @@ var FileUpload = (function () {
                     files = self.filepond("getFiles");
                     //if (isMultiUpload) {
                     // xoa input file cu
-                    if (fieldName) {
+                    if (_version == 1) {
                         domUpload.find('input[name="' + fieldName + '"').remove();
                         $.each(files, function (idx, item) {
                             domUpload.append(
