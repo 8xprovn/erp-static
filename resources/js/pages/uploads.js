@@ -102,7 +102,7 @@ var FileUpload = (function () {
                             let responsive = res;
                             res = JSON.parse(res);
                             if (res.error) {
-                                alert(res.message)
+                                alert(res.message || res.error_description || "Đã xảy ra lỗi không xác định!");
                                 pond.removeFile()
                             } else {
                                 files = self.filepond('getFiles');
