@@ -1318,7 +1318,7 @@ const AutoloadDataService = (function () {
             indexdFormat: ["name", "status"],
         },
         {
-            url: window.API_SERVICE_URL + "/org/location-cities",
+            url: window.API_SERVICE_URL_V2 + "/org/city",
             dom: ".em-city",
             attr: "data-id",
             formated: "$(name)",
