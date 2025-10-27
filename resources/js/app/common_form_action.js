@@ -98,13 +98,26 @@ function popup_modal(url, data_redirect_uri) {
         },
     });
 }
+
 function loadTinyMce(domId) {
     var self = $("." + domId);
+
+    function getEndpoints() {
+        const version = Number(self.attr("data-version")) || 1;
+        const baseUp =
+            version === 2
+                ? window.SERVICE_UPLOAD_URL_V2
+                : window.SERVICE_UPLOAD_URL;
+        return {
+            uploadUrl: version === 2 ? baseUp + "/api/files/store" : baseUp,
+            viewUrlPrefix:
+                version === 2 ? baseUp + "/api/files/view?path=" : baseUp + "/",
+        };
+    }
+
     tinymce.init({
         selector: "textarea." + domId,
         readonly: window.tinymce_readonly ? 1 : 0,
-        //themes: "modern",
-        //skin: "lightgray",
         plugins:
             "print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap emoticons filery textcolor colorpicker",
         toolbar:
@@ -114,80 +127,119 @@ function loadTinyMce(domId) {
         relative_urls: false, // Bắt buộc dùng URL tuyệt đối
         remove_script_host: false,
         color_cols: 5,
-        //filery_api_token: '123',
-        //filery_dialog_height: '400px',
-        //filery_show_images: true,
-        // images_upload_url: 'https://staging.api.f6.com.vn/uploads/process',
         automatic_uploads: true,
         file_picker_types: "file image media",
-        images_upload_handler: function (blobInfo, success, failure) {
-            var xhr, formData, img_path;
-            xhr = new XMLHttpRequest();
-            xhr.withCredentials = false;
-            xhr.open("POST", window.SERVICE_UPLOAD_URL);
-            xhr.setRequestHeader(
-                "Authorization",
-                "Bearer " + getCookie("imap_authen_access_token")
-            );
-            xhr.setRequestHeader("channel", self.attr("data-channel"));
-            xhr.setRequestHeader("folder", self.attr("data-folder"));
-            xhr.setRequestHeader("type", "image");
 
-            xhr.onload = function () {
-                if (xhr.status != 200) {
-                    failure("HTTP Error: " + xhr.status);
-                    return;
-                }
-                let res = JSON.parse(xhr.responseText);
-                img_path = res.path;
-                success(window.SERVICE_MEDIA_URL + img_path);
-            };
-            formData = new FormData();
-            formData.append("files", blobInfo.blob(), blobInfo.filename());
-            xhr.send(formData);
+        // Đảm bảo TinyMCE ghi ngược HTML về <textarea> (tránh required + hidden focus)
+        setup: (ed) => {
+            ed.on("change keyup undo redo", () => ed.save());
         },
-        file_picker_callback: function (callback, value, meta) {
-            var xhr, formData, img_path;
-            var input = document.createElement("input");
-            input.setAttribute("type", "file");
-            input.setAttribute("class", "domId");
-            //input.setAttribute('accept', 'image/*');
 
-            input.onchange = function () {
-                xhr = new XMLHttpRequest();
+        images_upload_handler: function (blobInfo, success, failure) {
+            const { uploadUrl, viewUrlPrefix } = getEndpoints();
+
+            try {
+                const xhr = new XMLHttpRequest();
                 xhr.withCredentials = false;
-                xhr.open("POST", window.SERVICE_UPLOAD_URL);
+                xhr.open("POST", uploadUrl);
                 xhr.setRequestHeader(
                     "Authorization",
                     "Bearer " + getCookie("imap_authen_access_token")
                 );
-                xhr.setRequestHeader("channel", self.attr("data-channel"));
-                xhr.setRequestHeader("type", "file");
+                xhr.setRequestHeader(
+                    "channel",
+                    self.attr("data-channel") || ""
+                );
+                xhr.setRequestHeader("type", "image");
+
+                xhr.onload = function () {
+                    if (xhr.status !== 200)
+                        return failure("HTTP Error: " + xhr.status);
+
+                    let res = {};
+                    try {
+                        res = JSON.parse(xhr.responseText || "{}");
+                    } catch (e) {}
+                    const path = res?.path || res?.data?.path;
+                    if (!path) return failure("Upload error: missing path");
+
+                    success(viewUrlPrefix + path);
+                };
+
+                const formData = new FormData();
+                formData.append("files", blobInfo.blob(), blobInfo.filename());
+                xhr.send(formData);
+            } catch (err) {
+                failure(err?.message || "Upload failed");
+            }
+        },
+
+        file_picker_callback: function (callback, value, meta) {
+            const { uploadUrl, viewUrlPrefix } = getEndpoints();
+
+            // tạo input file
+            const input = document.createElement("input");
+            input.type = "file";
+            // lọc theo loại
+            if (meta.filetype === "image") input.accept = "image/*";
+            if (meta.filetype === "media") input.accept = "video/*,audio/*";
+
+            input.onchange = function () {
+                const file = this.files?.[0];
+                if (!file) return;
+
+                const xhr = new XMLHttpRequest();
+                xhr.withCredentials = false;
+                xhr.open("POST", uploadUrl);
+                xhr.setRequestHeader(
+                    "Authorization",
+                    "Bearer " + getCookie("imap_authen_access_token")
+                );
+                xhr.setRequestHeader(
+                    "channel",
+                    self.attr("data-channel") || ""
+                );
+                // type theo meta
+                xhr.setRequestHeader(
+                    "type",
+                    meta.filetype === "image"
+                        ? "image"
+                        : meta.filetype === "media"
+                        ? "media"
+                        : "file"
+                );
 
                 xhr.onload = function () {
                     if (xhr.status != 200) {
                         console.log("HTTP Error: " + xhr.status);
                         return;
                     }
-                    let res = JSON.parse(xhr.responseText);
-                    let pathUrl =
-                        SERVICE_UPLOAD_URL_V2 +
-                        "/api/files/view?path=" +
-                        res.path;
-                    callback(pathUrl);
+                    let res = {};
+                    try {
+                        res = JSON.parse(xhr.responseText || "{}");
+                    } catch (e) {}
+                    const path = res?.path || res?.data?.path;
+                    if (!path) {
+                        console.log("Upload error: missing path");
+                        return;
+                    }
+
+                    // ✅ đúng API: trả thẳng URL cho TinyMCE
+                    const url = viewUrlPrefix + path;
+                    callback(url);
                 };
 
-                ////// get blob //////
-                var file = this.files[0];
-
-                var reader = new FileReader();
-                reader.readAsDataURL(file);
+                // đẩy file lên
+                const reader = new FileReader();
                 reader.onload = function () {
-                    var id = "blobid" + new Date().getTime();
-                    var blobCache = tinymce.activeEditor.editorUpload.blobCache;
-                    var base64 = reader.result.split(",")[1];
-                    var blobInfo = blobCache.create(id, file, base64);
-                    formData = new FormData();
+                    const id = "blobid" + Date.now();
+                    const blobCache =
+                        tinymce.activeEditor.editorUpload.blobCache;
+                    const base64 = reader.result.split(",")[1];
+                    const blobInfo = blobCache.create(id, file, base64);
+                    blobCache.add(blobInfo);
+
+                    const formData = new FormData();
                     formData.append(
                         "files",
                         blobInfo.blob(),
@@ -195,6 +247,7 @@ function loadTinyMce(domId) {
                     );
                     xhr.send(formData);
                 };
+                reader.readAsDataURL(file);
             };
 
             input.click();
