@@ -130,11 +130,7 @@ var FileUpload = (function () {
                             try {
                                 const data = typeof response === 'string' ? JSON.parse(response) : response;
                                 const msg = data?.message || data?.error_description;
-                                if (msg) {
-                                    alert("Lỗi Upload: " + data.message);
-                                } else {
-                                    alert("Lỗi Upload: " + response);
-                                }
+                                alert("Lỗi Upload: " + (msg || response));
                             } catch (e) {
                                 alert("Lỗi Upload: " + response);
                             }
