@@ -145,7 +145,7 @@ var FileUpload = (function () {
                             load();
                             return true;
                         }
-                        fetch('/api/files/revert', {
+                        fetch(SERVICE_UPLOAD_URL_V2 + '/api/files/revert', {
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
