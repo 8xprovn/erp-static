@@ -27,6 +27,11 @@ var FileUpload = (function () {
             var self = $(this);
             var fieldName = self.attr("data-field");
             var _channel = self.attr("data-channel");
+            var _folder = self.attr("data-folder") || "";
+            var _version = self.attr("data-version") || 1;
+            var pond = null;
+            var _service_upload_url = (_version == 2) ? window.SERVICE_UPLOAD_URL_V2 + '/api/files/store' : window.SERVICE_UPLOAD_URL;
+
             if (!_channel) {
                 return false;
             }
@@ -34,34 +39,43 @@ var FileUpload = (function () {
             var _type = self.attr("data-type") || "image";
             var isMultiUpload = self.attr("multiple") ? 1 : 0;
             var domUpload = self.parent();
-            var hiddenField = domUpload.find('input[name="' + fieldName + '"');
+            
             var _function_callback = self.attr("data-callback");
-            if (hiddenField) {
+            if (_version == 1) {
+                var hiddenField = domUpload.find('input[name="' + fieldName + '"');
                 if (isMultiUpload == 0) {
                     /// upload 1 file
                     var val_files = hiddenField.val();
                     if (val_files) {
-                        files.push({
-                            source: val_files,
-                            options: { type: "local" },
-                        });
+                        val_files = [val_files];
                     }
                 } else {
-                    var val_files = hiddenField
-                        .map(function () {
+                    var val_files = hiddenField.map(function () {
                             return $(this).val();
                         })
                         .get();
-                    if (val_files.length > 0) {
-                        $.each(val_files, function (K, item) {
-                            files.push({
-                                source: item,
-                                options: { type: "local" },
-                            });
-                        });
-                    }
                 }
             }
+            var valueData = self.attr("data-value");
+            if (valueData) {
+                // console.log(valueData);
+                if (isMultiUpload == 0) { /// upload 1 file
+                    valueData = [valueData];
+                }
+                else {
+                    valueData = JSON.parse(valueData);
+                }
+            }
+            if (valueData && Array.isArray(valueData)) {
+                $.each(valueData,function(K,item){
+                    files.push(
+                    {
+                        source: item,
+                        options: {type: 'local'}
+                    });
+                });
+            }
+            
             self.filepond({
                 files: files,
                 //allowMultiple: true,
@@ -73,7 +87,7 @@ var FileUpload = (function () {
                     url: "",
                     timeout: 7000,
                     process: {
-                        url: window.SERVICE_UPLOAD_URL + "/",
+                        url: _service_upload_url,
                         method: "POST",
                         headers: {
                             Authorization:
@@ -81,32 +95,25 @@ var FileUpload = (function () {
                                 getCookie("imap_authen_access_token"),
                             channel: _channel,
                             type: _type,
+                            folder: _folder
                         },
                         withCredentials: false,
                         onload: (res) => {
                             let responsive = res;
                             res = JSON.parse(res);
                             if (res.error) {
-                                alert(res.message)
+                                alert(res.message || res.error_description || "Đã xảy ra lỗi không xác định!");
                                 pond.removeFile()
                             } else {
                                 files = self.filepond('getFiles');
-                                console.log(fieldName,domUpload, files); 
-                                if (!isMultiUpload) {
-                                    hiddenField.remove();
-                                    // $.each(files, function(idx,item){
-                                    //     console.log(item,item.serverId,item.file)
-
-                                    //currentVal.push();
-                                    //});
-                                    // var currentVal = hiddenField.val();
-                                    // currentVal = (!currentVal) ? [] : JSON.parse(currentVal);
-
-                                    // currentVal.push(res.path);
-                                    // hiddenField.val(JSON.stringify(currentVal));
-                                    // console.log(currentVal);
+                                
+                                if (_version == 1) {
+                                    if (!isMultiUpload) {
+                                        hiddenField.remove();
+                                    }
+                                    domUpload.append('<input type="hidden" name="' + fieldName + '" value="' + res.path +'">');
                                 }
-                                domUpload.append('<input type="hidden" name="' + fieldName + '" value="' + res.path +'">');
+                                
                                 //$("body").html('<input type="hidden" name="' + fieldName + '" value="' + res.path +'">');
                                 if (
                                     _function_callback &&
@@ -120,16 +127,80 @@ var FileUpload = (function () {
                             }
                         },
                         onerror: (response) => {
-                            alert("Lỗi Upload: " + response);
+                            try {
+                                const data = typeof response === 'string' ? JSON.parse(response) : response;
+                                const msg = data?.message || data?.error_description;
+                                alert("Lỗi Upload: " + (msg || response));
+                            } catch (e) {
+                                alert("Lỗi Upload: " + response);
+                            }
                         }, //,
                         //ondata: (formData) => {
                         //formData.append('channel', _channel);
                         //return formData;
                         //},
                     },
-                    revert: null,
+                    revert: (source, load, error) => {
+                        if (_version == 1) {
+                            load();
+                            return true;
+                        }
+                        fetch(SERVICE_UPLOAD_URL_V2 + '/api/files/revert', {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                            },
+                            body: source // tùy bạn muốn gửi gì
+                        })
+                        .then(response => {
+                            if (response.ok) {
+                                load(); // ✅ báo FilePond là đã xóa xong
+                            } else {
+                                error('Xóa thất bại');
+                            }
+                        })
+                        .catch(() => error('Lỗi kết nối khi xóa file'));
+                    },
                     restore: null,
-                    load: window.SERVICE_MEDIA_URL + "/",
+                    load: (source, load, error, progress, abort, headers) => {
+                        let url;
+                        if (_version == 2) {
+                            url = SERVICE_UPLOAD_URL_V2 + '/api/files/view?path=';
+                        } else {
+                            url = SERVICE_MEDIA_URL + '/';
+                        }
+                        url = url + source;
+
+                        const xhr = new XMLHttpRequest();
+                        xhr.open('GET', url, true);
+                        xhr.responseType = 'blob';
+
+                        xhr.onload = function() {
+                            if (xhr.status >= 200 && xhr.status < 300) {
+                                load(xhr.response); // Trả blob về cho FilePond
+                            } else {
+                                error('Không tải được ảnh');
+                            }
+                        };
+
+                        xhr.onerror = function() {
+                            error('Lỗi tải ảnh');
+                        };
+
+                        xhr.onprogress = function(e) {
+                            progress(e.lengthComputable, e.loaded, e.total);
+                        };
+
+                        xhr.send();
+
+                        // Cho phép người dùng hủy
+                        return {
+                            abort: () => {
+                                xhr.abort();
+                                abort();
+                            },
+                        };
+                    },
                     fetch: null,
                 },
                 onaddfile: (err, item) => {
@@ -147,30 +218,20 @@ var FileUpload = (function () {
                     files = self.filepond("getFiles");
                     //if (isMultiUpload) {
                     // xoa input file cu
-                    domUpload.find('input[name="' + fieldName + '"').remove();
-                    $.each(files, function (idx, item) {
-                        domUpload.append(
-                            '<input type="hidden" name="' +
-                                fieldName +
-                                '" value="' +
-                                item.serverId +
-                                '">'
-                        );
-                        //currentVal.push();
-                    });
-                    // console.log(files);
-                    // if (isMultiUpload) {
-                    //     var files = self.filepond('getFiles');
-                    //     var currentVal = [];
-                    //     $.each(files, function(idx,item){
-                    //         currentVal.push(item.serverId);
-                    //     })
-                    //     hiddenField.val(JSON.stringify(currentVal));
-
-                    // }
-                    // else {
-                    //     hiddenField.val("");
-                    // }
+                    if (_version == 1) {
+                        domUpload.find('input[name="' + fieldName + '"').remove();
+                        $.each(files, function (idx, item) {
+                            domUpload.append(
+                                '<input type="hidden" name="' +
+                                    fieldName +
+                                    '" value="' +
+                                    item.serverId +
+                                    '">'
+                            );
+                            //currentVal.push();
+                        });
+                    }
+                    
                 },
             });
         });

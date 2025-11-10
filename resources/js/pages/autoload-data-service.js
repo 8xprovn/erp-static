@@ -86,7 +86,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/support/setting_document",
             formated: "$(name)",
             id: "_id",
-            query: ['type_file', 'service', '_id', "type", 'brand_id'],
+            query: ["type_file", "service", "_id", "type", "brand_id"],
             version: 2,
         },
         ///////////// HR /////////////
@@ -136,7 +136,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/hr/setting/job_title",
             formated: "$(name)",
             id: "_id",
-            query: ["_id","type", "code"],
+            query: ["_id", "type", "code"],
             version: 2,
         },
         "hr-documents": {
@@ -218,7 +218,7 @@ const AutoloadDataService = (function () {
             id: "_id",
             version: 2,
         },
-        'sys-district': {
+        "sys-district": {
             url: window.API_SERVICE_URL_V2 + "/org/districts",
             formated: "$(name)",
             query: ["city_id", "code", "name"], // query bat buoc
@@ -226,15 +226,17 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         city: {
-            url: window.API_SERVICE_URL + "/org/location-cities",
+            url: window.API_SERVICE_URL_V2 + "/org/city",
             formated: "$(name)",
-            id: "city_id",
+            id: "_id",
+            version: 2,
         },
         district: {
-            url: window.API_SERVICE_URL + "/org/location/district",
+            url: window.API_SERVICE_URL_V2 + "/org/districts",
             formated: "$(name)",
-            query: ["city_id"], // query bat buoc
-            id: "district_id",
+            query: ["city_id", "code", "name"], // query bat buoc
+            id: "_id",
+            version: 2, 
         },
         commune: {
             url: window.API_SERVICE_URL + "/org/location/commune",
@@ -287,13 +289,14 @@ const AutoloadDataService = (function () {
         },
         "class-schedule": {
             url: window.API_SERVICE_URL_V2 + "/lms/class-schedules",
-            formated: "$(lesson_name) Buổi $(schedule_number) Ngày $(time:date)",
+            formated:
+                "$(lesson_name) Buổi $(schedule_number) Ngày $(time:date)",
             query: [
                 "class_id",
                 "is_completed",
                 "review_classification",
                 "test_classification",
-                "consultation_classification"
+                "consultation_classification",
             ],
             id: "schedule_number",
             version: 2,
@@ -311,7 +314,13 @@ const AutoloadDataService = (function () {
             //'search_param': 'name',
             formated: "$(name)",
             id: "_id",
-            query: ["brand_id", "contact_id", "status", "course_level_id", "type"],
+            query: [
+                "brand_id",
+                "contact_id",
+                "status",
+                "course_level_id",
+                "type",
+            ],
             version: 2,
         },
         "course-search": {
@@ -401,7 +410,14 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/finance/wallets",
             formated: "$(name) - $(code)",
             id: "_id",
-            query: ["relate_type", "relate_id", "type", "is_company", "is_minvoice", "type_available"],
+            query: [
+                "relate_type",
+                "relate_id",
+                "type",
+                "is_company",
+                "is_minvoice",
+                "type_available",
+            ],
             version: 2,
         },
         finance_transaction_type: {
@@ -423,6 +439,20 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             id: "_id",
             query: ["category_id", "name"],
+            version: 2,
+        },
+        sale_point: {
+            url: window.API_SERVICE_URL_V2 + "/finance/sale-point",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "relate_id", "type", "branch_id", "status"],
+            version: 2,
+        },
+        finance_exam_location: {
+            url: window.API_SERVICE_URL_V2 + "/finance/exam-location",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "name", "status", "area", "status"],
             version: 2,
         },
         ticket_topic: {
@@ -630,14 +660,14 @@ const AutoloadDataService = (function () {
         /////////End task backend v2//////
 
         //////////Target//////////
-        "target": {
+        target: {
             url: window.API_SERVICE_URL_V2 + "/target/targets",
             formated: "$(name)",
             id: "_id",
             query: ["status"],
             version: 2,
         },
-        "criteria": {
+        criteria: {
             url: window.API_SERVICE_URL_V2 + "/target/criteria",
             formated: "$(name)",
             id: "_id",
@@ -658,7 +688,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/payroll/system-variable",
             formated: "$(name)",
             id: "_id",
-            query: ["_id","name", "code", "status", "type", "type_module"],
+            query: ["_id", "name", "code", "status", "type", "type_module"],
             version: 2,
         },
         payroll_template: {
@@ -672,12 +702,17 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/payroll/cycle",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "status_payroll", "is_lock", "is_pay", 'payroll_template_id'],
+            query: [
+                "_id",
+                "status_payroll",
+                "is_lock",
+                "is_pay",
+                "payroll_template_id",
+            ],
             version: 2,
         },
 
         /////// End payroll v2////////
-
 
         ///// asset /////
         allocation_type: {
@@ -800,7 +835,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/internal/category",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "topic_id", 'parent_id'],
+            query: ["_id", "topic_id", "parent_id"],
             version: 2,
         },
         ///// end asset /////
@@ -808,7 +843,15 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/recruitment/job",
             formated: "$(title)",
             id: "_id",
-            query: ["_id","type", "status","employee_type", "category_id", "brand_id", "branch_id"],
+            query: [
+                "_id",
+                "type",
+                "status",
+                "employee_type",
+                "category_id",
+                "brand_id",
+                "branch_id",
+            ],
             version: 2,
         },
         "recruitment-candidate": {
@@ -829,7 +872,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/recruitment/job_category",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "status", "code","rel_parent"],
+            query: ["_id", "status", "code", "rel_parent"],
             version: 2,
         },
 
@@ -843,26 +886,26 @@ const AutoloadDataService = (function () {
         },
         ///// end openai /////
 
-         ///// risk /////
+        ///// risk /////
         "risk-category": {
             url: window.API_SERVICE_URL_V2 + "/target/risk-category",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "code","status"],
+            query: ["_id", "code", "status"],
             version: 2,
         },
         "risk-setting": {
             url: window.API_SERVICE_URL_V2 + "/target/risk-setting",
             formated: "$(name)",
             id: "_id",
-            query: ["_id","status"],
+            query: ["_id", "status"],
             version: 2,
         },
         "risk-validate": {
             url: window.API_SERVICE_URL_V2 + "/target/risk-validate",
             formated: "$(name)",
             id: "_id",
-            query: ["_id","status"],
+            query: ["_id", "status"],
             version: 2,
         },
         ///// end risk /////
@@ -874,7 +917,7 @@ const AutoloadDataService = (function () {
             id: "_id",
             query: ["_id", "title", "status"],
             version: 2,
-        }
+        },
         /// end course video ////
     };
     var arrDomAutoFill = [
@@ -888,8 +931,17 @@ const AutoloadDataService = (function () {
             query: ["type", "branch_id", "manager_id", "department_id"],
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'status', 'job_title_id', 'position_id'],
+            indexedDB: "yes",
+            indexdFormat: [
+                "first_name",
+                "last_name",
+                "fullname",
+                "email",
+                "phone",
+                "status",
+                "job_title_id",
+                "position_id",
+            ],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/brand",
@@ -899,8 +951,8 @@ const AutoloadDataService = (function () {
             query: ["_id", "status"],
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','status'],
+            indexedDB: "yes",
+            indexdFormat: ["name", "status"],
         },
         ////////////// EDU //////////
         {
@@ -926,11 +978,29 @@ const AutoloadDataService = (function () {
             dom: ".em-course",
             attr: "data-id",
             formated: "$(name)",
-            query: ["brand_id", "contact_id", "status", "course_level_id", "type", "mode"], // query ko bat buoc
+            query: [
+                "brand_id",
+                "contact_id",
+                "status",
+                "course_level_id",
+                "type",
+                "mode",
+            ], // query ko bat buoc
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','course_level_id', 'description', 'lesson_num', 'number_unit', 'status', 'unit', 'price', 'type', 'type_code'],
+            indexedDB: "yes",
+            indexdFormat: [
+                "name",
+                "course_level_id",
+                "description",
+                "lesson_num",
+                "number_unit",
+                "status",
+                "unit",
+                "price",
+                "type",
+                "type_code",
+            ],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/lms/course-levels",
@@ -983,8 +1053,20 @@ const AutoloadDataService = (function () {
             ],
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','status', 'type', 'email', 'phone', 'status', 'price', 'salary', 'method', 'teacher_type', 'rate'],
+            indexedDB: "yes",
+            indexdFormat: [
+                "name",
+                "status",
+                "type",
+                "email",
+                "phone",
+                "status",
+                "price",
+                "salary",
+                "method",
+                "teacher_type",
+                "rate",
+            ],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/lms/setting-shifts",
@@ -1063,8 +1145,8 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','status'],
+            indexedDB: "yes",
+            indexdFormat: ["name", "status"],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/hr/allowances",
@@ -1219,8 +1301,8 @@ const AutoloadDataService = (function () {
             query: ["brand_id", "city_code"],
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','status'],
+            indexedDB: "yes",
+            indexdFormat: ["name", "status"],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/city",
@@ -1229,8 +1311,8 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','status'],
+            indexedDB: "yes",
+            indexdFormat: ["name", "status"],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/districts",
@@ -1239,11 +1321,11 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','status'],
+            indexedDB: "yes",
+            indexdFormat: ["name", "status"],
         },
         {
-            url: window.API_SERVICE_URL + "/org/location-cities",
+            url: window.API_SERVICE_URL_V2 + "/org/city",
             dom: ".em-city",
             attr: "data-id",
             formated: "$(name)",
@@ -1272,8 +1354,8 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','status', 'parent', 'manager_id', 'code'],
+            indexedDB: "yes",
+            indexdFormat: ["name", "status", "parent", "manager_id", "code"],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/hr/setting/category",
@@ -1290,8 +1372,8 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','status'],
+            indexedDB: "yes",
+            indexdFormat: ["name", "status"],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/hr/documents",
@@ -1342,8 +1424,17 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             fk: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['name','type', 'brand_id', 'status', 'start_time', 'assigned_employee_id', 'branch_id', 'course_id'],
+            indexedDB: "yes",
+            indexdFormat: [
+                "name",
+                "type",
+                "brand_id",
+                "status",
+                "start_time",
+                "assigned_employee_id",
+                "branch_id",
+                "course_id",
+            ],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/crm/contact-document-type",
@@ -1362,8 +1453,26 @@ const AutoloadDataService = (function () {
             fk: "_id",
             pquery: "_id",
             version: 2,
-            indexedDB:'yes',
-            indexdFormat :['first_name','last_name', 'fullname', 'email', 'phone', 'branch_id', 'brand_id', 'birthdate', 'is_accout', 'is_student', 'is_children', 'is_locked', 'parents_info', 'parent_id', 'relation', 'relation_name', 'is_account'],
+            indexedDB: "yes",
+            indexdFormat: [
+                "first_name",
+                "last_name",
+                "fullname",
+                "email",
+                "phone",
+                "branch_id",
+                "brand_id",
+                "birthdate",
+                "is_accout",
+                "is_student",
+                "is_children",
+                "is_locked",
+                "parents_info",
+                "parent_id",
+                "relation",
+                "relation_name",
+                "is_account",
+            ],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/crm/partners",
@@ -1542,6 +1651,24 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/finance/vouchers",
             dom: ".finance_vouchers",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/finance/sale-point",
+            dom: ".sale_point",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/finance/exam-location",
+            dom: ".finance-exam-location",
             attr: "data-id",
             formated: "$(name)",
             query: ["_id"],
@@ -1756,11 +1883,16 @@ const AutoloadDataService = (function () {
             dom: ".em-payroll-cycle",
             attr: "data-id",
             formated: "$(name)",
-            query: ["_id", "status_payroll", "is_lock", "is_pay", 'payroll_template_id'],
+            query: [
+                "_id",
+                "status_payroll",
+                "is_lock",
+                "is_pay",
+                "payroll_template_id",
+            ],
             fk: "_id",
             version: 2,
         },
-
 
         /////// End payroll v2////////
 
@@ -1920,7 +2052,8 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             fk: "_id",
             version: 2,
-        },{
+        },
+        {
             url: window.API_SERVICE_URL_V2 + "/internal/violation_errors",
             dom: ".em-internal-violation-errors",
             attr: "data-id",
@@ -1936,7 +2069,7 @@ const AutoloadDataService = (function () {
             dom: ".em-risk-category",
             attr: "data-id",
             formated: "$(name)",
-            query: ["_id", "code","status"],
+            query: ["_id", "code", "status"],
             fk: "_id",
             version: 2,
         },
@@ -1945,7 +2078,7 @@ const AutoloadDataService = (function () {
             dom: ".em-risk-setting",
             attr: "data-id",
             formated: "$(name)",
-            query: ["_id","status"],
+            query: ["_id", "status"],
             fk: "_id",
             version: 2,
             link: "/target/risk_setting/$(_id)",
@@ -1969,7 +2102,7 @@ const AutoloadDataService = (function () {
             query: ["_id"],
             fk: "_id",
             version: 2,
-        }
+        },
         /// end course video ////
     ];
 
@@ -1977,7 +2110,6 @@ const AutoloadDataService = (function () {
     // Setup module components
     //
 
-    
     // Basic Datatable examples
     var replaceData = function (parentDom) {
         $.each(arrDomAutoFill, function (idx, item) {
@@ -1985,7 +2117,6 @@ const AutoloadDataService = (function () {
             if (!focusDom.length) {
                 return true;
             }
-            
 
             /////////// FIX TAM CHO CAC DOM DANG CHAY ///////////
 
@@ -2028,165 +2159,185 @@ const AutoloadDataService = (function () {
                 } else {
                     objParams[item.fk] = { inq: inqId };
                 }
-                
 
-                if(item.indexedDB && item.indexedDB == 'yes') {
-                  if (objParams._id && objParams._id.length > 0) {
-                    getMissingDataFromIndexedDB(objParams._id, item, focusDom)
-                  }
+                if (item.indexedDB && item.indexedDB == "yes") {
+                    if (objParams._id && objParams._id.length > 0) {
+                        getMissingDataFromIndexedDB(
+                            objParams._id,
+                            item,
+                            focusDom
+                        );
+                    }
                 } else {
-
-                  //replace url arg
-                  var urlQuery = item.url;
-                  if (item.url_arg) {
-                      $.each(item.url_arg, function (k, v) {
-                          urlQuery = urlQuery.replace(
-                              "{" + k + "}",
-                              objParams[v]
-                          );
-                          delete objParams[v];
-                      });
-                  }
-                  var dataGet = {};
-                  if (!$.isEmptyObject(objParams)) {
-                      if (item.version == 2) {
-                          dataGet = { filter: objParams, limit: 1000 };
-                      } else {
-                          dataGet = {
-                              filter: JSON.stringify({
-                                  where: objParams,
-                                  limit: 500,
-                              }),
-                          };
-                      }
-                  }
-                  // ktra query bat buoc
-                  
-                  $.ajax({
-                    url: urlQuery,
-                    type: "GET",
-                    dataType: "json",
-                    // xhrFields: {
-                    //   withCredentials: true
-                    // },
-                    data: dataGet,
-                    contentType:
-                        "application/x-www-form-urlencoded; charset=UTF-8",
-                    // beforeSend: function(xhr) {
-                    //     //console.log('test',xhr);
-                    // },
-                    headers: {
-                        Authorization:
-                            "Bearer " + getCookie("imap_authen_access_token"),
-                    },
-                    success: function (response) {
-                        if (response.error) {
-                            ////console.log(data);
-                            return false;
-                        }
-                        var new_str = item.formated;
-                        var new_link = item.link;
-                        var objData = {};
-                        objLink = {};
-                        $.each(response, function (key, value) {
-                            objData[value[item.fk]] = value;
+                    //replace url arg
+                    var urlQuery = item.url;
+                    if (item.url_arg) {
+                        $.each(item.url_arg, function (k, v) {
+                            urlQuery = urlQuery.replace(
+                                "{" + k + "}",
+                                objParams[v]
+                            );
+                            delete objParams[v];
                         });
-                        focusDom.each(function () {
-                            if ($(this).prop("tagName") == "SELECT") {
-                                var selectData = $(this);
-                                var tmp = $(this).attr("data-format")
-                                    ? $(this).attr("data-format")
-                                    : new_str;
+                    }
+                    var dataGet = {};
+                    if (!$.isEmptyObject(objParams)) {
+                        if (item.version == 2) {
+                            dataGet = { filter: objParams, limit: 1000 };
+                        } else {
+                            dataGet = {
+                                filter: JSON.stringify({
+                                    where: objParams,
+                                    limit: 500,
+                                }),
+                            };
+                        }
+                    }
+                    // ktra query bat buoc
 
-                                selectData
-                                    .find("option")
-                                    .each(function (element, key) {
-                                        var v = $(this).val();
-                                        if (objData[v]) {
-                                            var replaced = formatReplace(
-                                                tmp,
-                                                objData[v]
-                                            );
-                                            $(this).text(replaced);
-                                            setTimeout(function () {
-                                                selectData.trigger(
-                                                    "change_select2"
-                                                );
-                                            }, 1000);
-                                        }
-                                    });
-                                selectData.trigger("change");
-                            } else {
-                                var v = $(this).attr(item.attr);
-                                if (objData[v]) {
+                    $.ajax({
+                        url: urlQuery,
+                        type: "GET",
+                        dataType: "json",
+                        // xhrFields: {
+                        //   withCredentials: true
+                        // },
+                        data: dataGet,
+                        contentType:
+                            "application/x-www-form-urlencoded; charset=UTF-8",
+                        // beforeSend: function(xhr) {
+                        //     //console.log('test',xhr);
+                        // },
+                        headers: {
+                            Authorization:
+                                "Bearer " +
+                                getCookie("imap_authen_access_token"),
+                        },
+                        success: function (response) {
+                            if (response.error) {
+                                ////console.log(data);
+                                return false;
+                            }
+                            var new_str = item.formated;
+                            var new_link = item.link;
+                            var objData = {};
+                            objLink = {};
+                            $.each(response, function (key, value) {
+                                objData[value[item.fk]] = value;
+                            });
+                            focusDom.each(function () {
+                                if ($(this).prop("tagName") == "SELECT") {
+                                    var selectData = $(this);
                                     var tmp = $(this).attr("data-format")
                                         ? $(this).attr("data-format")
                                         : new_str;
-                                    if (new_link) {
-                                        $(this).html(
-                                            '<a href="' +
-                                            formatReplace(
-                                                new_link,
-                                                objData[v]
-                                            ) +
-                                            '" class="load_not_ajax" target="_blank">' +
-                                            formatReplace(tmp, objData[v]) +
-                                            "</a>"
-                                        );
-                                    } else {
-                                        $(this).text(
-                                            formatReplace(tmp, objData[v])
-                                        );
+
+                                    selectData
+                                        .find("option")
+                                        .each(function (element, key) {
+                                            var v = $(this).val();
+                                            if (objData[v]) {
+                                                var replaced = formatReplace(
+                                                    tmp,
+                                                    objData[v]
+                                                );
+                                                $(this).text(replaced);
+                                                setTimeout(function () {
+                                                    selectData.trigger(
+                                                        "change_select2"
+                                                    );
+                                                }, 1000);
+                                            }
+                                        });
+                                    selectData.trigger("change");
+                                } else {
+                                    var v = $(this).attr(item.attr);
+                                    if (objData[v]) {
+                                        var tmp = $(this).attr("data-format")
+                                            ? $(this).attr("data-format")
+                                            : new_str;
+                                        if (new_link) {
+                                            $(this).html(
+                                                '<a href="' +
+                                                    formatReplace(
+                                                        new_link,
+                                                        objData[v]
+                                                    ) +
+                                                    '" class="load_not_ajax" target="_blank">' +
+                                                    formatReplace(
+                                                        tmp,
+                                                        objData[v]
+                                                    ) +
+                                                    "</a>"
+                                            );
+                                        } else {
+                                            $(this).text(
+                                                formatReplace(tmp, objData[v])
+                                            );
+                                        }
                                     }
                                 }
-                            }
-                        });
-                    },
-                    error: function () { },
-                  });
+                            });
+                        },
+                        error: function () {},
+                    });
                 }
             }
         });
     };
-    
-    const VERSION = 1;  // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV6";  // Tên cơ sở dữ liệu
-    //luc them ojectstorename cần đổi tên dbName lên
-    const objectStoreNames = ["em-profile", "em-class", "em-branch", "em-department", "em-brand", "em-course", "em-sys-city",
-         "em-position", 'em-job-title', "em-crm-campaigns", "crm-contact", "em-sys-district"];  // Danh sách các tên ObjectStore
-    const CLEAR_DELAY = 3 * 24 * 60 * 60 * 1000; ; //Thời gian trì hoãn xóa dữ liệu
 
-    let db = null;  // Đối tượng để lưu trữ kết nối đến cơ sở dữ liệu
+    const VERSION = 1; // Đặt phiên bản cho cơ sở dữ liệu
+    const dbName = "ERPDBV6"; // Tên cơ sở dữ liệu
+    //luc them ojectstorename cần đổi tên dbName lên
+    const objectStoreNames = [
+        "em-profile",
+        "em-class",
+        "em-branch",
+        "em-department",
+        "em-brand",
+        "em-course",
+        "em-sys-city",
+        "em-position",
+        "em-job-title",
+        "em-crm-campaigns",
+        "crm-contact",
+        "em-sys-district",
+    ]; // Danh sách các tên ObjectStore
+    const CLEAR_DELAY = 3 * 24 * 60 * 60 * 1000; //Thời gian trì hoãn xóa dữ liệu
+
+    let db = null; // Đối tượng để lưu trữ kết nối đến cơ sở dữ liệu
 
     // Tạo cơ sở dữ liệu với nhiều object store
     function createDatabaseWithStores() {
         const version = VERSION;
         const request = indexedDB.open(dbName, version);
 
-        request.onupgradeneeded = function(event) {
+        request.onupgradeneeded = function (event) {
             const db = event.target.result;
-            let  storeCreated = false;
-            
-            objectStoreNames.forEach(storeName => {
-            storeName = String(storeName).replace(/\./g, '');
+            let storeCreated = false;
+
+            objectStoreNames.forEach((storeName) => {
+                storeName = String(storeName).replace(/\./g, "");
                 if (!db.objectStoreNames.contains(storeName)) {
-                    db.createObjectStore(storeName, { keyPath: "_id", autoIncrement: true });
+                    db.createObjectStore(storeName, {
+                        keyPath: "_id",
+                        autoIncrement: true,
+                    });
                     storeCreated = true;
                 }
             });
-        
-            
+
             if (storeCreated) {
-            // Nếu có object store mới được tạo ra, đặt lịch trình xóa dữ liệu
-            setClearDataScheduled();
+                // Nếu có object store mới được tạo ra, đặt lịch trình xóa dữ liệu
+                setClearDataScheduled();
             }
         };
 
-        request.onsuccess = function(event) {
+        request.onsuccess = function (event) {
             db = event.target.result;
         };
 
-        request.onerror = function(event) {
+        request.onerror = function (event) {
             console.log("Lỗi cơ sở dữ liệu: " + event.target.errorCode);
         };
     }
@@ -2201,21 +2352,24 @@ const AutoloadDataService = (function () {
 
             const request = indexedDB.open(dbName, VERSION);
 
-            request.onupgradeneeded = function(event) {
+            request.onupgradeneeded = function (event) {
                 const db = event.target.result;
-                objectStoreNames.forEach(storeName => {
+                objectStoreNames.forEach((storeName) => {
                     if (!db.objectStoreNames.contains(storeName)) {
-                        db.createObjectStore(storeName, { keyPath: "_id", autoIncrement: true });
+                        db.createObjectStore(storeName, {
+                            keyPath: "_id",
+                            autoIncrement: true,
+                        });
                     }
                 });
             };
 
-            request.onsuccess = function(event) {
+            request.onsuccess = function (event) {
                 db = event.target.result;
                 resolve(db);
             };
 
-            request.onerror = function(event) {
+            request.onerror = function (event) {
                 reject(`IndexedDB error: ${event.target.errorCode}`);
             };
         });
@@ -2225,18 +2379,19 @@ const AutoloadDataService = (function () {
     function getDataFromIndexedDB(objectStoreName, selectedId) {
         return new Promise((resolve, reject) => {
             if (!db) {
-                return reject('Database is not initialized');
+                return reject("Database is not initialized");
             }
             if (!db.objectStoreNames.contains(objectStoreName)) {
                 console.warn("Store chưa tồn tại:", objectStoreName);
                 resolve(null); // bỏ qua, không lỗi
                 return;
             }
-            const transaction = db.transaction([objectStoreName], 'readonly');
+            const transaction = db.transaction([objectStoreName], "readonly");
             const objectStore = transaction.objectStore(objectStoreName);
             var id = Number(selectedId);
-            if (isNaN(id) || id <= 0) {  // Kiểm tra xem id có phải là số và lớn hơn 0
-              id = 0;
+            if (isNaN(id) || id <= 0) {
+                // Kiểm tra xem id có phải là số và lớn hơn 0
+                id = 0;
             }
             const request = objectStore.get(id);
 
@@ -2245,24 +2400,24 @@ const AutoloadDataService = (function () {
             };
 
             request.onerror = (event) => {
-                reject('Error querying IndexedDB');
+                reject("Error querying IndexedDB");
             };
         });
     }
 
     // Lưu dữ liệu vào một object store trong cơ sở dữ liệu cụ thể
     function saveDataToIndexedDB(objectStoreName, id, data) {
-        objectStoreName = String(objectStoreName).replace(/\./g, '');
+        objectStoreName = String(objectStoreName).replace(/\./g, "");
         return new Promise((resolve, reject) => {
             if (!db) {
-                return reject('Database is not initialized');
+                return reject("Database is not initialized");
             }
             if (!db.objectStoreNames.contains(objectStoreName)) {
                 console.warn("Store chưa tồn tại:", objectStoreName);
                 resolve(null); // bỏ qua, không lỗi
                 return;
             }
-            const transaction = db.transaction([objectStoreName], 'readwrite');
+            const transaction = db.transaction([objectStoreName], "readwrite");
             const objectStore = transaction.objectStore(objectStoreName);
             const request = objectStore.put({ _id: id, ...data });
 
@@ -2278,7 +2433,7 @@ const AutoloadDataService = (function () {
 
     // Hàm kiểm tra dữ liệu thiếu trong IndexedDB và cập nhật DOM
     async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
-        const objectStoreName = String(item.dom).replace(/\./g, '');  // Tên object store
+        const objectStoreName = String(item.dom).replace(/\./g, ""); // Tên object store
 
         // Mở cơ sở dữ liệu nếu chưa được mở
         await openIndexedDB();
@@ -2290,9 +2445,9 @@ const AutoloadDataService = (function () {
         for (const id of arrId) {
             const data = await getDataFromIndexedDB(objectStoreName, id);
             if (!data) {
-                idsToFetch.push(id);  // Thêm vào danh sách các ID cần lấy thêm dữ liệu
+                idsToFetch.push(id); // Thêm vào danh sách các ID cần lấy thêm dữ liệu
             } else {
-                objDatav[id] = data;  // Lưu dữ liệu vào object
+                objDatav[id] = data; // Lưu dữ liệu vào object
             }
         }
 
@@ -2330,7 +2485,10 @@ const AutoloadDataService = (function () {
                     const tmp = $(this).attr("data-format") || item.formated;
                     if (item.link) {
                         $(this).html(
-                            `<a href="${formatReplace(item.link, objData[v])}" class="load_not_ajax" target="_blank">
+                            `<a href="${formatReplace(
+                                item.link,
+                                objData[v]
+                            )}" class="load_not_ajax" target="_blank">
                                 ${formatReplace(tmp, objData[v])}
                             </a>`
                         );
@@ -2377,7 +2535,7 @@ const AutoloadDataService = (function () {
                 };
             }
         }
-        
+
         // Ktra query bắt buộc
         try {
             const response = await ajaxRequest(urlQuery, dataGet, item);
@@ -2392,13 +2550,15 @@ const AutoloadDataService = (function () {
                 if (item.indexdFormat) {
                     const keys = item.indexdFormat;
                     data_save = Object.fromEntries(
-                        Object.entries(value).filter(([key]) => keys.includes(key))
+                        Object.entries(value).filter(([key]) =>
+                            keys.includes(key)
+                        )
                     );
                 } else {
-                    data_save = { ...value }
+                    data_save = { ...value };
                     delete data_save._id;
                 }
-                if (objDatav && Object.keys(objDatav).length > 0) { 
+                if (objDatav && Object.keys(objDatav).length > 0) {
                     await updateDomWithData(focusDom, objDatav, item);
                 }
                 await saveDataToIndexedDB(item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
@@ -2418,71 +2578,83 @@ const AutoloadDataService = (function () {
                 data: dataGet,
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 headers: {
-                    Authorization: "Bearer " + getCookie("imap_authen_access_token"),
+                    Authorization:
+                        "Bearer " + getCookie("imap_authen_access_token"),
                 },
                 success: function (response) {
                     resolve(response);
                 },
                 error: function (error) {
                     reject(error);
-                }
+                },
             });
         });
     }
     // set thoi gian xoa data
     function setClearDataScheduled() {
-    const now = Date.now();
-    const clearTime = now + CLEAR_DELAY;
-    
-    localStorage.setItem('clearDataIndexDBScheduled', clearTime.toString());
+        const now = Date.now();
+        const clearTime = now + CLEAR_DELAY;
+
+        localStorage.setItem("clearDataIndexDBScheduled", clearTime.toString());
     }
     // check thoi gian xoa data
     function checkAndPerformScheduledClear() {
-    const scheduledClearTime = localStorage.getItem('clearDataIndexDBScheduled');
+        const scheduledClearTime = localStorage.getItem(
+            "clearDataIndexDBScheduled"
+        );
 
-    if (scheduledClearTime) {
-        const now = Date.now();
-        if (now >= parseInt(scheduledClearTime, 10)) {
-            // Nếu đến thời gian xóa dữ liệu, thực hiện xóa
-            clearAllObjectStores().catch(error => console.log(`Error in scheduled clear: ${error}`));
+        if (scheduledClearTime) {
+            const now = Date.now();
+            if (now >= parseInt(scheduledClearTime, 10)) {
+                // Nếu đến thời gian xóa dữ liệu, thực hiện xóa
+                clearAllObjectStores().catch((error) =>
+                    console.log(`Error in scheduled clear: ${error}`)
+                );
+            }
+        } else {
+            setClearDataScheduled();
         }
-    } else {
-        setClearDataScheduled();
-    }
     }
     // xoa data
     function clearAllObjectStores() {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const db = await openIndexedDB();
-            const transaction = db.transaction(objectStoreNames, 'readwrite');
+        return new Promise(async (resolve, reject) => {
+            try {
+                const db = await openIndexedDB();
+                const transaction = db.transaction(
+                    objectStoreNames,
+                    "readwrite"
+                );
 
-            objectStoreNames.forEach(storeName => {
-                const objectStore = transaction.objectStore(storeName);
-                const request = objectStore.clear();
+                objectStoreNames.forEach((storeName) => {
+                    const objectStore = transaction.objectStore(storeName);
+                    const request = objectStore.clear();
 
-                request.onsuccess = () => {
-                    console.log(`Cleared ${storeName}`);
+                    request.onsuccess = () => {
+                        console.log(`Cleared ${storeName}`);
+                    };
+
+                    request.onerror = (event) => {
+                        console.log(
+                            `Error clearing ${storeName}: ${event.target.errorCode}`
+                        );
+                    };
+                });
+
+                transaction.oncomplete = () => {
+                    // Đặt lại thời gian xóa sau khi xóa dữ liệu
+                    setClearDataScheduled();
+                    resolve();
                 };
 
-                request.onerror = (event) => {
-                    console.log(`Error clearing ${storeName}: ${event.target.errorCode}`);
+                transaction.onerror = (event) => {
+                    reject(
+                        `Error clearing object stores: ${event.target.errorCode}`
+                    );
                 };
-            });
-
-            transaction.oncomplete = () => {
-                // Đặt lại thời gian xóa sau khi xóa dữ liệu
-                setClearDataScheduled();
-                resolve();
-            };
-
-            transaction.onerror = (event) => {
-                reject(`Error clearing object stores: ${event.target.errorCode}`);
-            };
-        } catch (error) {
-            reject(`Error in clearAllObjectStores: ${error}`);
-        }
-    });
+            } catch (error) {
+                reject(`Error in clearAllObjectStores: ${error}`);
+            }
+        });
     }
     var selectData = function (parentDom) {
         var __cache = [];
@@ -2577,20 +2749,20 @@ const AutoloadDataService = (function () {
         //console.debug(objParams);
         var minimumInputLength =
             (typeof showType == "undefined" || showType != "all") &&
-                search_param
+            search_param
                 ? 2
                 : 0;
         var limit = search_param ? 50 : 500;
         var __cache = [];
         if (window.API_MICROSERVICE_GUEST == null) {
             var _token = getCookie("imap_authen_access_token");
-        }else{
+        } else {
             var _token = window.API_MICROSERVICE_GUEST;
         }
         current_dom.select2({
             minimumInputLength: minimumInputLength,
             allowClear: true,
-            closeOnSelect: current_dom.data('close-on-select') === true,
+            closeOnSelect: current_dom.data("close-on-select") === true,
             cache: true,
             placeholder: current_dom.attr("placeholder") || "Select an option",
             ajax: {
@@ -2742,7 +2914,7 @@ const AutoloadDataService = (function () {
             createDatabaseWithStores();
             checkAndPerformScheduledClear();
         },
-        getDataFromIndexedDB: getDataFromIndexedDB
+        getDataFromIndexedDB: getDataFromIndexedDB,
     };
 })();
 // Initialize module

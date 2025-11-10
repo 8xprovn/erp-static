@@ -34,6 +34,13 @@ const searchContactService = (function () {
     var addForm = function(parentDom) {
         parentDom.find(".search_contact").each(function () {
             var self = $(this);
+            var isDisable = self.prop('disabled');
+            var classDnone = '';
+            var styleDisable = ''
+            if (isDisable) {
+                classDnone = 'd-none';
+                styleDisable = 'disabled'
+            }
             // tạo id random cho select và modal
             var ajax_search_id = Math.random().toString(36).substring(2);
             self.addClass('select-' + ajax_search_id);
@@ -78,7 +85,7 @@ const searchContactService = (function () {
             
             var html = '<div class="d-flex">\
                 '+htmlContent+'\
-                <button type="button" class="btn btn-teal call_ajax_search" data-toggle="modal" data-target="#'+ajax_search_id+'">\
+                <button type="button" class="btn btn-teal call_ajax_search '+classDnone+'" '+styleDisable+' data-toggle="modal" data-target="#'+ajax_search_id+'">\
                 <i class="icon-search4"></i></button></div>';
             self.replaceWith(html);
 
