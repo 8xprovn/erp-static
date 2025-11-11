@@ -45,12 +45,12 @@ var FileUpload = (function () {
                 var hiddenField = domUpload.find('input[name="' + fieldName + '"');
                 if (isMultiUpload == 0) {
                     /// upload 1 file
-                    var val_files = hiddenField.val();
-                    if (val_files) {
-                        val_files = [val_files];
+                    var valueData = hiddenField.val();
+                    if (valueData) {
+                        valueData = [valueData];
                     }
                 } else {
-                    var val_files = hiddenField.map(function () {
+                    var valueData = hiddenField.map(function () {
                             return $(this).val();
                         })
                         .get();
