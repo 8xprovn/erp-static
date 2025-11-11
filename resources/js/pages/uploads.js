@@ -56,14 +56,16 @@ var FileUpload = (function () {
                         .get();
                 }
             }
-            var valueData = self.attr("data-value");
-            if (valueData) {
-                // console.log(valueData);
-                if (isMultiUpload == 0) { /// upload 1 file
-                    valueData = [valueData];
-                }
-                else {
-                    valueData = JSON.parse(valueData);
+            else {
+                var valueData = self.attr("data-value");
+                if (valueData) {
+                    // console.log(valueData);
+                    if (isMultiUpload == 0) { /// upload 1 file
+                        valueData = [valueData];
+                    }
+                    else {
+                        valueData = JSON.parse(valueData);
+                    }
                 }
             }
             if (valueData && Array.isArray(valueData)) {
