@@ -677,14 +677,28 @@ const Layout = (function () {
             },
             error: function (xhr, ajaxOptions, thrownError) {
                 body.modal("hide");
-                if (xhr.responseText) {
-                    var responseText = JSON.parse(xhr.responseText);
-                    var TextMessage =
-                        responseText.message ||
-                        responseText.error_description ||
-                        "Vui lòng liên hệ IT để được hỗ trợ";
-                } else {
-                    var TextMessage = "Vui lòng liên hệ IT để được xử lý";
+                var TextMessage = "Lỗi ";
+                try {
+                    if (xhr.responseText) {
+                        // Nếu là JSON hợp lệ thì parse
+                        var responseText = JSON.parse(xhr.responseText);
+                        TextMessage =
+                            responseText.message ||
+                            responseText.error_description ||
+                            TextMessage;
+                    }
+                } catch (e) {
+                    // Nếu không phải JSON (ví dụ Cloudflare trả HTML)
+                    if (xhr.status === 524) {
+                        TextMessage = "Máy chủ phản hồi quá lâu (Lỗi 524)";
+                    } else if (xhr.status === 0) {
+                        TextMessage = "Không thể kết nối đến máy chủ";
+                    }
+                    else if (xhr.status >= 400 && xhr.status < 500) {
+                        TextMessage = "Yêu cầu không hợp lệ";
+                    } else {
+                        TextMessage = "Máy chủ trả về dữ liệu không hợp lệ";
+                    }
                 }
                 show_notify_error({
                     message: "Lỗi " + xhr.status + ": " + TextMessage,
