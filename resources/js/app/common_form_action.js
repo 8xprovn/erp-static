@@ -198,6 +198,10 @@ function loadTinyMce(domId) {
                     "channel",
                     self.attr("data-channel") || ""
                 );
+                xhr.setRequestHeader(
+                    "folder",
+                    self.attr("data-folder") || ""
+                );
                 // type theo meta
                 xhr.setRequestHeader(
                     "type",
