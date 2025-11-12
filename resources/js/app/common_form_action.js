@@ -149,6 +149,10 @@ function loadTinyMce(domId) {
                     "channel",
                     self.attr("data-channel") || ""
                 );
+                 xhr.setRequestHeader(
+                    "folder",
+                    self.attr("data-folder") || ""
+                );
                 xhr.setRequestHeader("type", "image");
 
                 xhr.onload = function () {
