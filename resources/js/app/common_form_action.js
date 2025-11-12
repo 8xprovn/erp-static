@@ -110,8 +110,7 @@ function loadTinyMce(domId) {
                 : window.SERVICE_UPLOAD_URL;
         return {
             uploadUrl: version === 2 ? baseUp + "/api/files/store" : baseUp,
-            viewUrlPrefix:
-                version === 2 ? baseUp + "/api/files/view?path=" : baseUp + "/",
+            viewUrlPrefix: version === 2 ? baseUp + "/storage/" : baseUp + "/",
         };
     }
 
