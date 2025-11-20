@@ -193,7 +193,7 @@ const AutoloadDataService = (function () {
             //'search_param': 'name',
             formated: "$(name)",
             id: "_id",
-            query: ["_id"],
+            query: ["_id", "status"],
             version: 2,
         },
         branch: {
