@@ -158,9 +158,11 @@ var DateTimePickers = function() {
         $('.datepicker').each(function() {
             var currentYear = new Date().getFullYear();
 
-            // Nếu có truyền min/max → dùng giá trị truyền vào
-            var minYear = $(this).data('min-year') ?? (currentYear - 50);
-            var maxYear = $(this).data('max-year') ?? (currentYear + 50);
+            var rawMin = $(this).data('min-year');
+            var rawMax = $(this).data('max-year');
+
+            var minYear = (rawMin === undefined || rawMin === null) ? currentYear - 50 : rawMin;
+            var maxYear = (rawMax === undefined || rawMax === null) ? currentYear + 50 : rawMax;
             var isEditable = $(this).data('edit') === true; // Kiểm tra data-edit
             $(this).pickadate({
                 format: 'dd/mm/yyyy',
