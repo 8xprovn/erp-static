@@ -452,7 +452,14 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/finance/exam-location",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "name", "status", "area", "status"],
+            query: ["_id", "name", "status", "area"],
+            version: 2,
+        },
+        finance_exam_period: {
+            url: window.API_SERVICE_URL_V2 + "/finance/exam-period",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "name", "status", "area"],
             version: 2,
         },
         ticket_topic: {
@@ -1669,6 +1676,15 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/finance/exam-location",
             dom: ".finance-exam-location",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/finance/exam-period",
+            dom: ".finance-exam-period",
             attr: "data-id",
             formated: "$(name)",
             query: ["_id"],
