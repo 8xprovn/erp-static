@@ -167,9 +167,9 @@ var DateTimePickers = function() {
             $(this).pickadate({
                 format: 'dd/mm/yyyy',
                 formatSubmit: 'yyyy-mm-dd',
-                min: [minYear, 0, 1],
-                max: [maxYear, 11, 31],
-                selectYears: [minYear, maxYear],
+                // min: [minYear, 0, 1],
+                // max: [maxYear, 11, 31],
+                selectYears: 100,
                 selectMonths: true,
                 hiddenName: true,
                 editable: isEditable, // Thiết lập editable
