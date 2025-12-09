@@ -457,7 +457,7 @@ const AutoloadDataService = (function () {
         },
         finance_exam_period: {
             url: window.API_SERVICE_URL_V2 + "/finance/exam-period",
-            formated: "$(name)",
+            formated: "$(name) $(time:exam_time)",
             id: "_id",
             query: ["_id", "name", "status", "area"],
             version: 2,
