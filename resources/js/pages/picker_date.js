@@ -156,11 +156,16 @@ var DateTimePickers = function() {
         var maxYear = new Date().getFullYear() + 20;
         // Basic options
         $('.datepicker').each(function() {
+            var currentYear = new Date().getFullYear();
+
+            // Nếu có truyền min/max → dùng giá trị truyền vào
+            var minYear = $(this).data('min-year') ?? (currentYear - 50);
+            var maxYear = $(this).data('max-year') ?? (currentYear + 50);
             var isEditable = $(this).data('edit') === true; // Kiểm tra data-edit
             $(this).pickadate({
                 format: 'dd/mm/yyyy',
                 formatSubmit: 'yyyy-mm-dd',
-                selectYears: 100,
+                selectYears: [minYear, maxYear],
                 selectMonths: true,
                 hiddenName: true,
                 editable: isEditable, // Thiết lập editable
