@@ -156,10 +156,19 @@ var DateTimePickers = function() {
         var maxYear = new Date().getFullYear() + 20;
         // Basic options
         $('.datepicker').each(function() {
+            var currentYear = new Date().getFullYear();
+
+            var rawMin = $(this).data('min-year');
+            var rawMax = $(this).data('max-year');
+
+            var minYear = (rawMin === undefined || rawMin === null) ? currentYear - 200 : rawMin;
+            var maxYear = (rawMax === undefined || rawMax === null) ? currentYear + 100 : rawMax;
             var isEditable = $(this).data('edit') === true; // Kiểm tra data-edit
             $(this).pickadate({
                 format: 'dd/mm/yyyy',
                 formatSubmit: 'yyyy-mm-dd',
+                min: [minYear, 0, 1],
+                max: [maxYear, 11, 31],
                 selectYears: 100,
                 selectMonths: true,
                 hiddenName: true,
