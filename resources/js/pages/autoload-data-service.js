@@ -2319,7 +2319,7 @@ const AutoloadDataService = (function () {
         "crm-contact",
         "em-sys-district",
     ]; // Danh sách các tên ObjectStore
-    const CLEAR_DELAY = 3 * 24 * 60 * 60 * 1000; //Thời gian trì hoãn xóa dữ liệu
+    const CLEAR_DELAY = 24 * 60 * 60 * 1000; //Thời gian trì hoãn xóa dữ liệu
 
     let db = null; // Đối tượng để lưu trữ kết nối đến cơ sở dữ liệu
 
