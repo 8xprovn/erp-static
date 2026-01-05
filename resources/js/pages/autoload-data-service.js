@@ -2337,12 +2337,14 @@ const AutoloadDataService = (function () {
     };
 
     const VERSION = 1; // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV6"; // Tên cơ sở dữ liệu
+    const dbName = "ERPDBV7"; // Tên cơ sở dữ liệu
     //luc them ojectstorename cần đổi tên dbName lên
     const objectStoreNames = [
         "em-profile",
         "em-class",
         "em-branch",
+        "em-province",
+        "em-ward",
         "em-department",
         "em-brand",
         "em-course",
