@@ -212,6 +212,22 @@ const AutoloadDataService = (function () {
             query: ["status", "_id"],
             version: 2,
         },
+        province: {
+            url: window.API_SERVICE_URL_V2 + "/org/province",
+            //'search_param': 'name',
+            formated: "$(type) $(name)",
+            id: "_id",
+            query: ["status", "_id", "name", "code"],
+            version: 2,
+        },
+        ward: {
+            url: window.API_SERVICE_URL_V2 + "/org/ward",
+            //'search_param': 'name',
+            formated: "$(type) $(name)",
+            id: "_id",
+            query: ["status", "province_id","_id", "name", "code"],
+            version: 2,
+        },
         "sys-city": {
             url: window.API_SERVICE_URL_V2 + "/org/city",
             formated: "$(name)",
@@ -1310,6 +1326,24 @@ const AutoloadDataService = (function () {
             version: 2,
             indexedDB: "yes",
             indexdFormat: ["name", "status"],
+        },{
+            url: window.API_SERVICE_URL_V2 + "/org/province",
+            dom: ".em-province",
+            attr: "data-id",
+            formated: "$(type) $(name)", 
+            fk: "_id",
+            version: 2,
+            indexedDB: "yes",
+            indexdFormat: ["name", "status"],
+        },{
+            url: window.API_SERVICE_URL_V2 + "/org/ward",
+            dom: ".em-ward",
+            attr: "data-id",
+            formated: "$(type) $(name)", 
+            fk: "_id",
+            version: 2,
+            indexedDB: "yes",
+            indexdFormat: ["name", "province_id", "status"],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/city",
@@ -2303,12 +2337,14 @@ const AutoloadDataService = (function () {
     };
 
     const VERSION = 1; // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV6"; // Tên cơ sở dữ liệu
+    const dbName = "ERPDBV7"; // Tên cơ sở dữ liệu
     //luc them ojectstorename cần đổi tên dbName lên
     const objectStoreNames = [
         "em-profile",
         "em-class",
         "em-branch",
+        "em-province",
+        "em-ward",
         "em-department",
         "em-brand",
         "em-course",
@@ -2321,59 +2357,36 @@ const AutoloadDataService = (function () {
     ]; // Danh sách các tên ObjectStore
     const CLEAR_DELAY = 24 * 60 * 60 * 1000; //Thời gian trì hoãn xóa dữ liệu
 
-        /**
-     * ============================================
-     * INDEXEDDB + DOM OPTIMIZER (ANTI-LAG)
-     * + GIỮ createDatabaseWithStores() (theo code bạn)
-     * ============================================
-     * REQUIRE GLOBAL:
-     *   - dbName (string)
-     *   - VERSION (number)
-     *   - objectStoreNames (array)
-     *   - CLEAR_DELAY (ms)
-     *   - formatReplace(...)  (your function)
-     *   - getCookie(...)      (your function)
-     * ============================================
-     */
+    let db = null; // Đối tượng để lưu trữ kết nối đến cơ sở dữ liệu
 
-    let dbInstance = null;
-    let clearIntervalId = null;
-
-    /* =====================
-    UTILS
-    ===================== */
-    function normalizeStoreName(name) {
-        return String(name).replace(/\./g, "");
-    }
-
-    /* =====================
-    CREATE DB + STORES (GIỮ THEO BẠN)
-    ===================== */
+    // Tạo cơ sở dữ liệu với nhiều object store
     function createDatabaseWithStores() {
-        const request = indexedDB.open(dbName, VERSION);
+        const version = VERSION;
+        const request = indexedDB.open(dbName, version);
 
         request.onupgradeneeded = function (event) {
             const db = event.target.result;
             let storeCreated = false;
 
             objectStoreNames.forEach((storeName) => {
-                storeName = normalizeStoreName(storeName);
+                storeName = String(storeName).replace(/\./g, "");
                 if (!db.objectStoreNames.contains(storeName)) {
                     db.createObjectStore(storeName, {
                         keyPath: "_id",
+                        autoIncrement: true,
                     });
                     storeCreated = true;
                 }
             });
 
-            // ✅ Chỉ set schedule nếu CHƯA CÓ (tránh reset liên tục)
             if (storeCreated) {
-                setClearDataScheduledIfEmpty();
+                // Nếu có object store mới được tạo ra, đặt lịch trình xóa dữ liệu
+                setClearDataScheduled();
             }
         };
 
         request.onsuccess = function (event) {
-            dbInstance = event.target.result;
+            db = event.target.result;
         };
 
         request.onerror = function (event) {
@@ -2381,32 +2394,31 @@ const AutoloadDataService = (function () {
         };
     }
 
-    /* =====================
-    OPEN DB (tối ưu)
-    ===================== */
+    // Mở cơ sở dữ liệu và lưu trữ kết nối
     function openIndexedDB() {
-        if (dbInstance) return Promise.resolve(dbInstance);
-
         return new Promise((resolve, reject) => {
+            if (db) {
+                resolve(db);
+                return;
+            }
+
             const request = indexedDB.open(dbName, VERSION);
 
             request.onupgradeneeded = function (event) {
                 const db = event.target.result;
-
                 objectStoreNames.forEach((storeName) => {
-                    storeName = normalizeStoreName(storeName);
                     if (!db.objectStoreNames.contains(storeName)) {
-                        db.createObjectStore(storeName, { keyPath: "_id" });
+                        db.createObjectStore(storeName, {
+                            keyPath: "_id",
+                            autoIncrement: true,
+                        });
                     }
                 });
-
-                // ✅ Chỉ set schedule nếu CHƯA CÓ
-                setClearDataScheduledIfEmpty();
             };
 
             request.onsuccess = function (event) {
-                dbInstance = event.target.result;
-                resolve(dbInstance);
+                db = event.target.result;
+                resolve(db);
             };
 
             request.onerror = function (event) {
@@ -2415,265 +2427,286 @@ const AutoloadDataService = (function () {
         });
     }
 
-    /* =====================
-    INDEXEDDB GET MULTI (anti-await-loop)
-    ===================== */
-    async function getMultipleFromIndexedDB(storeName, ids) {
-        const db = await openIndexedDB();
-        storeName = normalizeStoreName(storeName);
-
-        return new Promise((resolve) => {
-            if (!db.objectStoreNames.contains(storeName)) {
-                resolve({});
+    // Lấy dữ liệu từ một object store trong cơ sở dữ liệu cụ thể
+    function getDataFromIndexedDB(objectStoreName, selectedId) {
+        return new Promise((resolve, reject) => {
+            if (!db) {
+                return reject("Database is not initialized");
+            }
+            if (!db.objectStoreNames.contains(objectStoreName)) {
+                console.warn("Store chưa tồn tại:", objectStoreName);
+                resolve(null); // bỏ qua, không lỗi
                 return;
             }
+            const transaction = db.transaction([objectStoreName], "readonly");
+            const objectStore = transaction.objectStore(objectStoreName);
+            var id = Number(selectedId);
+            if (isNaN(id) || id <= 0) {
+                // Kiểm tra xem id có phải là số và lớn hơn 0
+                id = 0;
+            }
+            const request = objectStore.get(id);
 
-            const tx = db.transaction(storeName, "readonly");
-            const store = tx.objectStore(storeName);
-            const result = {};
+            request.onsuccess = (event) => {
+                resolve(request.result ? request.result : null);
+            };
 
-            ids.forEach((id) => {
-                const key = Number(id) || 0;
-                const req = store.get(key);
-                req.onsuccess = () => {
-                    if (req.result) result[id] = req.result;
-                };
-            });
-
-            tx.oncomplete = () => resolve(result);
+            request.onerror = (event) => {
+                reject("Error querying IndexedDB");
+            };
         });
     }
 
-    async function saveDataToIndexedDB(storeName, id, data) {
-        const db = await openIndexedDB();
-        storeName = normalizeStoreName(storeName);
+    // Lưu dữ liệu vào một object store trong cơ sở dữ liệu cụ thể
+    function saveDataToIndexedDB(objectStoreName, id, data) {
+        objectStoreName = String(objectStoreName).replace(/\./g, "");
+        return new Promise((resolve, reject) => {
+            if (!db) {
+                return reject("Database is not initialized");
+            }
+            if (!db.objectStoreNames.contains(objectStoreName)) {
+                console.warn("Store chưa tồn tại:", objectStoreName);
+                resolve(null); // bỏ qua, không lỗi
+                return;
+            }
+            const transaction = db.transaction([objectStoreName], "readwrite");
+            const objectStore = transaction.objectStore(objectStoreName);
+            const request = objectStore.put({ _id: id, ...data });
 
-        return new Promise((resolve) => {
-            if (!db.objectStoreNames.contains(storeName)) {
+            request.onsuccess = () => {
                 resolve();
-                return;
-            }
+            };
 
-            const tx = db.transaction(storeName, "readwrite");
-            tx.objectStore(storeName).put({ _id: id, ...data });
-            tx.oncomplete = resolve;
+            request.onerror = (event) => {
+                reject(`Error saving to IndexedDB: ${event.target.errorCode}`);
+            };
         });
     }
 
-    /* =====================
-    DOM UPDATE (ANTI-LAG)
-    ===================== */
-    function updateDomChunked(focusDom, objData, item, chunkSize = 30) {
-        const elements = focusDom.toArray();
-        let index = 0;
-
-        function process(deadline) {
-            let processed = 0;
-            while (
-                index < elements.length &&
-                processed < chunkSize &&
-                (deadline.timeRemaining() > 0 || deadline.didTimeout)
-            ) {
-                applyDomUpdate($(elements[index]), objData, item);
-                index++;
-                processed++;
-            }
-
-            if (index < elements.length) {
-                requestIdleCallback(process, { timeout: 100 });
-            }
-        }
-
-        requestIdleCallback(process, { timeout: 100 });
-    }
-
-    function applyDomUpdate($el, objData, item) {
-        if ($el.prop("tagName") === "SELECT") {
-            const format = $el.attr("data-format") || item.formated;
-            let changed = false;
-
-            $el.find("option").each(function () {
-                const v = this.value;
-                if (objData[v]) {
-                    this.text = formatReplace(format, objData[v]);
-                    changed = true;
-                }
-            });
-
-            if (changed) {
-                $el.trigger("change");
-                $el.trigger("change_select2");
-            }
-            return;
-        }
-
-        const v = $el.attr(item.attr);
-        if (!objData[v]) return;
-
-        const format = $el.attr("data-format") || item.formated;
-
-        if (item.link) {
-            $el.html(
-                `<a href="${formatReplace(item.link, objData[v])}"
-                    class="load_not_ajax"
-                    target="_blank">
-                    ${formatReplace(format, objData[v])}
-                </a>`
-            );
-        } else {
-            $el.text(formatReplace(format, objData[v]));
-        }
-    }
-
-    /* =====================
-    MAIN: GET MISSING + UPDATE DOM + FETCH
-    ===================== */
+    // Hàm kiểm tra dữ liệu thiếu trong IndexedDB và cập nhật DOM
     async function getMissingDataFromIndexedDB(arrId, item, focusDom) {
-        const storeName = normalizeStoreName(item.dom);
+        const objectStoreName = String(item.dom).replace(/\./g, ""); // Tên object store
 
-        const cachedData = await getMultipleFromIndexedDB(storeName, arrId);
+        // Mở cơ sở dữ liệu nếu chưa được mở
+        await openIndexedDB();
 
-        if (Object.keys(cachedData).length) {
-            updateDomChunked(focusDom, cachedData, item);
+        const idsToFetch = [];
+        const objDatav = {};
+
+        // Lấy dữ liệu từ IndexedDB
+        for (const id of arrId) {
+            const data = await getDataFromIndexedDB(objectStoreName, id);
+            if (!data) {
+                idsToFetch.push(id); // Thêm vào danh sách các ID cần lấy thêm dữ liệu
+            } else {
+                objDatav[id] = data; // Lưu dữ liệu vào object
+            }
         }
 
-        const missingIds = arrId.filter((id) => !cachedData[id]);
+        // Cập nhật DOM với dữ liệu đã có
+        if (objDatav && Object.keys(objDatav).length > 0) {
+            await updateDomWithData(focusDom, objDatav, item);
+        }
 
-        if (missingIds.length) {
-            fetchDataAndUpdateDOM(item, missingIds, focusDom);
+        // Lấy thêm dữ liệu từ nguồn bên ngoài nếu cần
+        if (idsToFetch && idsToFetch.length > 0) {
+            fetchDataAndUpdateDOM(item, idsToFetch, focusDom);
         }
     }
 
+    // Hàm cập nhật DOM với dữ liệu
+    function updateDomWithData(focusDom, objData, item) {
+        focusDom.each(function () {
+            if ($(this).prop("tagName") == "SELECT") {
+                const selectData = $(this);
+                const tmp = $(this).attr("data-format") || item.formated;
+                selectData.find("option").each(function () {
+                    const v = $(this).val();
+                    if (objData[v]) {
+                        const replaced = formatReplace(tmp, objData[v]);
+                        $(this).text(replaced);
+                        setTimeout(() => {
+                            selectData.trigger("change_select2");
+                        }, 1000);
+                    }
+                });
+                selectData.trigger("change");
+            } else {
+                const v = $(this).attr(item.attr);
+                if (objData[v]) {
+                    const tmp = $(this).attr("data-format") || item.formated;
+                    if (item.link) {
+                        $(this).html(
+                            `<a href="${formatReplace(
+                                item.link,
+                                objData[v]
+                            )}" class="load_not_ajax" target="_blank">
+                                ${formatReplace(tmp, objData[v])}
+                            </a>`
+                        );
+                    } else {
+                        $(this).text(formatReplace(tmp, objData[v]));
+                    }
+                }
+            }
+        });
+    }
+
+    // Hàm gọi API và cập nhật DOM
     async function fetchDataAndUpdateDOM(item, arrId, focusDom) {
-        if (!arrId.length || (arrId.length === 1 && arrId[0] == 0)) return;
+        const inqId = arrId;
+        if (inqId.length === 1 && inqId[0] == 0) {
+            return false;
+        }
+        let objParams = {};
 
-        const params =
-            item.version === 2
-                ? { [item.fk]: arrId }
-                : { [item.fk]: { inq: arrId } };
-
-        let url = item.url;
-        if (item.url_arg) {
-            Object.entries(item.url_arg).forEach(([k, v]) => {
-                url = url.replace(`{${k}}`, params[v]);
-                delete params[v];
-            });
+        if (item.version === 2) {
+            objParams[item.fk] = inqId;
+        } else {
+            objParams[item.fk] = { inq: inqId };
         }
 
-        const dataGet =
-            item.version === 2
-                ? { filter: params, limit: 1000 }
-                : { filter: JSON.stringify({ where: params, limit: 500 }) };
-
-        try {
-            const response = await ajaxRequest(url, dataGet);
-            if (!Array.isArray(response)) return;
-
-            const domData = {};
-            const saveTasks = [];
-
-            response.forEach((row) => {
-                const id = row[item.fk];
-                domData[id] = row;
-
-                const saveData = item.indexdFormat
-                    ? Object.fromEntries(
-                        Object.entries(row).filter(([k]) =>
-                            item.indexdFormat.includes(k)
-                        )
-                    )
-                    : { ...row };
-
-                delete saveData._id;
-
-                saveTasks.push(saveDataToIndexedDB(item.dom, id, saveData));
+        // Replace url arg
+        let urlQuery = item.url;
+        if (item.url_arg) {
+            $.each(item.url_arg, function (k, v) {
+                urlQuery = urlQuery.replace("{" + k + "}", objParams[v]);
+                delete objParams[v];
             });
+        }
+        let dataGet = {};
+        if (!$.isEmptyObject(objParams)) {
+            if (item.version == 2) {
+                dataGet = { filter: objParams, limit: 1000 };
+            } else {
+                dataGet = {
+                    filter: JSON.stringify({
+                        where: objParams,
+                        limit: 500,
+                    }),
+                };
+            }
+        }
 
-            updateDomChunked(focusDom, domData, item);
-            Promise.all(saveTasks); // chạy nền
-
-        } catch (e) {
-            console.error("Fetch error:", e);
+        // Ktra query bắt buộc
+        try {
+            const response = await ajaxRequest(urlQuery, dataGet, item);
+            if (response.error) {
+                return false;
+            }
+            const objDatav = {};
+            for (const value of response) {
+                const id = value[item.fk];
+                objDatav[id] = value;
+                let data_save = {};
+                if (item.indexdFormat) {
+                    const keys = item.indexdFormat;
+                    data_save = Object.fromEntries(
+                        Object.entries(value).filter(([key]) =>
+                            keys.includes(key)
+                        )
+                    );
+                } else {
+                    data_save = { ...value };
+                    delete data_save._id;
+                }
+                if (objDatav && Object.keys(objDatav).length > 0) {
+                    await updateDomWithData(focusDom, objDatav, item);
+                }
+                await saveDataToIndexedDB(item.dom, id, data_save); // Lưu dữ liệu vào IndexedDB
+            }
+        } catch (error) {
+            console.log("Error in AJAX request:", error);
         }
     }
 
-    /* =====================
-    AJAX
-    ===================== */
-    function ajaxRequest(url, data) {
+    // Hàm gửi yêu cầu AJAX
+    function ajaxRequest(url, dataGet, item) {
         return new Promise((resolve, reject) => {
             $.ajax({
-                url,
+                url: url,
                 type: "GET",
                 dataType: "json",
-                data,
+                data: dataGet,
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 headers: {
-                    Authorization: "Bearer " + getCookie("imap_authen_access_token"),
+                    Authorization:
+                        "Bearer " + getCookie("imap_authen_access_token"),
                 },
-                success: resolve,
-                error: reject,
+                success: function (response) {
+                    resolve(response);
+                },
+                error: function (error) {
+                    reject(error);
+                },
             });
         });
     }
-
-    /* =====================
-    CLEAR SCHEDULER (FIX: KHÔNG RESET LIÊN TỤC)
-    ===================== */
-    function setClearDataScheduledIfEmpty() {
-        const existing = localStorage.getItem("clearDataIndexDBScheduled");
-        if (existing) return;
-
-        localStorage.setItem(
-            "clearDataIndexDBScheduled",
-            String(Date.now() + CLEAR_DELAY)
-        );
-    }
-
-    function resetClearSchedule() {
-        localStorage.removeItem("clearDataIndexDBScheduled");
-        setClearDataScheduledIfEmpty();
-    }
-
-    function checkAndPerformScheduledClear() {
-        const scheduled = localStorage.getItem("clearDataIndexDBScheduled");
-        if (!scheduled) {
-            setClearDataScheduledIfEmpty();
-            return;
-        }
-
+    // set thoi gian xoa data
+    function setClearDataScheduled() {
         const now = Date.now();
-        if (now < Number(scheduled)) return;
+        const clearTime = now + CLEAR_DELAY;
 
-        clearAllObjectStores()
-            .then(resetClearSchedule)
-            .catch((e) => console.log("Error in scheduled clear:", e));
+        localStorage.setItem("clearDataIndexDBScheduled", clearTime.toString());
     }
+    // check thoi gian xoa data
+    function checkAndPerformScheduledClear() {
+        const scheduledClearTime = localStorage.getItem(
+            "clearDataIndexDBScheduled"
+        );
 
-    async function clearAllObjectStores() {
-        const db = await openIndexedDB();
-        const stores = objectStoreNames.map(normalizeStoreName);
+        if (scheduledClearTime) {
+            const now = Date.now();
+            if (now >= parseInt(scheduledClearTime, 10)) {
+                // Nếu đến thời gian xóa dữ liệu, thực hiện xóa
+                clearAllObjectStores().catch((error) =>
+                    console.log(`Error in scheduled clear: ${error}`)
+                );
+            }
+        } else {
+            setClearDataScheduled();
+        }
+    }
+    // xoa data
+    function clearAllObjectStores() {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const db = await openIndexedDB();
+                const transaction = db.transaction(
+                    objectStoreNames,
+                    "readwrite"
+                );
 
-        return new Promise((resolve, reject) => {
-            const tx = db.transaction(stores, "readwrite");
+                objectStoreNames.forEach((storeName) => {
+                    const objectStore = transaction.objectStore(storeName);
+                    const request = objectStore.clear();
 
-            stores.forEach((store) => tx.objectStore(store).clear());
+                    request.onsuccess = () => {
+                        console.log(`Cleared ${storeName}`);
+                    };
 
-            tx.oncomplete = resolve;
-            tx.onerror = () => reject("Clear object stores failed");
+                    request.onerror = (event) => {
+                        console.log(
+                            `Error clearing ${storeName}: ${event.target.errorCode}`
+                        );
+                    };
+                });
+
+                transaction.oncomplete = () => {
+                    // Đặt lại thời gian xóa sau khi xóa dữ liệu
+                    setClearDataScheduled();
+                    resolve();
+                };
+
+                transaction.onerror = (event) => {
+                    reject(
+                        `Error clearing object stores: ${event.target.errorCode}`
+                    );
+                };
+            } catch (error) {
+                reject(`Error in clearAllObjectStores: ${error}`);
+            }
         });
-    }
-
-    /**
-     * ✅ Gọi 1 lần khi init:
-     * - set schedule nếu chưa có
-     * - bật interval check
-     */
-    function startClearWatcher(intervalMs = 3600000) {
-        setClearDataScheduledIfEmpty();
-        checkAndPerformScheduledClear();
-
-        if (clearIntervalId) clearInterval(clearIntervalId);
-        clearIntervalId = setInterval(checkAndPerformScheduledClear, intervalMs);
     }
     var selectData = function (parentDom) {
         var __cache = [];
@@ -2927,20 +2960,13 @@ const AutoloadDataService = (function () {
 
     return {
         init: function (parentDom) {
-            // Các hàm này là của bạn (cũ)
+            //console.log(parentDom);
             replaceData(parentDom);
             selectData(parentDom);
-
-            // ✅ GIỮ createDatabaseWithStores()
             createDatabaseWithStores();
-
-            // ✅ BẮT WATCHER để không phải reload mới clear
-            startClearWatcher(3600000);
+            checkAndPerformScheduledClear();
         },
-        getMissingDataFromIndexedDB,
-        openIndexedDB,
-        createDatabaseWithStores,
-        checkAndPerformScheduledClear,
+        getDataFromIndexedDB: getDataFromIndexedDB,
     };
 })();
 // Initialize module
