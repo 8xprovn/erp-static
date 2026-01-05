@@ -2668,7 +2668,7 @@ const AutoloadDataService = (function () {
      * - set schedule nếu chưa có
      * - bật interval check
      */
-    function startClearWatcher(intervalMs = 5000) {
+    function startClearWatcher(intervalMs = 3600000) {
         setClearDataScheduledIfEmpty();
         checkAndPerformScheduledClear();
 
@@ -2935,7 +2935,7 @@ const AutoloadDataService = (function () {
             createDatabaseWithStores();
 
             // ✅ BẮT WATCHER để không phải reload mới clear
-            startClearWatcher(5000);
+            startClearWatcher(3600000);
         },
         getMissingDataFromIndexedDB,
         openIndexedDB,
