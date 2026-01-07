@@ -212,25 +212,17 @@ const AutoloadDataService = (function () {
             query: ["status", "_id"],
             version: 2,
         },
-        province: {
-            url: window.API_SERVICE_URL_V2 + "/org/province",
-            //'search_param': 'name',
-            formated: "$(type) $(name)",
-            id: "_id",
-            query: ["status", "_id", "name", "code"],
-            version: 2,
-        },
         ward: {
             url: window.API_SERVICE_URL_V2 + "/org/ward",
             //'search_param': 'name',
             formated: "$(type) $(name)",
             id: "_id",
-            query: ["status", "province_id","_id", "name", "code"],
+            query: ["status", "city_id","_id", "name", "code"],
             version: 2,
         },
         "sys-city": {
             url: window.API_SERVICE_URL_V2 + "/org/city",
-            formated: "$(name)",
+            formated: "$(type) $(name)",
             id: "_id",
             version: 2,
         },
@@ -243,7 +235,7 @@ const AutoloadDataService = (function () {
         },
         city: {
             url: window.API_SERVICE_URL_V2 + "/org/city",
-            formated: "$(name)",
+            formated: "$(type) $(name)",
             id: "_id",
             version: 2,
         },
@@ -1327,15 +1319,6 @@ const AutoloadDataService = (function () {
             indexedDB: "yes",
             indexdFormat: ["name", "status"],
         },{
-            url: window.API_SERVICE_URL_V2 + "/org/province",
-            dom: ".em-province",
-            attr: "data-id",
-            formated: "$(type) $(name)", 
-            fk: "_id",
-            version: 2,
-            indexedDB: "yes",
-            indexdFormat: ["name", "status"],
-        },{
             url: window.API_SERVICE_URL_V2 + "/org/ward",
             dom: ".em-ward",
             attr: "data-id",
@@ -1343,13 +1326,13 @@ const AutoloadDataService = (function () {
             fk: "_id",
             version: 2,
             indexedDB: "yes",
-            indexdFormat: ["name", "province_id", "status"],
+            indexdFormat: ["name", "city_id", "status"],
         },
         {
             url: window.API_SERVICE_URL_V2 + "/org/city",
             dom: ".em-sys-city",
             attr: "data-id",
-            formated: "$(name)",
+            formated: "$(type) $(name)",
             fk: "_id",
             version: 2,
             indexedDB: "yes",
@@ -1369,7 +1352,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/org/city",
             dom: ".em-city",
             attr: "data-id",
-            formated: "$(name)",
+            formated: "$(type) $(name)",
             fk: "city_id",
         },
         {
@@ -2337,13 +2320,12 @@ const AutoloadDataService = (function () {
     };
 
     const VERSION = 1; // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV7"; // Tên cơ sở dữ liệu
+    const dbName = "ERPDBV8"; // Tên cơ sở dữ liệu
     //luc them ojectstorename cần đổi tên dbName lên
     const objectStoreNames = [
         "em-profile",
         "em-class",
         "em-branch",
-        "em-province",
         "em-ward",
         "em-department",
         "em-brand",
