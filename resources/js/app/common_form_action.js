@@ -134,6 +134,41 @@ function loadTinyMce(domId) {
             ed.on("change keyup undo redo", () => ed.save());
         },
 
+        paste_preprocess: function (plugin, args) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(args.content || "", "text/html");
+
+            // ❌ xóa toàn bộ <style>...</style>
+            doc.querySelectorAll("style, script, meta, link").forEach((el) =>
+                el.remove()
+            );
+
+            // xử lý attribute
+            doc.body.querySelectorAll("*").forEach((el) => {
+                const keep = {};
+
+                if (el.hasAttribute("href")) {
+                    keep.href = el.getAttribute("href");
+                }
+
+                if (el.hasAttribute("src")) {
+                    keep.src = el.getAttribute("src");
+                }
+
+                // xóa toàn bộ attribute
+                Array.from(el.attributes).forEach((attr) =>
+                    el.removeAttribute(attr.name)
+                );
+
+                // set lại href / src
+                Object.entries(keep).forEach(([k, v]) => {
+                    if (v) el.setAttribute(k, v);
+                });
+            });
+
+            args.content = doc.body.innerHTML;
+        },
+
         images_upload_handler: function (blobInfo, success, failure) {
             const { uploadUrl, viewUrlPrefix } = getEndpoints();
 
@@ -149,10 +184,7 @@ function loadTinyMce(domId) {
                     "channel",
                     self.attr("data-channel") || ""
                 );
-                 xhr.setRequestHeader(
-                    "folder",
-                    self.attr("data-folder") || ""
-                );
+                xhr.setRequestHeader("folder", self.attr("data-folder") || "");
                 xhr.setRequestHeader("type", "image");
 
                 xhr.onload = function () {
@@ -202,10 +234,7 @@ function loadTinyMce(domId) {
                     "channel",
                     self.attr("data-channel") || ""
                 );
-                xhr.setRequestHeader(
-                    "folder",
-                    self.attr("data-folder") || ""
-                );
+                xhr.setRequestHeader("folder", self.attr("data-folder") || "");
                 // type theo meta
                 xhr.setRequestHeader(
                     "type",
