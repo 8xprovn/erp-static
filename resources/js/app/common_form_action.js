@@ -120,7 +120,7 @@ function loadTinyMce(domId) {
         plugins:
             "print preview paste importcss searchreplace autolink autosave save directionality code visualblocks visualchars fullscreen image link media template codesample table charmap hr pagebreak nonbreaking anchor toc insertdatetime advlist lists wordcount imagetools textpattern noneditable help charmap emoticons filery textcolor colorpicker",
         toolbar:
-            "undo redo | formatselect | styleselect | bold italic | alignleft aligncenter alignright alignjustify | checklist numlist | link image  | forecolor backcolor",
+            "undo redo | formatselect | styleselect | bold italic | alignleft aligncenter alignright alignjustify | checklist numlist | link image media | forecolor backcolor",
         filery_api_url: "/test.json",
         convert_urls: false, // Ngăn chặn tự động đổi URL
         relative_urls: false, // Bắt buộc dùng URL tuyệt đối
@@ -132,6 +132,41 @@ function loadTinyMce(domId) {
         // Đảm bảo TinyMCE ghi ngược HTML về <textarea> (tránh required + hidden focus)
         setup: (ed) => {
             ed.on("change keyup undo redo", () => ed.save());
+        },
+
+        paste_preprocess: function (plugin, args) {
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(args.content || "", "text/html");
+
+            // ❌ xóa toàn bộ <style>...</style>
+            doc.querySelectorAll("style, script, meta, link").forEach((el) =>
+                el.remove()
+            );
+
+            // xử lý attribute
+            doc.body.querySelectorAll("*").forEach((el) => {
+                const keep = {};
+
+                if (el.hasAttribute("href")) {
+                    keep.href = el.getAttribute("href");
+                }
+
+                if (el.hasAttribute("src")) {
+                    keep.src = el.getAttribute("src");
+                }
+
+                // xóa toàn bộ attribute
+                Array.from(el.attributes).forEach((attr) =>
+                    el.removeAttribute(attr.name)
+                );
+
+                // set lại href / src
+                Object.entries(keep).forEach(([k, v]) => {
+                    if (v) el.setAttribute(k, v);
+                });
+            });
+
+            args.content = doc.body.innerHTML;
         },
 
         images_upload_handler: function (blobInfo, success, failure) {
@@ -149,10 +184,7 @@ function loadTinyMce(domId) {
                     "channel",
                     self.attr("data-channel") || ""
                 );
-                 xhr.setRequestHeader(
-                    "folder",
-                    self.attr("data-folder") || ""
-                );
+                xhr.setRequestHeader("folder", self.attr("data-folder") || "");
                 xhr.setRequestHeader("type", "image");
 
                 xhr.onload = function () {
@@ -202,10 +234,7 @@ function loadTinyMce(domId) {
                     "channel",
                     self.attr("data-channel") || ""
                 );
-                xhr.setRequestHeader(
-                    "folder",
-                    self.attr("data-folder") || ""
-                );
+                xhr.setRequestHeader("folder", self.attr("data-folder") || "");
                 // type theo meta
                 xhr.setRequestHeader(
                     "type",
