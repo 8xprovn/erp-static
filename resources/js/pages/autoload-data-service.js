@@ -934,6 +934,15 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         /// end course video ////
+        //// authorization ////
+        "authorization-roles": {
+            url: window.API_SERVICE_URL_V2 + "/authorization/roles",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "name"],
+            version: 2,
+        },
+        /// authorization ////
     };
     var arrDomAutoFill = [
         {
@@ -2137,6 +2146,17 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         /// end course video ////
+        ////  authorization////
+        {
+            url: window.API_SERVICE_URL_V2 + "/authorization/roles",
+            dom: ".em-authorization-roles",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        /// authorization ////
     ];
 
     //
