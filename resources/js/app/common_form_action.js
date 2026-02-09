@@ -87,7 +87,7 @@ function popup_modal(url, data_redirect_uri) {
                             watchExternalChanges: true,
                             wheelStep: 1000,
                             decimalPlacesRawValue: 0,
-                        }
+                        },
                     );
                 }
             });
@@ -99,6 +99,20 @@ function popup_modal(url, data_redirect_uri) {
     });
 }
 
+function appendCacheBuster(url) {
+    if (!url) return url;
+
+    const v = "v=" + Date.now(); // hoặc random: Math.floor(Math.random()*1000)
+
+    // đã có query ?
+    if (url.includes("?")) {
+        // tránh bị thêm trùng v=
+        if (/([?&])v=\d+/.test(url)) return url;
+        return url + "&" + v;
+    }
+
+    return url + "?" + v;
+}
 function loadTinyMce(domId) {
     var self = $("." + domId);
 
@@ -131,6 +145,14 @@ function loadTinyMce(domId) {
 
         // Đảm bảo TinyMCE ghi ngược HTML về <textarea> (tránh required + hidden focus)
         setup: (ed) => {
+            ed.on("init", () => {
+                ed.getBody()
+                    .querySelectorAll("img")
+                    .forEach((img) => {
+                        img.src = appendCacheBuster(img.src);
+                    });
+            });
+
             ed.on("change keyup undo redo", () => ed.save());
         },
 
@@ -140,7 +162,7 @@ function loadTinyMce(domId) {
 
             // ❌ xóa toàn bộ <style>...</style>
             doc.querySelectorAll("style, script, meta, link").forEach((el) =>
-                el.remove()
+                el.remove(),
             );
 
             // xử lý attribute
@@ -157,7 +179,7 @@ function loadTinyMce(domId) {
 
                 // xóa toàn bộ attribute
                 Array.from(el.attributes).forEach((attr) =>
-                    el.removeAttribute(attr.name)
+                    el.removeAttribute(attr.name),
                 );
 
                 // set lại href / src
@@ -178,11 +200,11 @@ function loadTinyMce(domId) {
                 xhr.open("POST", uploadUrl);
                 xhr.setRequestHeader(
                     "Authorization",
-                    "Bearer " + getCookie("imap_authen_access_token")
+                    "Bearer " + getCookie("imap_authen_access_token"),
                 );
                 xhr.setRequestHeader(
                     "channel",
-                    self.attr("data-channel") || ""
+                    self.attr("data-channel") || "",
                 );
                 xhr.setRequestHeader("folder", self.attr("data-folder") || "");
                 xhr.setRequestHeader("type", "image");
@@ -228,11 +250,11 @@ function loadTinyMce(domId) {
                 xhr.open("POST", uploadUrl);
                 xhr.setRequestHeader(
                     "Authorization",
-                    "Bearer " + getCookie("imap_authen_access_token")
+                    "Bearer " + getCookie("imap_authen_access_token"),
                 );
                 xhr.setRequestHeader(
                     "channel",
-                    self.attr("data-channel") || ""
+                    self.attr("data-channel") || "",
                 );
                 xhr.setRequestHeader("folder", self.attr("data-folder") || "");
                 // type theo meta
@@ -241,8 +263,8 @@ function loadTinyMce(domId) {
                     meta.filetype === "image"
                         ? "image"
                         : meta.filetype === "media"
-                        ? "media"
-                        : "file"
+                          ? "media"
+                          : "file",
                 );
 
                 xhr.onload = function () {
@@ -279,7 +301,7 @@ function loadTinyMce(domId) {
                     formData.append(
                         "files",
                         blobInfo.blob(),
-                        blobInfo.filename()
+                        blobInfo.filename(),
                     );
                     xhr.send(formData);
                 };
