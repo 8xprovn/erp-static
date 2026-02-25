@@ -219,7 +219,7 @@ function loadTinyMce(domId) {
                     } catch (e) {}
                     const path = res?.path || res?.data?.path;
                     if (!path) return failure("Upload error: missing path");
-
+                    path = path.replace(/^\/+/, '');
                     success(viewUrlPrefix + path);
                 };
 
@@ -283,6 +283,7 @@ function loadTinyMce(domId) {
                     }
 
                     // ✅ đúng API: trả thẳng URL cho TinyMCE
+                    path = path.replace(/^\/+/, '');
                     const url = viewUrlPrefix + path;
                     callback(url);
                 };
