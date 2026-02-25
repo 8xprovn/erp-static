@@ -124,7 +124,7 @@ function loadTinyMce(domId) {
                 : window.SERVICE_UPLOAD_URL;
         return {
             uploadUrl: version === 2 ? baseUp + "/api/files/store" : baseUp,
-            viewUrlPrefix: version === 2 ? baseUp + "/storage/" : baseUp + "/",
+            viewUrlPrefix: version === 2 ? baseUp + "/storage/" : "https://st.ebomb.edu.vn/",
         };
     }
 
@@ -217,9 +217,9 @@ function loadTinyMce(domId) {
                     try {
                         res = JSON.parse(xhr.responseText || "{}");
                     } catch (e) {}
-                    const path = res?.path || res?.data?.path;
+                    var path = res?.path || res?.data?.path;
                     if (!path) return failure("Upload error: missing path");
-
+                    path = path.replace(/^\/+/, '');
                     success(viewUrlPrefix + path);
                 };
 
@@ -276,13 +276,14 @@ function loadTinyMce(domId) {
                     try {
                         res = JSON.parse(xhr.responseText || "{}");
                     } catch (e) {}
-                    const path = res?.path || res?.data?.path;
+                    var path = res?.path || res?.data?.path;
                     if (!path) {
                         console.log("Upload error: missing path");
                         return;
                     }
 
                     // ✅ đúng API: trả thẳng URL cho TinyMCE
+                    path = path.replace(/^\/+/, '');
                     const url = viewUrlPrefix + path;
                     callback(url);
                 };
