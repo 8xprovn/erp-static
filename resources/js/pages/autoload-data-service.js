@@ -33,8 +33,8 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/crm/accounts",
             search_param: "name",
             formated: "$(name)",
-            id: "_id",
-            query: [],
+            id: "account_id",
+            query: ["account_type", "account_id"],
             version: 2,
         },
         "document-type": {
@@ -1522,9 +1522,9 @@ const AutoloadDataService = (function () {
             dom: ".crm-account",
             attr: "data-id",
             formated: "$(name)",
-            link: "/crm/accounts/$(_id)",
-            fk: "_id",
-            pquery: "_id",
+            link: "/crm/accounts/$(account_id)",
+            fk: "account_id",
+            pquery: "account_id",
             version: 2,
         },
         {
