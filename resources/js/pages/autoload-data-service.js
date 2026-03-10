@@ -270,7 +270,7 @@ const AutoloadDataService = (function () {
         "course-price": {
             url: window.API_SERVICE_URL_V2 + "/lms/course-price",
             formated: "$(name)",
-            query: ["course_id", "type"], // query ko bat buoc
+            query: ["course_id", "type", 'status'], // query ko bat buoc
             id: "_id",
             version: 2,
         },
@@ -1040,7 +1040,7 @@ const AutoloadDataService = (function () {
             dom: ".em-course-price",
             attr: "data-id",
             formated: "$(name)",
-            query: ["course_id", "type"], // query ko bat buoc
+            query: ["course_id", "type", 'status'], // query ko bat buoc
             fk: "_id",
             version: 2,
         },
