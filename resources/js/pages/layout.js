@@ -114,8 +114,8 @@ const Layout = (function () {
                         redirect_uri = data.redirect_uri;
                     }
                     var window_redirect_uri = ""
-                    if (data.redirect_uri) {
-                        window_redirect_uri = data.redirect_uri;
+                    if (data.window_redirect_uri) {
+                        window_redirect_uri = data.window_redirect_uri;
                     }
                     if (self.attr("data-redirect-uri")) {
                         redirect_uri = self.attr("data-redirect-uri");
