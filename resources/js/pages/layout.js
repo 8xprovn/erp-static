@@ -109,8 +109,13 @@ const Layout = (function () {
                     }
 
                     var redirect_uri = "";
+                    var window_redirect_uri = ""
                     if (data.redirect_uri) {
                         redirect_uri = data.redirect_uri;
+                    }
+                    var window_redirect_uri = ""
+                    if (data.redirect_uri) {
+                        window_redirect_uri = data.redirect_uri;
                     }
                     if (self.attr("data-redirect-uri")) {
                         redirect_uri = self.attr("data-redirect-uri");
@@ -217,8 +222,13 @@ const Layout = (function () {
                                 progress_loading.hide();
                             },
                         }).done(function () {});
-                        redirectAjaxUrl(window.location.href);
-                        return true;
+                        if(window_redirect_uri) {
+                            window.location.href = window_redirect_uri;
+                            return true;
+                        } else {
+                            redirectAjaxUrl(window.location.href);
+                            return true;
+                        }
                     }
 
                     if (redirect_uri == "popup_close") {
@@ -226,6 +236,9 @@ const Layout = (function () {
                             .modal("hide")
                             .data("bs.modal", null);
                         redirectAjaxUrl(window.location.href);
+                        return true;
+                    } else if(window_redirect_uri) {
+                        window.location.href = window_redirect_uri;
                         return true;
                     } else {
                         redirectAjaxUrl(redirect_uri);
