@@ -3571,13 +3571,13 @@ function customAjax(options) {
         const create_form_add = (attr) => {
             var attachment_button = "";
             if (_attachment == true) {
-                attachment_button = ` <button type="button" class="btn btn-light btn-icon border-transparent btn-outline-dark rounded-pill btn-sm mr-1 upload-image">
+                attachment_button = ` <button type="button" title="Images" class="btn btn-light btn-icon border-transparent btn-outline-dark rounded-pill btn-sm mr-1 upload-image">
                             <i class="icon-file-picture"></i>
                         </button>`
             }
             var attachment_file_button = "";
             if (_attachment_file == true) {
-                attachment_file_button = ` <button type="button" class="btn btn-light btn-icon border-transparent btn-outline-dark rounded-pill btn-sm mr-1 upload-file">
+                attachment_file_button = ` <button type="button" title="Files" class="btn btn-light btn-icon border-transparent btn-outline-dark rounded-pill btn-sm mr-1 upload-file">
                             <i class="icon-file-text2"></i>
                         </button>`
             }
