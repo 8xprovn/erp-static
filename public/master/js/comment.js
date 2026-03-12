@@ -2907,7 +2907,6 @@ function customAjax(options) {
     }
     let _url_list = "";
     const upload_image = (_dom_reload, _form, file) => {
-        console.log(_dom_reload, _form, file);
         
         if (!file) return;
         let formData = new FormData();
@@ -2948,6 +2947,65 @@ function customAjax(options) {
                     currentImages.push(res.path);
                     hiddenInput.val(currentImages.join(",")); // Lưu danh sách URL ảnh vào input
                 }
+            },
+            error: function (xhr) {
+                console.error("Upload failed: " + xhr.responseText);
+            }
+        });
+    };
+    const upload_file = (_dom_reload, _form, file) => {
+        if (!file) return;
+
+        let formData = new FormData();
+        formData.append("files", file);
+
+        $.ajax({
+            url: window.SERVICE_UPLOAD_URL,
+            type: "POST",
+            data: formData,
+            contentType: false,
+            processData: false,
+            headers: {
+                "Authorization": "Bearer " + getCookie("imap_authen_access_token"),
+                "channel": 'erp',
+                "type": "file",
+            },
+            success: function (res) {
+
+                if (res.path) {
+
+                    let fileUrl = window.SERVICE_MEDIA_URL + res.path;
+
+                    _dom_reload.find(".upload-image-flame").append(`
+                        <div class="uploaded-file-container" style="position: relative; margin-top: 10px;">
+                            
+                            <a href="${fileUrl}" class="load_not_ajax" target="_blank" data-file="${res.path}">
+                                <i class="icon-file-text2"></i> ${file.name}
+                            </a>
+
+                            <button type="button"
+                            class="remove-uploaded-file btn btn-light btn-icon btn-outline-dark border-transparent rounded-pill btn-sm">
+                                <i class="icon-cross2"></i>
+                            </button>
+
+                        </div>
+                    `);
+
+                    let hiddenInput = _dom_reload.find("input[name='attachment_file']");
+
+                    if (hiddenInput.length === 0) {
+                        hiddenInput = $('<input type="hidden" name="attachment_file">');
+                        _dom_reload.append(hiddenInput);
+                    }
+
+                    let currentFiles = hiddenInput.val() ? hiddenInput.val().split(",") : [];
+
+                    currentFiles.push(res.path);
+
+                    hiddenInput.val(currentFiles.join(","));
+
+                }
+
             },
             error: function (xhr) {
                 console.error("Upload failed: " + xhr.responseText);
@@ -3240,6 +3298,31 @@ function customAjax(options) {
                     }).catch(console.error);
                 }
             });
+            $(document).on("click", "button.upload-file", function (e) {
+                e.stopPropagation();
+                let _this = $(this);
+                let _parent_dom = $(this).closest(".comment-box");
+                if (window.showOpenFilePicker) {
+                    window.showOpenFilePicker({
+                        types: [{
+                            description: "Documents",
+                            accept: {
+                                "application/pdf": [".pdf"],
+                                "application/msword": [".doc"],
+                                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
+                                "application/vnd.ms-excel": [".xls"],
+                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"]
+                            }
+                        }],
+                        startIn: "downloads", // Đề xuất thư mục Downloads (Chrome)
+                    }).then(async (handles) => {
+                        if (handles.length > 0) {
+                            let file = await handles[0].getFile();
+                            upload_file( _parent_dom,_this, file);
+                        }
+                    }).catch(console.error);
+                }
+            });
 
             // edit_comment
             $(document).on("click", ".like-comment", function (e) {
@@ -3358,6 +3441,24 @@ function customAjax(options) {
                 let updatedImages = hiddenInput.val().split(",").filter(url => url !== removedImage);
                 hiddenInput.val(updatedImages.join(","));
             });
+            $(document).on("click", ".remove-uploaded-file", function (e) {
+                e.preventDefault();
+
+                let parent = $(this).closest(".uploaded-file-container");
+                let removedFile = parent.find("a").data("file");
+                let _parent_dom = $(this).closest(".comment-box");
+                let hiddenInput = _parent_dom.find("input[name='attachment_file']");
+
+                parent.remove();
+
+                let updatedFiles = hiddenInput.val()
+                    ? hiddenInput.val().split(",").filter(url => url !== removedFile)
+                    : [];
+                console.log(updatedFiles, hiddenInput, hiddenInput.val(), removedFile);
+                
+                hiddenInput.val(updatedFiles.join(","));
+
+            });
             $(document).on('click', '.img-attachment-comment', function () {
                 let imgSrc = $(this).attr('src');
                 
@@ -3428,6 +3529,7 @@ function customAjax(options) {
                     $(_dom_reload).append(response);
                     $(_form).find("[name='content']").val("");
                     $(_form).find("[name='attachment']").val("");
+                    $(_form).find("[name='attachment_file']").val("");
                     
                     if (input_type == "textarea") {
                         let editorId = $(_form).find(".input_comment_data").attr("id");
@@ -3473,6 +3575,12 @@ function customAjax(options) {
                             <i class="icon-file-picture"></i>
                         </button>`
             }
+            var attachment_file_button = "";
+            if (_attachment_file == true) {
+                attachment_file_button = ` <button type="button" class="btn btn-light btn-icon border-transparent btn-outline-dark rounded-pill btn-sm mr-1 upload-file">
+                            <i class="icon-file-text2"></i>
+                        </button>`
+            }
             var htmlmen = ` <span data-original-id="${attr.created_by}">
                             <a href="https://erp.ebomb.edu.vn/hr/employee/profile/${attr.created_by}" class="load_not_ajax user-name" data-user-id=${attr.created_by} target="_blank">
                             ${attr.fullname}
@@ -3497,6 +3605,7 @@ function customAjax(options) {
                     <input type="hidden" name="content" value='${htmlmen}'>
                     <div class="d-flex align-items-center justify-content-end">
                         ${attachment_button}
+                        ${attachment_file_button}
                         <button type="submit" class="btn btn-primary btn-add-comment">
                             <i class="icon-paperplane"></i>
                         </button>
