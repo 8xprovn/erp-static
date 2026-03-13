@@ -2913,19 +2913,21 @@ function customAjax(options) {
         formData.append("files", file);
         // Gửi AJAX upload file lên server
         $.ajax({
-            url: window.SERVICE_UPLOAD_URL, // Đổi URL API của bạn
+            url: _server_upload_v2 + '/api/files/store', // Đổi URL API của bạn
+            
             type: "POST",
             data: formData,
             contentType: false,
             processData: false,
             headers: {
                 "Authorization": "Bearer " + getCookie("imap_authen_access_token"),
-                "channel": 'erp',
+                "channel": 'comment_attachment',
                 "type": "image",
+                'folder':"image"
             },
             success: function (res) {
                 if (res.path) {
-                    let imageUrl = window.SERVICE_MEDIA_URL + res.path;
+                    let imageUrl = _server_upload_v2 + '/api/files/view?preview=true&path='+res.path;
 
                     // Tìm đúng upload-image-flame trong form hiện tại
                     _dom_reload.find(".upload-image-flame").append(`
@@ -2950,6 +2952,10 @@ function customAjax(options) {
             },
             error: function (xhr) {
                 console.error("Upload failed: " + xhr.responseText);
+                show_notify_error({
+                    "status": false,
+                    "message": xhr.responseText
+                });
             }
         });
     };
@@ -2960,21 +2966,23 @@ function customAjax(options) {
         formData.append("files", file);
 
         $.ajax({
-            url: window.SERVICE_UPLOAD_URL,
+            url: _server_upload_v2 + '/api/files/store',
             type: "POST",
             data: formData,
             contentType: false,
             processData: false,
             headers: {
                 "Authorization": "Bearer " + getCookie("imap_authen_access_token"),
-                "channel": 'erp',
+                "channel": 'comment_attachment',
                 "type": "file",
+                "folder":"file"
             },
             success: function (res) {
 
                 if (res.path) {
 
-                    let fileUrl = window.SERVICE_MEDIA_URL + res.path;
+                    // let fileUrl = window.SERVICE_MEDIA_URL + res.path;
+                    let fileUrl = _server_upload_v2 + '/api/files/view?path='+res.path;
 
                     _dom_reload.find(".upload-image-flame").append(`
                         <div class="uploaded-file-container" style="position: relative; margin-top: 10px;">
@@ -3009,6 +3017,10 @@ function customAjax(options) {
             },
             error: function (xhr) {
                 console.error("Upload failed: " + xhr.responseText);
+                show_notify_error({
+                    "status": false,
+                    "message": xhr.responseText
+                });
             }
         });
     };
@@ -3293,6 +3305,7 @@ function customAjax(options) {
                     }).then(async (handles) => {
                         if (handles.length > 0) {
                             let file = await handles[0].getFile();
+                            
                             upload_image( _parent_dom,_this, file);
                         }
                     }).catch(console.error);
@@ -3309,9 +3322,7 @@ function customAjax(options) {
                             accept: {
                                 "application/pdf": [".pdf"],
                                 "application/msword": [".doc"],
-                                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
-                                "application/vnd.ms-excel": [".xls"],
-                                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [".xlsx"]
+                                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"]
                             }
                         }],
                         startIn: "downloads", // Đề xuất thư mục Downloads (Chrome)
@@ -3454,7 +3465,6 @@ function customAjax(options) {
                 let updatedFiles = hiddenInput.val()
                     ? hiddenInput.val().split(",").filter(url => url !== removedFile)
                     : [];
-                console.log(updatedFiles, hiddenInput, hiddenInput.val(), removedFile);
                 
                 hiddenInput.val(updatedFiles.join(","));
 
