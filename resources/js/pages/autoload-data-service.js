@@ -269,7 +269,7 @@ const AutoloadDataService = (function () {
         },
         "course-price": {
             url: window.API_SERVICE_URL_V2 + "/lms/course-price",
-            formated: "$(name)",
+            formated: "$(_id) - $(name) - $(amount)",
             query: ["course_id", "type", "status"], // query ko bat buoc
             id: "_id",
             version: 2,
@@ -341,7 +341,7 @@ const AutoloadDataService = (function () {
         "course-prices": {
             url: window.API_SERVICE_URL_V2 + "/lms/course-prices",
             //'search_param': 'name',
-            formated: "$(name)",
+            formated: "$(_id) - $(name) - $(amount)",
             id: "_id",
             query: ["course_id", "from_date", "to_date", "status", "type"],
             version: 2,
@@ -1039,7 +1039,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/lms/course-price",
             dom: ".em-course-price",
             attr: "data-id",
-            formated: "$(name)",
+            formated: "$(_id) - $(name) - $(amount)",
             query: ["course_id", "type", "status"], // query ko bat buoc
             fk: "_id",
             version: 2,
