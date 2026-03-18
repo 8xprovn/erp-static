@@ -48,6 +48,12 @@ $(document).ready(function () {
                         <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Project manager</div>\
                     </a>\
                 </div>',
+        'recruitment': '<div class="col-4">\
+                    <a href="https://erp.ebomb.edu.vn/recruitment" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
+                        <i class="icon-profile text-success icon-2x"></i>\
+                        <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Tuyển dụng</div>\
+                    </a>\
+                </div>',
         'app': '<div class="col-4">\
                     <a href="https://erp.ebomb.edu.vn/app" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
                         <i class="icon-android text-info icon-2x"></i>\
