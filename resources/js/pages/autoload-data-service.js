@@ -244,7 +244,7 @@ const AutoloadDataService = (function () {
             formated: "$(name)",
             query: ["city_id", "code", "name"], // query bat buoc
             id: "_id",
-            version: 2, 
+            version: 2,
         },
         commune: {
             url: window.API_SERVICE_URL + "/org/location/commune",
@@ -1331,7 +1331,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/org/ward",
             dom: ".em-ward",
             attr: "data-id",
-            formated: "$(type) $(name)", 
+            formated: "$(type) $(name)",
             fk: "_id",
             version: 2,
             indexedDB: "yes",
@@ -1839,6 +1839,23 @@ const AutoloadDataService = (function () {
             fk: "_id",
             version: 2,
         },
+        {
+            url: window.API_SERVICE_URL_V2 + "/core/workflow_versions",
+            dom: ".em-core-workflow_versions",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/core/workflow_nodes",
+            dom: ".em-core-workflow_nodes",
+            attr: "data-id",
+            formated: "$(name)",
+            fk: "_id",
+            version: 2,
+        },
+
         {
             url: window.API_SERVICE_URL_V2 + "/core/events",
             dom: ".em-core-event",
