@@ -18911,13 +18911,7 @@ var arrDomAutoFill = [
         'query': ['brand_id','city_code'],
         'fk': 'branch_id'
     },
-    {
-        'url': window.API_SERVICE_URL + '/org/location-cities',
-        'dom': '.em-city',
-        'attr': 'data-id',
-        'formated': '$(name)',
-        'fk': 'city_id'
-    },
+     
     {
         'url': window.API_SERVICE_URL + '/org/location/district',
         'dom': '.em-district',
