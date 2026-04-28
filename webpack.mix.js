@@ -52,6 +52,7 @@ mix.scripts([
     'resources/js/vendors/tinymce/tinymce.min.js',
     'resources/js/app/*',
     'resources/js/pages/search_contact.js',
+    'resources/js/pages/search_class.js',
 ], 'public/master/js/vendors.js').minify('public/master/js/vendors.js');
 mix.styles([
     'resources/js/vendors/filepond/filepond-plugin-image-preview.css',
