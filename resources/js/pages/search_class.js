@@ -122,11 +122,6 @@ const searchClassService = (function () {
                                             <div class="row">
                                                 <div class="col-sm-12 col-xs-12">
                                                     <div class="x_panel row">
-                                                        <div class="form-group col-lg-12">
-                                                            <select name="filter[branch_id][]" data-module="branch" class="em-branch select2_suggest form-control" placeholder="Chi nhánh" multiple="multiple">
-                                                                
-                                                            </select>
-                                                        </div>
                                                         <div class="form-group col-lg-6">
                                                             <input type="text" name="filter[start_date][gte]" placeholder="Ngày khai giảng từ" class="form-control datepicker tab2-input" value="">
                                                         </div>
