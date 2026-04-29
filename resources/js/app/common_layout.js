@@ -78,10 +78,16 @@ $(document).ready(function () {
                         <div class="font-size-sm font-weight-semibold text-uppercase mt-2">IELTS Fighter</div>\
                     </a>\
                 </div>',
-        'dinotech': '<div class="col-4">\
-                    <a href="https://erp.ebomb.edu.vn/dinotech" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
+        'anhngumshoa': '<div class="col-4">\
+                    <a href="https://erp.ebomb.edu.vn/anhngumshoa" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
                         <i class="icon-podium text-pink icon-2x"></i>\
-                        <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Dinotech</div>\
+                        <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Anh ngữ Ms Hoa</div>\
+                    </a>\
+                </div>',
+        'mshoajunior': '<div class="col-4">\
+                    <a href="https://erp.ebomb.edu.vn/mshoajunior" class="d-block text-body text-center ripple-dark rounded p-3 load_not_ajax">\
+                        <i class="icon-podium text-pink icon-2x"></i>\
+                        <div class="font-size-sm font-weight-semibold text-uppercase mt-2">Ms Hoa Junior</div>\
                     </a>\
                 </div>',
         'knowledge': '<div class="col-4">\
