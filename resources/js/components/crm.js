@@ -4,7 +4,7 @@ module.exports = (function(){
     //   console.debug(funcName, count);
     // }
     return {
-        getSkillsTemplate:function(param,callback) {
+        getSkillsTemplate:function(params,callback) {
             helpers.curlgetapi_v2(API_SERVICE_URL_V2 + '/crm/skills_template',params,callback);
         },
         createSaleFile:function(params,callback) {
