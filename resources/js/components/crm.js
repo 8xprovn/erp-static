@@ -4,6 +4,9 @@ module.exports = (function(){
     //   console.debug(funcName, count);
     // }
     return {
+        getSkillsTemplate:function(param,callback) {
+            helpers.curlgetapi_v2(API_SERVICE_URL_V2 + '/crm/skills_template',params,callback);
+        },
         createSaleFile:function(params,callback) {
             helpers.curlpost(API_SERVICE_URL + '/crm/sales/copy_file',params,callback);
         },
