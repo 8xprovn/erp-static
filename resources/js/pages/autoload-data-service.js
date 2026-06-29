@@ -402,6 +402,16 @@ const AutoloadDataService = (function () {
             id: "_id",
             version: 2,
         },
+        "output-conditions": {
+            url: window.API_SERVICE_URL_V2 + "/lms/output-conditions",
+            formated: "$(name)",
+            id: "_id",
+            version: 2,
+            query: [
+                "name",
+                "status",
+            ],
+        },
         finance_invoices: {
             url: window.API_SERVICE_URL_V2 + "/finance/invoices",
             formated: "$(_id) ($(total_amt))",
@@ -1137,6 +1147,15 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/lms/document-categories",
             dom: ".em-lms-document-category",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["brand_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/lms/output-conditions",
+            dom: ".em-lms-output-conditions",
             attr: "data-id",
             formated: "$(name)",
             query: ["brand_id"],
