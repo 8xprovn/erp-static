@@ -141,6 +141,7 @@ function loadTinyMce(domId) {
         remove_script_host: false,
         color_cols: 5,
         automatic_uploads: true,
+        paste_data_images: false,
         file_picker_types: "file image media",
 
         // Đảm bảo TinyMCE ghi ngược HTML về <textarea> (tránh required + hidden focus)
@@ -165,6 +166,14 @@ function loadTinyMce(domId) {
                 el.remove(),
             );
 
+            // ❌ chặn ảnh base64 (data:image/...)
+            doc.querySelectorAll("img").forEach((img) => {
+                const src = img.getAttribute("src") || "";
+                if (/^data:image\//i.test(src)) {
+                    img.remove();
+                }
+            });
+
             // xử lý attribute
             doc.body.querySelectorAll("*").forEach((el) => {
                 const keep = {};
@@ -174,7 +183,10 @@ function loadTinyMce(domId) {
                 }
 
                 if (el.hasAttribute("src")) {
-                    keep.src = el.getAttribute("src");
+                    const src = el.getAttribute("src");
+                    if (!/^data:image\//i.test(src)) {
+                        keep.src = src;
+                    }
                 }
 
                 // xóa toàn bộ attribute
