@@ -975,6 +975,10 @@ const AutoloadDataService = (function () {
                 "status",
                 "job_title_id",
                 "position_id",
+                "manager_id",
+                "department_id",
+                "type",
+                "branch_id"
             ],
         },
         {
@@ -2376,7 +2380,7 @@ const AutoloadDataService = (function () {
     };
 
     const VERSION = 1; // Đặt phiên bản cho cơ sở dữ liệu
-    const dbName = "ERPDBV8"; // Tên cơ sở dữ liệu
+    const dbName = "ERPDBV9"; // Tên cơ sở dữ liệu
     //luc them ojectstorename cần đổi tên dbName lên
     const objectStoreNames = [
         "em-profile",
