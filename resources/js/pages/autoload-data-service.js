@@ -934,6 +934,20 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         ///// end risk /////
+        "survey-category": {
+            url: window.API_SERVICE_URL_V2 + "/dtms/survey-category",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "name"],
+            version: 2,
+        },
+        "survey-topic": {
+            url: window.API_SERVICE_URL_V2 + "/dtms/topic",
+            formated: "$(name)",
+            id: "_id",
+            query: ["_id", "name"],
+            version: 2,
+        },
 
         //// course video ////
         "course-video": {
@@ -1247,6 +1261,24 @@ const AutoloadDataService = (function () {
         {
             url: window.API_SERVICE_URL_V2 + "/recruitment/job_category",
             dom: ".recruitment-job-category",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/dtms/survey-category",
+            dom: ".survey-category",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["_id"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/dtms/topic",
+            dom: ".survey-topic",
             attr: "data-id",
             formated: "$(name)",
             query: ["_id"],
