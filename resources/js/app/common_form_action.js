@@ -36,6 +36,27 @@ $(document).ready(function () {
 });
 ////// FIX LOI FIREFOX KO GO TEXT DC INPUT ///
 $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+
+// Select2 can calculate a 0px search width while its modal is still hidden.
+// Recalculate it after Bootstrap has finished showing the modal.
+$(document).on("shown.bs.modal", ".modal", function () {
+    var modal = this;
+
+    window.requestAnimationFrame(function () {
+        $(modal).find("select.select2-hidden-accessible").each(function () {
+            var select2 = $(this).data("select2");
+
+            if (
+                select2 &&
+                select2.selection &&
+                typeof select2.selection.resizeSearch === "function"
+            ) {
+                select2.selection.resizeSearch();
+            }
+        });
+    });
+});
+
 function popup_modal(url, data_redirect_uri) {
     var randomDom = Math.random().toString(36).substring(2);
     //var type = $(this).attr('data-type');
