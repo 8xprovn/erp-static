@@ -122,18 +122,206 @@ function popup_modal(url, data_redirect_uri) {
 
 function appendCacheBuster(url) {
     if (!url) return url;
-
     const v = "v=" + Date.now(); // hoặc random: Math.floor(Math.random()*1000)
-
     // đã có query ?
     if (url.includes("?")) {
         // tránh bị thêm trùng v=
         if (/([?&])v=\d+/.test(url)) return url;
         return url + "&" + v;
     }
-
     return url + "?" + v;
 }
+
+const ALLOWED_FILE_EXTENSIONS = [
+    // Image
+    "jpg",
+    "jpeg",
+    "png",
+    "gif",
+    "webp",
+
+    // Audio
+    "mp3",
+
+    // Video
+    "mp4",
+    "webm",
+    "mov",
+    "avi",
+    "mkv",
+    "mpeg",
+    "mpg",
+    "m4v",
+    "3gp",
+
+    // Document
+    "pdf",
+    "doc",
+    "docx",
+    "xls",
+    "xlsx",
+    "ppt",
+    "pptx",
+    "txt",
+    "csv",
+];
+
+const ALLOWED_FILE_MIMES = [
+    // Image
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/webp",
+
+    // Audio
+    "audio/mpeg",
+
+    // Video
+    "video/mp4",
+    "video/webm",
+    "video/quicktime",
+    "video/x-msvideo",
+    "video/x-matroska",
+    "video/mpeg",
+    "video/3gpp",
+
+    // Document
+    "application/pdf",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "application/vnd.ms-excel",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "text/plain",
+    "text/csv",
+];
+
+const BLOCKED_URL_PATTERNS = [
+    "chrome-extension://",
+    "moz-extension://",
+    "file://",
+    "javascript:",
+    "data:",
+];
+
+function getFileExtension(value) {
+    if (!value) return "";
+
+    const cleanValue = value
+        .split("?")[0]
+        .split("#")[0];
+
+    const fileName = cleanValue.split("/").pop() || "";
+
+    return fileName.includes(".") ?
+        fileName.split(".").pop().toLowerCase() :
+        "";
+}
+
+function normalizeUrl(url) {
+    if (typeof url !== "string") {
+        return "";
+    }
+
+    return url.trim().toLowerCase();
+}
+
+function isAllowedFileUrl(url) {
+    if (!url) return false;
+    // Chặn URL nội bộ và URL nguy hiểm
+    // Chỉ cần xuất hiện một chuỗi bị chặn là trả về false
+    const normalizedUrl = normalizeUrl(url);
+
+    if (BLOCKED_URL_PATTERNS.some((pattern) => normalizedUrl.includes(pattern))) {
+        return false;
+    }
+    const extension = getFileExtension(normalizedUrl);
+    return ALLOWED_FILE_EXTENSIONS.includes(extension);
+}
+
+function isAllowedUploadFile(file) {
+    if (!(file instanceof File)) {
+        return false;
+    }
+
+    const extension = getFileExtension(file.name);
+    const mime = (file.type || "").toLowerCase();
+
+    return ALLOWED_FILE_EXTENSIONS.includes(extension) && ALLOWED_FILE_MIMES.includes(mime);
+}
+
+function sanitizeTinyMceContent(content) {
+    if (!content || typeof content !== "string") {
+        return "";
+    }
+    /*
+     * Chuyển HTML bị escape thành HTML bình thường:
+     * \"   → "
+     * \r\n → xuống dòng
+     */
+    const decodedContent = content.replace(/\\"/g, '"').replace(/\\r\\n|\\n|\\r/g, "\n");
+
+    const parser = new DOMParser();
+
+    const doc = parser.parseFromString(decodedContent, "text/html");
+
+    /*
+     * Xóa các thẻ nguy hiểm.
+     */
+    doc.querySelectorAll(
+        "script, style, meta, link, iframe, object, embed",
+    ).forEach((element) => {
+        element.remove();
+    });
+
+    /*
+     * Xóa toàn bộ phần tử có URL bị chặn.
+     */
+    doc.querySelectorAll("[src], [href], [poster]").forEach(
+        (element) => {
+            const values = [
+                element.getAttribute("src"),
+                element.getAttribute("href"),
+                element.getAttribute("poster"),
+            ].filter(Boolean);
+
+            const isBlocked = values.some((value) => BLOCKED_URL_PATTERNS.some((pattern) => normalizeUrl(value)
+                .includes(pattern)));
+
+            if (isBlocked) element.remove();
+        },
+    );
+
+    /*
+     * Xóa wrapper do extension chèn vào.
+     */
+    doc.querySelectorAll(
+        [
+            ".s4ext-lookup",
+            ".s4ext-window",
+            ".s4ext-window-header",
+            ".s4ext-window-close",
+            "#s4ext-window",
+            '[class*="s4ext-"]',
+            '[id*="s4ext-"]',
+        ].join(","),
+    ).forEach((element) => {
+        element.remove();
+    });
+
+    /*
+     * Xóa thẻ div/span rỗng còn lại.
+     */
+    doc.querySelectorAll("div, span, p").forEach((element) => {
+        const text = (element.textContent || "").replace(/\u00a0/g, "").trim();
+        const hasMedia = element.querySelector("img, video, audio, source, a");
+        if (!text && !hasMedia) element.remove()
+    });
+
+    return doc.body.innerHTML.trim();
+}
+
 function loadTinyMce(domId) {
     var self = $("." + domId);
 
@@ -165,63 +353,50 @@ function loadTinyMce(domId) {
         paste_data_images: false,
         file_picker_types: "file image media",
 
-        // Đảm bảo TinyMCE ghi ngược HTML về <textarea> (tránh required + hidden focus)
-        setup: (ed) => {
-            ed.on("init", () => {
-                ed.getBody()
+
+        setup: function (editor) {
+            /*
+             * Chạy khi TinyMCE set nội dung:
+             * - Source code → OK
+             * - editor.setContent()
+             * - load dữ liệu ban đầu
+             */
+            editor.on("BeforeSetContent", function (event) {
+                if (typeof event.content === "string") {
+                    event.content = sanitizeTinyMceContent(event.content);
+                }
+            });
+
+            /*
+             * Làm sạch nội dung đã có khi editor khởi tạo.
+             */
+            editor.on("init", function () {
+                const currentContent = editor.getContent();
+                const cleanContent =
+                    sanitizeTinyMceContent(currentContent);
+
+                if (cleanContent !== currentContent) {
+                    editor.setContent(cleanContent);
+                    editor.save();
+                }
+
+                editor
+                    .getBody()
                     .querySelectorAll("img")
                     .forEach((img) => {
                         img.src = appendCacheBuster(img.src);
                     });
             });
 
-            ed.on("change keyup undo redo", () => ed.save());
+            editor.on("change keyup undo redo", function () {
+                editor.save();
+            });
         },
 
         paste_preprocess: function (plugin, args) {
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(args.content || "", "text/html");
-
-            // ❌ xóa toàn bộ <style>...</style>
-            doc.querySelectorAll("style, script, meta, link").forEach((el) =>
-                el.remove(),
-            );
-
-            // ❌ chặn ảnh base64 (data:image/...)
-            doc.querySelectorAll("img").forEach((img) => {
-                const src = img.getAttribute("src") || "";
-                if (/^data:image\//i.test(src)) {
-                    img.remove();
-                }
-            });
-
-            // xử lý attribute
-            doc.body.querySelectorAll("*").forEach((el) => {
-                const keep = {};
-
-                if (el.hasAttribute("href")) {
-                    keep.href = el.getAttribute("href");
-                }
-
-                if (el.hasAttribute("src")) {
-                    const src = el.getAttribute("src");
-                    if (!/^data:image\//i.test(src)) {
-                        keep.src = src;
-                    }
-                }
-
-                // xóa toàn bộ attribute
-                Array.from(el.attributes).forEach((attr) =>
-                    el.removeAttribute(attr.name),
-                );
-
-                // set lại href / src
-                Object.entries(keep).forEach(([k, v]) => {
-                    if (v) el.setAttribute(k, v);
-                });
-            });
-
-            args.content = doc.body.innerHTML;
+            const originalContent = args.content || "";
+            const cleanContent = sanitizeTinyMceContent(originalContent);
+            args.content = cleanContent;
         },
 
         images_upload_handler: function (blobInfo, success, failure) {
@@ -277,6 +452,11 @@ function loadTinyMce(domId) {
             input.onchange = function () {
                 const file = this.files?.[0];
                 if (!file) return;
+                if (!isAllowedUploadFile(file)) {
+                    alert("Chỉ cho phép upload ảnh, video hoặc tài liệu hợp lệ.");
+                    this.value = "";
+                    return;
+                }
 
                 const xhr = new XMLHttpRequest();
                 xhr.withCredentials = false;
