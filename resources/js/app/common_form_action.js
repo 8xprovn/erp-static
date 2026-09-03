@@ -227,6 +227,10 @@ function normalizeUrl(url) {
     return url.trim().toLowerCase();
 }
 
+function isBase64ImageUrl(url) {
+    return /^data:image\//i.test(normalizeUrl(url));
+}
+
 function isAllowedFileUrl(url) {
     if (!url) return false;
     // Chặn URL nội bộ và URL nguy hiểm
@@ -267,31 +271,50 @@ function sanitizeTinyMceContent(content) {
     const doc = parser.parseFromString(decodedContent, "text/html");
 
     /*
-     * Xóa các thẻ nguy hiểm.
+     * Xóa các thẻ nguy hiểm (giữ object/embed/video phục vụ media).
      */
-    doc.querySelectorAll(
-        "script, style, meta, link, iframe, object, embed",
-    ).forEach((element) => {
+    doc.querySelectorAll("script, style, meta, link").forEach((element) => {
         element.remove();
     });
 
     /*
-     * Xóa toàn bộ phần tử có URL bị chặn.
+     * Xóa phần tử có URL nguy hiểm.
      */
-    doc.querySelectorAll("[src], [href], [poster]").forEach(
+    doc.querySelectorAll("[src], [href], [poster], [data]").forEach(
         (element) => {
             const values = [
                 element.getAttribute("src"),
                 element.getAttribute("href"),
                 element.getAttribute("poster"),
+                element.getAttribute("data"),
             ].filter(Boolean);
 
-            const isBlocked = values.some((value) => BLOCKED_URL_PATTERNS.some((pattern) => normalizeUrl(value)
-                .includes(pattern)));
+            const isBlocked = values.some((value) => {
+                const normalizedUrl = normalizeUrl(value);
+                return BLOCKED_URL_PATTERNS.some((pattern) =>
+                    normalizedUrl.includes(pattern),
+                );
+            });
 
             if (isBlocked) element.remove();
         },
     );
+
+    /*
+     * Xóa ảnh có src/srcset base64.
+     */
+    doc.querySelectorAll("img").forEach((img) => {
+        const src = img.getAttribute("src") || "";
+        const srcset = img.getAttribute("srcset") || "";
+        const hasBase64Srcset = srcset.split(",").some((part) => {
+            const url = (part.trim().split(/\s+/)[0] || "");
+            return isBase64ImageUrl(url);
+        });
+
+        if (isBase64ImageUrl(src) || hasBase64Srcset) {
+            img.remove();
+        }
+    });
 
     /*
      * Xóa wrapper do extension chèn vào.
@@ -315,7 +338,9 @@ function sanitizeTinyMceContent(content) {
      */
     doc.querySelectorAll("div, span, p").forEach((element) => {
         const text = (element.textContent || "").replace(/\u00a0/g, "").trim();
-        const hasMedia = element.querySelector("img, video, audio, source, a");
+        const hasMedia = element.querySelector(
+            "img, video, audio, source, a, iframe, embed, table, ul, ol, blockquote, pre, hr",
+        );
         if (!text && !hasMedia) element.remove()
     });
 
@@ -352,6 +377,13 @@ function loadTinyMce(domId) {
         automatic_uploads: true,
         paste_data_images: false,
         file_picker_types: "file image media",
+        media_live_embeds: true,
+        extended_valid_elements:
+            "iframe[src|width|height|frameborder|allowfullscreen|allow|style|class|title|loading|referrerpolicy|name|id|sandbox]," +
+            "embed[src|type|width|height|style|class|allowfullscreen|allow]," +
+            "video[src|width|height|poster|controls|autoplay|loop|muted|preload|style|class|playsinline]," +
+            "source[src|type|media]," +
+            "object[data|type|width|height|style|class|id|name],param[name|value|valuetype|type]",
 
 
         setup: function (editor) {
@@ -363,6 +395,12 @@ function loadTinyMce(domId) {
              */
             editor.on("BeforeSetContent", function (event) {
                 if (typeof event.content === "string") {
+                    event.content = sanitizeTinyMceContent(event.content);
+                }
+            });
+
+            editor.on("GetContent", function (event) {
+                if (event.format === "html" && typeof event.content === "string") {
                     event.content = sanitizeTinyMceContent(event.content);
                 }
             });
@@ -384,6 +422,11 @@ function loadTinyMce(domId) {
                     .getBody()
                     .querySelectorAll("img")
                     .forEach((img) => {
+                        const src = img.getAttribute("src") || "";
+                        if (isBase64ImageUrl(src)) {
+                            img.remove();
+                            return;
+                        }
                         img.src = appendCacheBuster(img.src);
                     });
             });
