@@ -1533,6 +1533,15 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         {
+            url: window.API_SERVICE_URL_V2 + "/crm/opportunities",
+            dom: ".crm-opportunity",
+            attr: "data-id",
+            formated: "$(fullname)",
+            link: "/crm/opportunities/$(_id)",
+            fk: "_id",
+            version: 2,
+        },
+        {
             url: window.API_SERVICE_URL_V2 + "/crm/contacts",
             dom: ".crm-contact",
             attr: "data-id",
