@@ -860,7 +860,7 @@ const AutoloadDataService = (function () {
             url: window.API_SERVICE_URL_V2 + "/internal/category",
             formated: "$(name)",
             id: "_id",
-            query: ["_id", "topic_id", "parent_id"],
+            query: ["_id", "topic_id", "parent_id", "status"],
             version: 2,
         },
         ///// end asset /////
