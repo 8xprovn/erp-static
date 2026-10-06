@@ -779,7 +779,7 @@ $(document).ready(function () {
                 wheelStep: 1000,
                 createLocalList: false,
                 decimalPlacesRawValue: 0,
-                minimumValue: '1'
+                minimumValue: '0'
             });
         }
     });
