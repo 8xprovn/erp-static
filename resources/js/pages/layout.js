@@ -768,3 +768,19 @@ $(document).on("pricechange", ".format_price", function (e) {
         allowNegative: true,
     });
 });
+
+$(document).ready(function () {
+    $(".format_price_positive").each(function () {
+        if (!AutoNumeric.isManagedByAutoNumeric(this)) {
+            new AutoNumeric(this, {
+                decimalPlaces: 0,
+                unformatOnSubmit: true,
+                watchExternalChanges: true,
+                wheelStep: 1000,
+                createLocalList: false,
+                decimalPlacesRawValue: 0,
+                minimumValue: '0'
+            });
+        }
+    });
+});

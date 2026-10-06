@@ -19626,6 +19626,19 @@ $(document).ready(function() {
             AutoNumeric.multiple('.format_price', { decimalPlaces: 0, unformatOnSubmit: true, watchExternalChanges: true, wheelStep: 1000,createLocalList: false,decimalPlacesRawValue: 0});
         }
     }
+    $(".format_price_positive").each(function () {
+        if (!AutoNumeric.isManagedByAutoNumeric(this)) {
+            new AutoNumeric(this, {
+                decimalPlaces: 0,
+                unformatOnSubmit: true,
+                watchExternalChanges: true,
+                wheelStep: 1000,
+                createLocalList: false,
+                decimalPlacesRawValue: 0,
+                minimumValue: '0'
+            });
+        }
+    });
     $("body").Initialize();
 });
 $(document).ready(function () {
