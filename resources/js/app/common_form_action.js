@@ -99,7 +99,7 @@ function popup_modal(url, data_redirect_uri) {
             });
             $("#" + ajax_call_id).on("shown.bs.modal", function (e) {
                 AutoloadDataService.init($("#" + ajax_call_id));
-                if ($("#" + ajax_call_id).find(".format_price")) {
+                if ($("#" + ajax_call_id).find(".format_price").length) {
                     AutoNumeric.multiple(
                         '[id="' + ajax_call_id + '"] .format_price',
                         {
@@ -108,6 +108,19 @@ function popup_modal(url, data_redirect_uri) {
                             watchExternalChanges: true,
                             wheelStep: 1000,
                             decimalPlacesRawValue: 0,
+                        },
+                    );
+                }
+                if ($("#" + ajax_call_id).find(".format_price_positive").length) {
+                    AutoNumeric.multiple(
+                        '[id="' + ajax_call_id + '"] .format_price_positive',
+                        {
+                            decimalPlaces: 0,
+                            unformatOnSubmit: true,
+                            watchExternalChanges: true,
+                            wheelStep: 1000,
+                            decimalPlacesRawValue: 0,
+                            minimumValue: "0",
                         },
                     );
                 }
