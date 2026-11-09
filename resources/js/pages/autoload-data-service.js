@@ -38,7 +38,7 @@ const AutoloadDataService = (function () {
             version: 2,
         },
         "document-type": {
-            url: window.API_SERVICE_URL_V2 + "/crm/contact-document-type",
+            url: window.API_SERVICE_URL_V2 + "/crm/document_type",
             formated: "$(name)",
             id: "_id",
             query: ["status", "_id"],
@@ -1525,7 +1525,7 @@ const AutoloadDataService = (function () {
             ],
         },
         {
-            url: window.API_SERVICE_URL_V2 + "/crm/contact-document-type",
+            url: window.API_SERVICE_URL_V2 + "/crm/document_type",
             dom: ".crm-document-type",
             attr: "data-id",
             formated: "$(name)",
