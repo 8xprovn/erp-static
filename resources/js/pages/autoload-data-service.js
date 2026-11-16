@@ -3046,7 +3046,97 @@ const AutoloadDataService = (function () {
                 return $($.parseHTML(data.html));
             },
         });
+
+        if (dataTable === "segments") {
+            current_dom.off("select2:select.segmentUrl");
+            current_dom.on("select2:select.segmentUrl", function (e) {
+                applySegmentFilterToUrl(e.params && e.params.data && e.params.data.id);
+            });
+        }
     };
+
+    var applySegmentFilterToUrl = function (segmentData) {
+        if (!segmentData) {
+            return;
+        }
+
+        var parsed;
+        try {
+            parsed = typeof segmentData === "string" ? JSON.parse(segmentData) : segmentData;
+            if (parsed && typeof parsed.filter === "string") {
+                parsed.filter = JSON.parse(parsed.filter);
+            }
+        } catch (err) {
+            if (typeof show_notify_error === "function") {
+                show_notify_error({
+                    message: "Segment data không hợp lệ",
+                });
+            }
+            return;
+        }
+
+        if (!parsed || typeof parsed !== "object") {
+            return;
+        }
+
+        var segmentParams = new URLSearchParams($.param(parsed));
+        var currentParams = new URLSearchParams(window.location.search);
+
+        segmentParams.forEach(function (value, key) {
+            currentParams.delete(key);
+        });
+        segmentParams.forEach(function (value, key) {
+            currentParams.append(key, value);
+        });
+
+        var queryString = currentParams.toString();
+        var newUrl =
+            window.location.pathname + (queryString ? "?" + queryString : "");
+
+        $.ajax({
+            type: "GET",
+            url: newUrl,
+            headers: { view: "popup" },
+            dataType: "html",
+            beforeSend: function () {
+                if (typeof progress_loading !== "undefined") {
+                    progress_loading.show(".content-inner");
+                }
+            },
+            success: function (data) {
+                if (typeof progress_loading !== "undefined") {
+                    progress_loading.hide();
+                }
+                $(".content-inner").html(data);
+                history.pushState({}, "", newUrl);
+                $(".sidebar-mobile-expanded").removeClass(
+                    "sidebar-mobile-expanded"
+                );
+                $(".content-inner").trigger("MainContentReloaded", []);
+            },
+            error: function (xhr) {
+                if (typeof progress_loading !== "undefined") {
+                    progress_loading.hide();
+                }
+                var textMessage = "Vui lòng liên hệ IT để được hỗ trợ";
+                if (xhr.responseText) {
+                    try {
+                        var responseText = JSON.parse(xhr.responseText);
+                        textMessage =
+                            responseText.message ||
+                            responseText.error_description ||
+                            textMessage;
+                    } catch (parseErr) {}
+                }
+                if (typeof show_notify_error === "function") {
+                    show_notify_error({
+                        message: "Lỗi " + xhr.status + ": " + textMessage,
+                    });
+                }
+            },
+        });
+    };
+
     $.fn.loadSuggestData = function (params) {
         var o = $(this[0]); // This is the element
         loadSelectData($(this), params);
