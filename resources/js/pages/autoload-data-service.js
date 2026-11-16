@@ -92,7 +92,7 @@ const AutoloadDataService = (function () {
         segments: {
             url: window.API_SERVICE_URL_V2 + "/support/segments",
             formated: "$(name)",
-            id: "_id",
+            id: "data",
             query: ["created_by", "service", "type"],
             version: 2,
         },
