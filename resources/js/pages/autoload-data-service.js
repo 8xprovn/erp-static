@@ -89,6 +89,13 @@ const AutoloadDataService = (function () {
             query: ["type_file", "service", "_id", "type", "brand_id"],
             version: 2,
         },
+        segments: {
+            url: window.API_SERVICE_URL_V2 + "/support/segments",
+            formated: "$(name)",
+            id: "_id",
+            query: ["created_by", "service"],
+            version: 2,
+        },
         ///////////// HR /////////////
         employee: {
             url: window.API_SERVICE_URL_V2 + "/hr/employees/custom/search",
@@ -1361,6 +1368,15 @@ const AutoloadDataService = (function () {
             attr: "data-id",
             formated: "$(name)",
             query: ["name", "type"],
+            fk: "_id",
+            version: 2,
+        },
+        {
+            url: window.API_SERVICE_URL_V2 + "/support/segments",
+            dom: ".em-segments",
+            attr: "data-id",
+            formated: "$(name)",
+            query: ["name", "service"],
             fk: "_id",
             version: 2,
         },
